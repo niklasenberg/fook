@@ -26,9 +26,6 @@ jobs:
     # Get flutter dependencies.
     - run: flutter pub get
     
-    # Run widget tests for our flutter project.
-    - run: flutter test
-    
     # Build apk.
     - run: flutter build apk
     
@@ -37,3 +34,4 @@ jobs:
       with:
         name: android-apk
         path: build/app/outputs/apk/release/app-release.apk
+
