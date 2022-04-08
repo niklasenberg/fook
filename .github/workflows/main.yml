@@ -37,20 +37,3 @@ jobs:
       with:
         name: android-apk
         path: build/app/outputs/apk/release/app-release.apk
-
-  build_ios:
-    name: 'Build iOS'
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - uses: subosito/flutter-action@v1
-      with:
-        channel: 'beta'
-    - run: flutter pub get
-    - run: flutter test
-    - run: flutter build ios --release --no-codesign
-    
-    - uses: actions/upload-artifact@v1
-      with:
-        name: Runner.app
-        path: build/ios/Release-iphoneos/Runner.app
