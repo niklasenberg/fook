@@ -8,7 +8,7 @@ on:
 jobs:
   build_apk:
     name: 'Build APK'
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
     
     # Setup Java environment in order to build the Android app.
@@ -40,32 +40,17 @@ jobs:
 
   build_ios:
     name: 'Build iOS'
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: subosito/flutter-action@v1
       with:
         channel: 'beta'
     - run: flutter pub get
+    - run: flutter test
     - run: flutter build ios --release --no-codesign
     
     - uses: actions/upload-artifact@v1
       with:
         name: Runner.app
         path: build/ios/Release-iphoneos/Runner.app
-  
-  unit_tests:
-    name: 'Run flutter test'
-    runs-on: macos-latest
-    steps:
-    
-    # Setup Java environment in order to build the Android app.
-    - uses: actions/checkout@v1
-    # Setup the flutter environment.
-    - uses: subosito/flutter-action@v1
-      with:
-        channel: 'beta'
-    - run: flutter pub get
-    
-    # Run widget tests for our flutter project.
-    - run: flutter test
