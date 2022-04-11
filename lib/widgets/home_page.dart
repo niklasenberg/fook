@@ -7,12 +7,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => FirebaseAuth.instance.signOut(),
-        child: const Icon(Icons.logout)
-      ),
+          onPressed: () => signOut(context), child: const Icon(Icons.logout)),
     );
   }
+}
+
+signOut(BuildContext context) async {
+  await FirebaseAuth.instance.signOut();
+  Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => LoginPage()));
 }
