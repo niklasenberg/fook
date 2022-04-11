@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
@@ -25,15 +27,51 @@ class LoginForm extends StatelessWidget {
     return AuthFlowBuilder<EmailFlowController>(
       listener: (oldState, state, controller) {
         if (state is SignedIn) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const HomePage()));
         }
       },
       builder: (context, state, controller, _) {
         if (state is AwaitingEmailAndPassword) {
           return Column(
             children: [
-              TextField(controller: emailCtrl),
-              TextField(controller: passwordCtrl),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                child: const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Sign in with Daisy',
+                    textAlign: TextAlign.left,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Username',
+                        ),
+                        controller: emailCtrl),
+                  ),
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: TextFormField(
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Password',
+                        ),
+                        controller: passwordCtrl),
+                  ),
+                ],
+              ),
+              Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
               ElevatedButton(
                 onPressed: () {
                   controller.setEmailAndPassword(
@@ -42,6 +80,9 @@ class LoginForm extends StatelessWidget {
                   );
                 },
                 child: const Text('Sign in'),
+                style: ElevatedButton.styleFrom(
+                  fixedSize: Size(120.0, 30.0),
+                ),
               ),
             ],
           );
@@ -50,7 +91,7 @@ class LoginForm extends StatelessWidget {
         } else if (state is AuthFailed) {
           // FlutterFireUIWidget that shows a human-readable error message.
           return ErrorText(exception: state.exception);
-        } else{
+        } else {
           return const LoginPage();
         }
       },
