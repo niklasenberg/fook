@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
@@ -35,6 +33,17 @@ class LoginForm extends StatelessWidget {
         if (state is AwaitingEmailAndPassword) {
           return Column(
             children: [
+              Container(
+                width: 300.0,
+                height: 300.0,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Image.asset(
+                    'lib/assets/logo_o.png',
+                    scale: 0.5,
+                  ),
+                ),
+              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
                 child: const Align(
@@ -90,7 +99,7 @@ class LoginForm extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (state is AuthFailed) {
           // FlutterFireUIWidget that shows a human-readable error message.
-          return ErrorText(exception: state.exception);
+          return SnackBar(content: Text(state.exception.toString()));
         } else {
           return const LoginPage();
         }
