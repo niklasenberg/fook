@@ -34,4 +34,21 @@ jobs:
       with:
         name: android-apk
         path: build/app/outputs/apk/release/app-release.apk
+  
+  send_:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        DISCORD_USERNAME: Henke B
+      uses: Ilshidur/action-discord@master
+      with:
+        args: 'Någon pushade man, resource leak?'
+    - name: Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
 
