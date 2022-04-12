@@ -53,7 +53,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '293825347027',
     projectId: 'fook-604f3',
     storageBucket: 'fook-604f3.appspot.com',
-    iosClientId: '293825347027-uun7qb3iboetjsvgeo07f78l4ccn2kn7.apps.googleusercontent.com',
+    iosClientId:
+        '293825347027-uun7qb3iboetjsvgeo07f78l4ccn2kn7.apps.googleusercontent.com',
     iosBundleId: 'com.example.fook',
   );
 }
