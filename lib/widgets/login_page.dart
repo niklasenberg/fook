@@ -29,8 +29,8 @@ class LoginForm extends StatelessWidget {
     return AuthFlowBuilder<EmailFlowController>(
       listener: (oldState, state, controller) {
         if (state is SignedIn) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const HomePage()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
         } else if (state is AuthFailed) {
           Fluttertoast.showToast(
               msg: 'Login or password is invalid',
