@@ -1,0 +1,13 @@
+var file = "Path_to_pre_existing_Excel_File/excel_file.xlsx";
+    var bytes = File(file).readAsBytesSync();
+    var excel = Excel.decodeBytes(bytes);
+    
+    for (var table in excel.tables.keys) {
+        print(table); //sheet Name
+    //print(excel.tables[table].maxCols);
+     // print(excel.tables[table].maxRows);
+     // for (var row in excel.tables[table].rows) {
+      //  print("$row");
+     // }
+    }
+    
