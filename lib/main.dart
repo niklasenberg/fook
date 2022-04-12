@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'model/firebase_options.dart';
 import 'widgets/login_page.dart';
@@ -15,13 +14,33 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          primarySwatch: Colors.deepOrange,
+          backgroundColor: Colors.black26,
+          fontFamily: 'Roboto',
+          inputDecorationTheme: const InputDecorationTheme(
+            labelStyle: TextStyle(color: Colors.deepOrangeAccent,
+            fontFamily: 'Roboto'),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.deepOrangeAccent),
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.deepOrangeAccent),
+                borderRadius: BorderRadius.all(Radius.circular(25))),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.deepOrangeAccent),
+                borderRadius: BorderRadius.all(Radius.circular(25))),
+            errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.all(Radius.circular(25))),
+            focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.all(Radius.circular(25))),
+          )),
       home: const LoginPage(),
     );
   }
