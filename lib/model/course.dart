@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class Course {
+class Course extends Object{
   late final String name;
   late final String shortCode;
   late final String code;
@@ -17,10 +17,14 @@ class Course {
         name: json["name"],
         shortCode: json["shortCode"],
         code: json["code"],
-        literature: List.from(jsonDecode(json['literature'])),
+        literature: List.from(json['literature']),
       );
 
-  getName() {
+  String getName() {
     return this.name;
+  }
+
+  List<String> getLiterature(){
+    return this.literature;
   }
 }
