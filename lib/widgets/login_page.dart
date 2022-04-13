@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
-import 'package:fook/handlers/course_handler.dart';
 import 'home_page.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:string_validator/string_validator.dart';
-import 'package:fook/model/course.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -27,14 +24,11 @@ class LoginForm extends StatelessWidget {
   final passwordCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  Course course = Course(name: 'Programmering 2', shortCode: 'PROG2', code: 'IB332N', literature: ['234235345','','']);
-
   @override
   Widget build(BuildContext context) {
     return AuthFlowBuilder<EmailFlowController>(
       listener: (oldState, state, controller) {
         if (state is SignedIn) {
-          CourseHandler.addCourse(course);
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
         } else if (state is AuthFailed) {
           Fluttertoast.showToast(
@@ -48,7 +42,7 @@ class LoginForm extends StatelessWidget {
         }
       },
       builder: (context, state, controller, _) {
-        if (state is AwaitingEmailAndPassword) {
+        if (state is AwaitingEmailAndPassword || state is AuthFailed) {
           return SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -149,7 +143,7 @@ class LoginForm extends StatelessWidget {
         } else if (state is SigningIn) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return Container();
+          return const LoginPage();
         }
       },
     );
