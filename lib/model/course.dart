@@ -13,18 +13,35 @@ class Course extends Object{
     required this.literature,
   });
 
-  factory Course.fromJson(Map<String, dynamic> json) => Course(
-        name: json["name"],
-        shortCode: json["shortCode"],
-        code: json["code"],
-        literature: List.from(json['literature']),
+  factory Course.fromMap(Map<String, dynamic> map) => Course(
+        name: map["name"],
+        shortCode: map["shortCode"],
+        code: map["code"],
+        literature: List.from(map['literature']),
       );
 
-  String getName() {
-    return this.name;
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'shortCode': shortCode,
+      'code': code,
+      'literature': literature
+    };
   }
 
-  List<String> getLiterature(){
-    return this.literature;
+  String getName() {
+    return name;
+  }
+
+  String getShortCode() {
+    return shortCode;
+  }
+
+  String getCode() {
+    return code;
+  }
+
+  List<String> getLiterature() {
+    return literature;
   }
 }

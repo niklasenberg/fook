@@ -39,6 +39,7 @@ dependencies:
   flutterfire_ui: ^0.4.0+1
   fluttertoast: ^8.0.9
   string_validator: ^0.3.0
+  excel: ^2.0.0-null-safety-3
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +64,7 @@ flutter:
   uses-material-design: true
   assets:
   - lib/assets/logo_o.png
+  - lib/assets/Kurser-copy.xlsx
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
