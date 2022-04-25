@@ -29,8 +29,7 @@ class LoginForm extends StatelessWidget {
     return AuthFlowBuilder<EmailFlowController>(
       listener: (oldState, state, controller) {
         if (state is SignedIn) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
         } else if (state is AuthFailed) {
           Fluttertoast.showToast(
               msg: 'Login or password is invalid',
@@ -43,7 +42,7 @@ class LoginForm extends StatelessWidget {
         }
       },
       builder: (context, state, controller, _) {
-        if (state is AwaitingEmailAndPassword) {
+        if (state is AwaitingEmailAndPassword || state is AuthFailed) {
           return SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -142,7 +141,7 @@ class LoginForm extends StatelessWidget {
             ),
           );
         } else if (state is SigningIn) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else {
           return const LoginPage();
         }
