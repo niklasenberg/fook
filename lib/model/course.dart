@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 class Course extends Object{
   late final String name;
   late final String shortCode;
   late final String code;
-  List<String> literature = [];
+  List<String> literature;
 
   Course({
     required this.name,
