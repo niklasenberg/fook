@@ -2,8 +2,9 @@ on:
   push:
     branches:
     - main
-    
-# on: push    # Default will running for every branch.
+  pull_request:
+    branches:
+    - main  
     
 jobs:
   build_apk:

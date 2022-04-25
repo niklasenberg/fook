@@ -10,22 +10,18 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+
+  final Widget firstPage = FirebaseAuth.instance.currentUser == null
+      ? const LoginPage()
+      : const HomePage();
 
   @override
   Widget build(BuildContext context) {
-    Widget firstPage;
-
-    if (FirebaseAuth.instance.currentUser == null) {
-      firstPage = const LoginPage();
-    } else {
-      firstPage = HomePage();
-    }
-
     return MaterialApp(
       theme: ThemeData(
           primarySwatch: Colors.deepOrange,
@@ -33,7 +29,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Roboto',
           inputDecorationTheme: const InputDecorationTheme(
             labelStyle: TextStyle(color: Colors.deepOrangeAccent,
-            fontFamily: 'Roboto'),
+                fontFamily: 'Roboto'),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.deepOrangeAccent),
               borderRadius: BorderRadius.all(Radius.circular(25)),

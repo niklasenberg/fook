@@ -29,14 +29,14 @@ class LoginForm extends StatelessWidget {
     return AuthFlowBuilder<EmailFlowController>(
       listener: (oldState, state, controller) {
         if (state is SignedIn) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
         } else if (state is AuthFailed) {
           Fluttertoast.showToast(
               msg: 'Login or password is invalid',
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 2,
-              backgroundColor: Colors.deepOrangeAccent,
+              backgroundColor: Colors.red,
               textColor: Colors.white,
               fontSize: 16.0);
         }
@@ -61,7 +61,7 @@ class LoginForm extends StatelessWidget {
                   ),
                   Container(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                        const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -77,7 +77,7 @@ class LoginForm extends StatelessWidget {
                   Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: TextFormField(
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -87,6 +87,7 @@ class LoginForm extends StatelessWidget {
                                   !isNumeric(value.substring(4, 7))) {
                                 return 'Wrong format, should be abcd1234';
                               }
+                              return null;
                             },
                             decoration: const InputDecoration(
                               labelText: 'Username',
@@ -98,12 +99,13 @@ class LoginForm extends StatelessWidget {
                       const Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.0)),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: TextFormField(
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Password can\'t be empty!';
                               }
+                              return null;
                             },
                             obscureText: true,
                             decoration: const InputDecoration(
@@ -118,7 +120,7 @@ class LoginForm extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
@@ -130,10 +132,10 @@ class LoginForm extends StatelessWidget {
                     },
                     child: const Text('Sign in'),
                     style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(25))),
-                      fixedSize: Size(200, 30.0),
-                      primary: Colors.deepOrangeAccent,
+                      fixedSize: const Size(200, 30.0),
+                      primary: Theme.of(context).primaryColor,
                     ),
                   ),
                 ],
