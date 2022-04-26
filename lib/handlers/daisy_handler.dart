@@ -1,22 +1,24 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class DaisyHandler{
-
+class DaisyHandler {
   static Future<List<String>> getISBN(String code) async {
-    var response = await http.get(Uri.https('apitest.dsv.su.se', '/rest/public/course/' + code + '/literature'));
+    var response = await http.get(Uri.https(
+        'apitest.dsv.su.se', '/rest/public/course/' + code + '/literature'));
 
-    var data = jsonDecode(response.body);
+    List<String> result = [];
+    if (!response.body.isEmpty) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      List<dynamic> literature = data[data.keys.first];
 
-    List<String> literature = [];
-
-    for(var i in data){
-      String isbn = i['isbn'];
-      isbn.replaceAll("-", "");
-      isbn.replaceAll(" ", "");
-      literature.add(isbn.trim());
+      literature.forEach((book) {
+        var isbn = (book as Map<String, dynamic>)['ISBN'];
+        isbn = isbn.replaceAll("-", "");
+        isbn = isbn.replaceAll(" ", "");
+        result.add(isbn.trim());
+      });
     }
 
-    return literature;
+    return result;
   }
 }
