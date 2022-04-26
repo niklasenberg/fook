@@ -4,20 +4,16 @@ import 'package:fook/handlers/book_handler.dart';
 
 void main() {
   group('Book tests', () {
-    test('Successful fetch', () async {
+    test('Get books', () async {
       List<Book> lista = await BookHandler.getBooks('Jag är Zlatan');
       for (Book a in lista) {
         print(a.info);
       }
-
-      // expect(isbn.length, 2);
-      // expect(isbn[0], '9780226065663');
-      // expect(isbn[1], '9783319106311');
     });
-/*
-    test('Unsuccessful fetch', () async {
-      List<Book> isbn = await BookHandler.getBooks('twilight');
-      expect(isbn.length, 0);
-    });*/
+
+    test('Get book name', () async {
+      var result = await BookHandler.getBookName("9780226065663");
+      expect("The craft of research", result);
+    });
   });
 }
