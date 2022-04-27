@@ -31,6 +31,7 @@ class LoginForm extends StatelessWidget {
     return AuthFlowBuilder<EmailFlowController>(
       listener: (oldState, state, controller) {
         if (state is SignedIn) {
+          update(context);
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const HomePage()));
         } else if (state is AuthFailed) {
@@ -153,4 +154,9 @@ class LoginForm extends StatelessWidget {
       },
     );
   }
+}
+
+update(BuildContext context) async {
+  Course course = await CourseHandler.getCourse("VESK (AB-period)");
+  await CourseHandler.updateLiterature(course);
 }

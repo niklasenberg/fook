@@ -6,7 +6,11 @@ class BookHandler {
     Set<String> result = {};
 
     for (Book book in bookList) {
-      result.add(book.info.industryIdentifier as String);
+      String stringISBN = book.info.industryIdentifier
+          .firstWhere((element) => element.toString().contains("ISBN_13"))
+          .toString();
+
+      result.add(stringISBN.substring(8, stringISBN.length));
     }
 
     return result;

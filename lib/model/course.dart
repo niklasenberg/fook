@@ -4,7 +4,7 @@ class Course extends Object {
   late final String name;
   late final String shortCode;
   late final String code;
-  Map<String, dynamic> literature;
+  Map<String, Set<String>> literature;
 
   Course({
     required this.name,
@@ -19,7 +19,6 @@ class Course extends Object {
         code: map["code"],
         literature: (map['literature'] as Map<String, dynamic>)
             .map((key, value) => MapEntry(key, Set<String>.from(value))),
-        //  categories: (snap.data[CAT as Map<String, dynamic>).map((key, value) => MapEntry(key, MyCategory.fromEntity(MyCategoryEntity.fromJson(value)))),
       );
 
   Map<String, dynamic> toMap() {
@@ -27,7 +26,8 @@ class Course extends Object {
       'name': name,
       'shortCode': shortCode,
       'code': code,
-      'literature': literature
+      'literature':
+          literature.map((key, value) => MapEntry(key, (value.toList()))),
     };
   }
 
@@ -57,5 +57,9 @@ class Course extends Object {
 
   Set<String> getISBN(String name) {
     return literature[name]!;
+  }
+
+  void setLiterature(Map<String, Set<String>> literature) {
+    this.literature = literature;
   }
 }
