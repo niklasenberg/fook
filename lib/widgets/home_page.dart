@@ -11,29 +11,28 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child:
-          FutureBuilder(
-              future: CourseHandler.getCourse('PROG1'),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  Course course = snapshot.data as Course;
-                  return Text(
-                    course.getLiterature().first,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text(
-                    'Delivery error: ${snapshot.error.toString()}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  );
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              }),
+        child: FutureBuilder(
+            future: CourseHandler.getCourse('EGOV'),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                Course course = snapshot.data as Course;
+                return Text(
+                  course.getAllISBN().first,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  'Delivery error: ${snapshot.error.toString()}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            }),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: FloatingActionButton(
@@ -44,5 +43,6 @@ class HomePage extends StatelessWidget {
 
 signOut(BuildContext context) async {
   await FirebaseAuth.instance.signOut();
-  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+  Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => const LoginPage()));
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:string_validator/string_validator.dart';
+import 'package:fook/handlers/course_handler.dart';
+import 'package:fook/model/course.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -29,7 +31,8 @@ class LoginForm extends StatelessWidget {
     return AuthFlowBuilder<EmailFlowController>(
       listener: (oldState, state, controller) {
         if (state is SignedIn) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomePage()));
         } else if (state is AuthFailed) {
           Fluttertoast.showToast(
               msg: 'Login or password is invalid',
@@ -60,8 +63,8 @@ class LoginForm extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 20.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
