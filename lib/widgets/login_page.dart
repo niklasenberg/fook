@@ -5,6 +5,7 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/model/course.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -31,6 +32,7 @@ class LoginForm extends StatelessWidget {
     return AuthFlowBuilder<EmailFlowController>(
       listener: (oldState, state, controller) {
         if (state is SignedIn) {
+          update(context);
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const HomePage()));
         } else if (state is AuthFailed) {
@@ -153,4 +155,9 @@ class LoginForm extends StatelessWidget {
       },
     );
   }
+}
+
+update(BuildContext context) async {
+  Course course = await CourseHandler.getCourse("VESK (AB-period)", FirebaseFirestore.instance);
+  await CourseHandler.updateLiterature(course, FirebaseFirestore.instance);
 }

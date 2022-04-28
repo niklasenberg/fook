@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:developer';
 
 class DaisyHandler {
   static Future<Set<String>> getISBN(String code) async {
@@ -7,16 +8,17 @@ class DaisyHandler {
         'apitest.dsv.su.se', '/rest/public/course/' + code + '/literature'));
 
     Set<String> result = {};
-    if (!response.body.isEmpty) {
+
+    if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       List<dynamic> literature = data[data.keys.first];
 
-      literature.forEach((book) {
+      for (var book in literature) {
         var isbn = (book as Map<String, dynamic>)['ISBN'];
         isbn = isbn.replaceAll("-", "");
         isbn = isbn.replaceAll(" ", "");
         result.add(isbn.trim());
-      });
+      }
     }
 
     return result;
