@@ -11,7 +11,7 @@ void main() {
     });
 
     test('Unsuccessful fetch', () async {
-      Set<String> isbn = await DaisyHandler.getISBN('IB231N');
+      Set<String> isbn = await DaisyHandler.getISBN('I DONT EXIST');
       expect(isbn.length, 0);
     });
   });

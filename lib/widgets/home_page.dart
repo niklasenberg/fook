@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/model/course.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -12,7 +13,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: CourseHandler.getCourse('EGOV'),
+            future: CourseHandler.getCourse('VESK (AB-period)', FirebaseFirestore.instance),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 Course course = snapshot.data as Course;
@@ -43,6 +44,7 @@ class HomePage extends StatelessWidget {
 
 signOut(BuildContext context) async {
   await FirebaseAuth.instance.signOut();
+
   Navigator.pushReplacement(
       context, MaterialPageRoute(builder: (context) => const LoginPage()));
 }
