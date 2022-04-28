@@ -1,25 +1,30 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutterfire_ui/firestore.dart';
-
-import 'course.dart';
-
 class User {
   final String name;
   final String lastName;
-  final String userId;
-  final List<Course> courses;
-/*
-Gör constructor som ser ut som datamodellen i firebase
-*/
+  final List<String> courses;
+
   User({
     required this.name,
     required this.lastName,
-    required this.userId,
     required this.courses,
   });
-//from map
-  //factory User.fromFireStore(Documentsn) {}
+
+  factory User.fromMap(Map<String, dynamic> data) {
+    return User(
+      name: data['name'],
+      lastName: data['lastName'],
+      courses: List.from(data['courses']),
+    );
+  }
+/*
+  static Future<List<Course>> fetchCourses(dynamic courses) async {
+    List<String> x = List.from(courses);
+    List<Course> result = [];
+    for (String a in x) {
+      result.add(await CourseHandler.getCourse(a, FirebaseFirestore.instance));
+    }
+    return result;
+  }*/
 
   String getName() {
     return name;
@@ -29,13 +34,13 @@ Gör constructor som ser ut som datamodellen i firebase
     return lastName;
   }
 
-  List<Course> returnCourses() {
+  List<String> returnCourses() {
     return courses;
   }
 
   //Setregisteredcourses?
   //Setusername?
-
+/*
   void addCourse(Course x) {
     for (Course c in courses) {
       if (courses.contains(x)) {
@@ -53,5 +58,5 @@ Gör constructor som ser ut som datamodellen i firebase
       }
       ('Course not in your list of courses!');
     }
-  }
+  }*/
 }
