@@ -1,58 +1,60 @@
-import 'dart:convert';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fook/model/course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/handlers/daisy_handler.dart';
-import 'dart:developer';
 
 class CourseHandler {
-  static Future<Course> getCourse(String shortCode) async {
-    QuerySnapshot query = await FirebaseFirestore.instance
-        .collection('courseTest')
+  static Future<Course> getCourse(String shortCode, FirebaseFirestore firestore) async {
+    QuerySnapshot query = await firestore
+        .collection('courses')
         .where('shortCode', isEqualTo: shortCode)
         .get();
 
-    return Course.fromMap(query.docs[0].data() as Map<String, dynamic>);
+
+
+    if (query.docs.isNotEmpty){
+      return Course.fromMap(query.docs[0].data() as Map<String, dynamic>);
+    }else{
+      //This shouldn't happen
+      return Course(code: '?',shortCode: '?',name: '?',literature: <String, Set<String>>{});
+    }
   }
 
-  static addCourse(Course course) async {
-    FirebaseFirestore.instance
-        .collection('courseTest')
-        .add(course.toMap())
-        .then((value) => print('Course added'));
-  }
+  static updateLiterature(Course course, FirebaseFirestore firestore) async {
+    //Get current ISBN for course from Daisy
+    Set<String> isbnList = await DaisyHandler.getISBN(course.getCode());
 
-  static Future<bool> updateLiterature(Course course) async {
-    Set<String> ISBNList = await DaisyHandler.getISBN(course.getCode());
-
+    //Use these ISBNs to get accurate names
     List<String> names = [];
     Map<String, Set<String>> result = {};
-    for (var number in ISBNList) {
+    for (var number in isbnList) {
       names.add(await BookHandler.getBookName(number));
     }
 
+    //Use these names to get other book versions
     int index = 0;
-
     for (var name in names) {
-      (result[name] as Set<String>).add(ISBNList.elementAt(index));
-      result[name] = await BookHandler.getBookEditions(name);
-
+      result[name] = {};
+      result[name]!.add(isbnList.elementAt(index));
+      result[name]!.addAll(await BookHandler.getBookEditions(name));
       index++;
     }
+
+    //Update course object
     course.setLiterature(result);
 
-    FirebaseFirestore.instance
-        .collection('courseTest')
-        .doc(await getCourseDocumentID(course.shortCode))
+    //Update database
+    firestore
+        .collection('courses')
+        .doc(await getCourseDocumentID(course.shortCode, firestore))
         .update(course.toMap());
 
-    return true;
   }
 
-  static Future<String> getCourseDocumentID(String shortCode) async {
-    QuerySnapshot query = await FirebaseFirestore.instance
-        .collection('courseTest')
+  static Future<String> getCourseDocumentID(String shortCode, FirebaseFirestore firestore) async {
+    QuerySnapshot query = await firestore
+        .collection('courses')
         .where('shortCode', isEqualTo: shortCode)
         .get();
 

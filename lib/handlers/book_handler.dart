@@ -1,4 +1,5 @@
 import 'package:books_finder/books_finder.dart';
+import 'dart:developer';
 
 class BookHandler {
   static Future<Set<String>> getBookEditions(String name) async {
@@ -6,11 +7,13 @@ class BookHandler {
     Set<String> result = {};
 
     for (Book book in bookList) {
-      String stringISBN = book.info.industryIdentifier
-          .firstWhere((element) => element.toString().contains("ISBN_13"))
-          .toString();
+      List<IndustryIdentifier> isbnList = List.from(book.info.industryIdentifier);
 
-      result.add(stringISBN.substring(8, stringISBN.length));
+      for (IndustryIdentifier number in isbnList){
+        if (number.toString().contains('ISBN_13')){
+          result.add(number.toString().substring(8, number.toString().length));
+        }
+      }
     }
 
     return result;
@@ -28,15 +31,17 @@ class BookHandler {
   }
 
   static Future<List<Book>> getBookObjects(String name) async {
-    final List<Book> books = await queryBooks(
+    List<Book> books = await queryBooks(
       name,
-      maxResults: 3,
+      maxResults: 10,
       printType: PrintType.books,
       orderBy: OrderBy.relevance,
     );
 
     books
         .sort((a, b) => b.info.publishedDate!.compareTo(a.info.publishedDate!));
+
+    books = List.from(books.where((book) => book.info.title.toLowerCase().contains(name.toLowerCase())));
 
     return books;
   }

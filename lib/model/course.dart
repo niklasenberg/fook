@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 class Course extends Object {
-  late final String name;
-  late final String shortCode;
-  late final String code;
+  final String name;
+  final String shortCode;
+  final String code;
   Map<String, Set<String>> literature;
 
   Course({
@@ -50,7 +48,7 @@ class Course extends Object {
   List<String> getAllISBN() {
     List<String> result = [];
     for (var i in literature.values) {
-      result.addAll(i as Set<String>);
+      result.addAll(i);
     }
     return result;
   }
@@ -61,5 +59,9 @@ class Course extends Object {
 
   void setLiterature(Map<String, Set<String>> literature) {
     this.literature = literature;
+  }
+
+  String toString() {
+    return name + " " + shortCode + " " + code + " " + literature.toString();
   }
 }
