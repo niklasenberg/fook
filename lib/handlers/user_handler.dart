@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:fook/model/user.dart';
 
-class StudentHandler {
-  static Future<Type> getStudent(String userId) async {
-    QuerySnapshot query = await FirebaseFirestore.instance
-        .collection('users')
-        .where('DocumentId', isEqualTo: userId)
-        .get();
+class UserHandler {
+  static Future<User> getUser(
+      String userId, FirebaseFirestore firestore) async {
+    DocumentSnapshot document =
+        await firestore.collection('users').doc(userId).get();
 
-    return User; //Handlar om att JEremy inte pushat student än
+    return User.fromMap(document.data() as Map<String, dynamic>);
   }
 
   static addUser(User user) async {
     FirebaseFirestore.instance
         .collection('users')
-        .add(user)
+        .add(user.toMap())
         .then((value) => print('Student added'));
   }
 

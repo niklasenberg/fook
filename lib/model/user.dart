@@ -16,7 +16,17 @@ class User {
       courses: List.from(data['courses']),
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'lastName': lastName,
+      'courses': courses,
+    };
+  }
+
 /*
+
   static Future<List<Course>> fetchCourses(dynamic courses) async {
     List<String> x = List.from(courses);
     List<Course> result = [];
