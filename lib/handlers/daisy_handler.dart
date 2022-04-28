@@ -8,8 +8,8 @@ class DaisyHandler {
         'apitest.dsv.su.se', '/rest/public/course/' + code + '/literature'));
 
     Set<String> result = {};
-    log(response.body);
-    if (response.body != null) {
+
+    if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       List<dynamic> literature = data[data.keys.first];
 
