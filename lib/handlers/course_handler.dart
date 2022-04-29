@@ -57,7 +57,7 @@ class CourseHandler {
       course.setLiterature(result);
 
       //Update database
-      firestore
+      await firestore
           .collection('courses')
           .doc(await getCourseDocumentID(course.shortCode, firestore))
           .update(course.toMap());
