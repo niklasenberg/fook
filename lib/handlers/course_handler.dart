@@ -32,7 +32,7 @@ class CourseHandler {
     return result;
   }
 
-  static updateCourses(List<Course> courses, FirebaseFirestore firestore) async {
+  static Future<List<Course>> updateCourses(List<Course> courses, FirebaseFirestore firestore) async {
     for(Course course in courses){
       //Get current ISBN for course from Daisy
       Set<String> isbnList = await DaisyHandler.getISBN(course.getCode());
