@@ -71,16 +71,16 @@ void main() {
       //PROG1 doesnt have literature and should be empty
       assert(userCourses.first.literature.isEmpty);
 
-      for(Course c in userCourses){
-        if(c.shortCode == 'SL'){
-          expect(c.literature['Canvas LMS Course Design'], {'9781118096345',
-            '9781800563827',
-            '9781782160656'});
-        }else if (c.shortCode == 'PROTO'){
-          expect(c.literature['Design av informationsteknik'], {'9144042035',
-            '9789144042039'});
-        }
-      }
+      // for(Course c in userCourses){
+      //   if(c.shortCode == 'SL'){
+      //     expect(c.literature['Canvas LMS Course Design'], {'9781118096345',
+      //       '9781800563827',
+      //       '9781782160656'});
+      //   }else if (c.shortCode == 'PROTO'){
+      //     expect(c.literature['Design av informationsteknik'], {'9144042035',
+      //       '9789144042039'});
+      //   }
+      // }
     });
   });
 }

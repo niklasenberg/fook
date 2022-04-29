@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:fook/model/user.dart';
 
 class UserHandler {
@@ -18,7 +17,9 @@ class UserHandler {
         .then((value) => print('Student added'));
   }
 
-  static void updateUsername(String userName) async {}
+  static void updateUsername(String username) async {
+
+  }
 
   static Future<String> getCourseDocumentID(String shortCode) async {
     QuerySnapshot query = await FirebaseFirestore.instance
