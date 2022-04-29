@@ -26,6 +26,7 @@ jobs:
     
     # Get flutter dependencies.
     - run: flutter pub get
+    - run: flutter pub upgrade
     - run: flutter test
     
     # Build apk.
