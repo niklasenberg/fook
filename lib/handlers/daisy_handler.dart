@@ -9,7 +9,7 @@ class DaisyHandler {
 
     Set<String> result = {};
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 && response.body != '{}') {
       Map<String, dynamic> data = jsonDecode(response.body);
       List<dynamic> literature = data[data.keys.first];
 

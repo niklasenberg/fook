@@ -54,7 +54,11 @@ class Course extends Object {
   }
 
   Set<String> getISBN(String name) {
-    return literature[name]!;
+    if(literature[name] != null){
+      return literature[name]!;
+    }else{
+      return <String>{};
+    }
   }
 
   void setLiterature(Map<String, Set<String>> literature) {

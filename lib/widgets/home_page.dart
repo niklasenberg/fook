@@ -5,20 +5,30 @@ import 'package:fook/model/course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: CourseHandler.getCourse('VESK (AB-period)', FirebaseFirestore.instance),
+            future: _update(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                Course course = snapshot.data as Course;
+                List<Course> courses = snapshot.data as List<Course>;
                 return Text(
-                  course.getAllISBN().first,
+                  courses.toString(),
                   style: const TextStyle(
                     color: Colors.white,
                   ),
@@ -44,7 +54,12 @@ class HomePage extends StatelessWidget {
 
 signOut(BuildContext context) async {
   await FirebaseAuth.instance.signOut();
-
   Navigator.pushReplacement(
       context, MaterialPageRoute(builder: (context) => const LoginPage()));
+}
+
+Future<List<Course>> _update() async {
+  List<Course> courses = await CourseHandler.getUserCourses(
+      FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
+  return await CourseHandler.updateCourses(courses, FirebaseFirestore.instance);
 }

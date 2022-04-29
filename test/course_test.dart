@@ -19,15 +19,21 @@ void main() {
       });
 
       //Get mock course
-      Course course = await CourseHandler.getCourse('VESK (AB-period)', firestore);
+      List<Course> courses = [];
+      courses.add(await CourseHandler.getCourse('VESK (AB-period)', firestore));
+      courses.add(await CourseHandler.getCourse('EMDSV', firestore));
       //Update mock course
-      await CourseHandler.updateLiterature(course, firestore);
+      await CourseHandler.updateCourses(courses, firestore);
+
 
       //Assert results
-      for (String name in course.getBookName()){
+      for (Course course in courses){
         Set<String> daisyISBNs = await DaisyHandler.getISBN(course.code);
-        assert(daisyISBNs.contains(course.getISBN(name).first));
-        assert(course.getISBN(name).length <= 10);
+
+        if(course.getISBN(course.name).isNotEmpty){
+          assert(daisyISBNs.contains(course.getISBN(course.name).first));
+          assert(course.getISBN(course.name).length <= 10);
+        }
       }
     });
 
