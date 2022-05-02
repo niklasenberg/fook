@@ -16,6 +16,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    populate();
   }
 
   @override
@@ -62,4 +63,13 @@ Future<List<Course>> _update() async {
   List<Course> courses = await CourseHandler.getUserCourses(
       FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
   return await CourseHandler.updateCourses(courses, FirebaseFirestore.instance);
+}
+
+void populate() async {
+  const message = {};
+  await FirebaseFirestore.instance
+      .collection("chats")
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection("messages")
+      .add({});
 }
