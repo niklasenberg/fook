@@ -21,7 +21,7 @@ void main() {
       List<Book> result =
           await BookHandler.getBookObjects('The craft of research');
       for (Book b in result) {
-        assert(b.info.title.toLowerCase().contains('the craft of research'));
+        assert((b.info.title + " " + b.info.subtitle).trim().toLowerCase().contains('the craft of research'));
       }
     });
   });

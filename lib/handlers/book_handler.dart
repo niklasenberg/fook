@@ -7,11 +7,11 @@ class BookHandler {
     Set<String> result = {};
 
     for (Book book in bookList) {
-      List<IndustryIdentifier> isbnList = List.from(book.info.industryIdentifier);
+      List<IndustryIdentifier> isbnList = List.from(book.info.industryIdentifiers);
 
       for (IndustryIdentifier number in isbnList){
-        if (number.toString().contains('ISBN_13')){
-          result.add(number.toString().substring(8, number.toString().length));
+        if (number.type == 'ISBN_13'){
+          result.add(number.identifier);
         }
       }
     }
@@ -27,7 +27,7 @@ class BookHandler {
       orderBy: OrderBy.relevance,
     );
 
-    return books[0].info.title;
+    return (books[0].info.title + " " + books[0].info.subtitle).trim();
   }
 
   static Future<List<Book>> getBookObjects(String name) async {
@@ -41,7 +41,7 @@ class BookHandler {
     books
         .sort((a, b) => b.info.publishedDate!.compareTo(a.info.publishedDate!));
 
-    books = List.from(books.where((book) => book.info.title.toLowerCase().contains(name.toLowerCase())));
+    books = List.from(books.where((book) => (book.info.title + " " + book.info.subtitle).toLowerCase().trim().contains(name.toLowerCase())));
 
     return books;
   }
