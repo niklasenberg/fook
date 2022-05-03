@@ -17,7 +17,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder(
-      future: _getInfo(),
+      future: UserHandler.getInfo(
+          FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Object> list = snapshot.data as List<Object>;
@@ -77,15 +78,4 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     ));
   }
-}
-
-Future<List<Object>> _getInfo() async {
-  List<Object> result = [];
-
-  result.add(await UserHandler.getUser(
-      FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance));
-  result.add(await UserHandler.getPhotoUrl(
-      FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance));
-
-  return result;
 }

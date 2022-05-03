@@ -18,11 +18,23 @@ class UserHandler {
         .then((value) => print('Student added'));
   }
 
-  static Future<String> getPhotoUrl(String userId, FirebaseFirestore firestore) async {
-    return FirebaseStorage.instance.ref().child(userId + ".png").getDownloadURL();
+  static Future<String> getPhotoUrl(
+      String userId, FirebaseFirestore firestore) async {
+    return FirebaseStorage.instance
+        .ref()
+        .child(userId + ".png")
+        .getDownloadURL();
   }
 
-  static void updateUsername(String username) async {
+  static void updateUsername(String username) async {}
 
+  static Future<List<Object>> getInfo(
+      String uId, FirebaseFirestore firestore) async {
+    List<Object> result = [];
+
+    result.add(await UserHandler.getUser(uId, firestore));
+    result.add(await UserHandler.getPhotoUrl(uId, firestore));
+
+    return result;
   }
 }
