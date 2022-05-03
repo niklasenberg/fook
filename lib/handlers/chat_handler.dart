@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:fook/model/chat.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatHandler {
   static Stream<QuerySnapshot> getChats(String uId) {
@@ -18,9 +17,9 @@ class ChatHandler {
   }
 
   Future<bool> checkChatExistsOrNot(
-      {@required tring username1, @required String username2}) async {
-    String chatId = generateChatId(username1: username1, username2: username2);
-    DocumentSnapshot doc = await _db.collection('chats').doc(chatId).get();
+      String username1, String username2) async {
+    String chatId = generateChatId(username1, username2);
+    DocumentSnapshot doc = await FirebaseFirestore.instance.collection('chats').doc(chatId).get();
     return doc.exists;
   }
 }
