@@ -3,16 +3,19 @@ class Course extends Object {
   final String shortCode;
   final String code;
   Map<String, Set<String>> literature;
+  Set<String> isbnNumbers;
 
   Course({
     required this.name,
     required this.shortCode,
+    required this.isbnNumbers,
     required this.code,
     required this.literature,
   });
 
   factory Course.fromMap(Map<String, dynamic> map) => Course(
         name: map["name"],
+        isbnNumbers: Set<String>.from(map['isbnNumbers']),
         shortCode: map["shortCode"],
         code: map["code"],
         literature: (map['literature'] as Map<String, dynamic>)
@@ -26,6 +29,7 @@ class Course extends Object {
       'code': code,
       'literature':
           literature.map((key, value) => MapEntry(key, (value.toList()))),
+      'isbnNumbers': isbnNumbers.toList(),
     };
   }
 
@@ -45,12 +49,8 @@ class Course extends Object {
     return List.from(literature.keys);
   }
 
-  List<String> getAllISBN() {
-    List<String> result = [];
-    for (var i in literature.values) {
-      result.addAll(i);
-    }
-    return result;
+  Set<String> getIsbnNumbers() {
+    return isbnNumbers;
   }
 
   Set<String> getISBN(String name) {
@@ -65,7 +65,11 @@ class Course extends Object {
     this.literature = literature;
   }
 
+  void setIsbnNumbers(Set<String> numbers){
+    isbnNumbers = numbers;
+  }
+
   String toString() {
-    return name + " " + shortCode + " " + code + " " + literature.toString();
+    return name + " " + shortCode + " " + code + " " + literature.toString() + " " + isbnNumbers.toString();
   }
 }

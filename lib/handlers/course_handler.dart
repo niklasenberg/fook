@@ -18,11 +18,7 @@ class CourseHandler {
       return Course.fromMap(query.docs[0].data() as Map<String, dynamic>);
     } else {
       //This shouldn't happen
-      return Course(
-          code: '?',
-          shortCode: '?',
-          name: '?',
-          literature: <String, Set<String>>{});
+      return Course(code: '?',shortCode: '?',name: '?',literature: <String, Set<String>>{}, isbnNumbers: <String>{});
     }
   }
 
@@ -54,16 +50,19 @@ class CourseHandler {
       }
 
       //Use these names to get other book versions
+      Set<String> numbers = {};
       int index = 0;
       for (var name in names) {
         result[name] = {};
         result[name]!.add(isbnList.elementAt(index));
         result[name]!.addAll(await BookHandler.getBookEditions(name));
+        numbers.addAll(result[name]!);
         index++;
       }
 
       //Update course object
       course.setLiterature(result);
+      course.setIsbnNumbers(numbers);
 
       //Update database
       await firestore
