@@ -5,6 +5,7 @@ import 'package:fook/handlers/user_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/model/chat.dart';
 import 'package:fook/widgets/chat_detailed_page.dart';
+import 'package:fook/model/user.dart' as fook;
 
 class ChatsPage extends StatefulWidget {
   const ChatsPage({Key? key}) : super(key: key);
@@ -25,21 +26,21 @@ class _ChatPageState extends State<ChatsPage> {
       ),
       // key: _scaffKey,
       body: FutureBuilder(
-        future: UserHandler.getInfo(
+        future: UserHandler.getUser(
             FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
         builder: (BuildContext context, AsyncSnapshot userDataSnapshot) {
           if (userDataSnapshot.hasData) {
-            Map<dynamic, dynamic> user = userDataSnapshot.data;
-            String myId = user['uid'];
+            fook.User user = userDataSnapshot.data;
+            String myId = FirebaseAuth.instance.currentUser!.uid;
             return StreamBuilder(
-              stream: ChatHandler.getUserByUsername(
+              stream: ChatHandler.getChats(
                   FirebaseAuth.instance.currentUser!.uid,
                   FirebaseFirestore.instance),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   QuerySnapshot qSnap = snapshot.data as QuerySnapshot;
                   List<DocumentSnapshot> docs = qSnap.docs;
-                  if (docs.length == 0)
+                  if (docs.isEmpty)
                     return Center(
                       child: Text('No Chats yet!'),
                     );
@@ -58,10 +59,8 @@ class _ChatPageState extends State<ChatsPage> {
                             FirebaseFirestore.instance),
                         builder: (context, _snapshot) {
                           if (_snapshot.hasData) {
-                            DocumentSnapshot docSnapUser =
-                                _snapshot.data as DocumentSnapshot;
-                            Map<String, dynamic> _user =
-                                docSnapUser.data() as Map<String, dynamic>;
+                            fook.User otherUser = _snapshot as fook.User;
+
                             return Card(
                               margin: EdgeInsets.all(8.0),
                               elevation: 8.0,
@@ -86,7 +85,7 @@ class _ChatPageState extends State<ChatsPage> {
                                   child: Center(
                                     child: Row(
                                       children: [
-                                        Hero(
+                                        /* Hero(
                                           tag: _user['photo'].toString(),
                                           child: Container(
                                             width: MediaQuery.of(context)
@@ -107,7 +106,7 @@ class _ChatPageState extends State<ChatsPage> {
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ),*/
                                         SizedBox(
                                           width: MediaQuery.of(context)
                                                   .size
@@ -120,14 +119,14 @@ class _ChatPageState extends State<ChatsPage> {
                                                   .width *
                                               0.43,
                                           child: Text(
-                                            _user['name'].toString(),
+                                            user.name.toString(),
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
+                                        /*SizedBox(
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
@@ -139,7 +138,7 @@ class _ChatPageState extends State<ChatsPage> {
                                                     String,
                                                     dynamic>)['lastActive']),
                                           ),
-                                        ),
+                                        ),*/
                                       ],
                                     ),
                                   ),

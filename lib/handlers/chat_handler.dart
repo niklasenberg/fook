@@ -1,10 +1,14 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fook/model/user.dart' as fook;
 
 class ChatHandler {
-  static getUserByUsername(String username, FirebaseFirestore firestore) async {
-    return await firestore.collection('users').doc(username).get();
+  static getUserByUsername(String uId, FirebaseFirestore firestore) async {
+    return fook.User.fromMap(await firestore.collection('users').doc(uId).get()
+        as Map<String, dynamic>);
   }
+
+  getUserChats() {}
 
   static getChat(
     String userId,
@@ -19,11 +23,12 @@ class ChatHandler {
         .snapshots();
   }
 
-  static Stream<QuerySnapshot> getChats(String uId) {
-    return FirebaseFirestore.instance
+  static Stream<QuerySnapshot> getChats(
+      String uId, FirebaseFirestore firestore) {
+    return firestore
         .collection("chats")
         .where("members", arrayContains: uId)
-        .orderBy("lastActive", descending: true)
+        //.orderBy("lastActive", descending: true)
         .snapshots();
   }
 
