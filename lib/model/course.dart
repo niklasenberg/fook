@@ -15,7 +15,7 @@ class Course extends Object {
 
   factory Course.fromMap(Map<String, dynamic> map) => Course(
         name: map["name"],
-        isbnNumbers: Set<String>.from(map['isbnNumbers']),
+        isbnNumbers: Set<String>.from(map['isbnNumbers'] ?? {}),
         shortCode: map["shortCode"],
         code: map["code"],
         literature: (map['literature'] as Map<String, dynamic>)

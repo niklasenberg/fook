@@ -51,4 +51,12 @@ class SaleHandler {
         .doc(sale.getSaleID())
         .set(sale.toMap());
   }
+
+  //addsale
+/*
+*/
+
+  //is there a corresponding course
+  // vill kolla om isbn finns i befintliga isbn
+  //static Future<boolean> isValid()
 }

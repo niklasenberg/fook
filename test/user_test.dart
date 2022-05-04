@@ -15,21 +15,24 @@ void main() {
       'name': 'Programmering 1',
       'shortCode': 'PROG1',
       'code': 'IB133N',
-      'literature': {'boken till prog1': ['isbn1', 'isbn2']}
+      'literature': {'boken till prog1': ['isbn1', 'isbn2']},
+      'isbnNumbers': ['123']
     });
 
     await firestore.collection('courses').doc('1').set({
       'name': 'PrototypkursN',
       'shortCode': 'PROTO',
       'code': 'IB711C',
-      'literature': {'Prototyping:':  ['123', '124']}
+      'literature': {'Prototyping:':  ['123', '124']},
+      'isbnNumbers': ['123']
     });
 
     await firestore.collection('courses').doc('2').set({
       'name': 'Spelbaserat lärande',
       'shortCode': 'SL',
       'code': 'IB530C',
-      'literature': {'placeholder':  ['456', '789']}
+      'literature': {'placeholder':  ['456', '789']},
+      'isbnNumbers': ['123']
     });
 
     await firestore.collection('users').doc('boomerFc').set({
