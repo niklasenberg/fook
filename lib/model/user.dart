@@ -3,15 +3,11 @@
 class User {
   final String name;
   final String lastName;
-  final String uuid;
-  //var uuid = const Uuid().v4();
   final List<String> courses;
 
   User({
     required this.name,
     required this.lastName,
-    required this.uuid,
-    //required this.uuid,
     required this.courses,
   });
 
@@ -19,8 +15,6 @@ class User {
     return User(
       name: data['name'],
       lastName: data['lastName'],
-      uuid: data['uuid'],
-      //uuid: data['uuid'],
       courses: List.from(data['courses']),
     );
   }
@@ -29,8 +23,6 @@ class User {
     return {
       'name': name,
       'lastName': lastName,
-      'uuid': uuid,
-      //'id': uuid,
       'courses': courses,
     };
   }

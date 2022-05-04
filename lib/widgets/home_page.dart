@@ -59,6 +59,10 @@ signOut(BuildContext context) async {
 }
 
 Future<List<Course>> _update() async {
+  // List<Course> courses = [];
+  // courses.add(await CourseHandler.getCourse('SL', FirebaseFirestore.instance));
+  // return courses;
+
   List<Course> courses = await CourseHandler.getUserCourses(
       FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
   return await CourseHandler.updateCourses(courses, FirebaseFirestore.instance);
