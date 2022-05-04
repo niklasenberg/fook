@@ -1,27 +1,26 @@
-/*import 'dart:io';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fook/handlers/chat_handler.dart';
+import 'package:fook/widgets/profile_page.dart';
 
 class ChatDetailed extends StatefulWidget {
   Map<String, dynamic> userData;
-  ChatDetailed({this.userData});
+  ChatDetailed(this.userData);
   @override
   _ChatDetailedState createState() => _ChatDetailedState();
 }
 
 class _ChatDetailedState extends State<ChatDetailed> {
-  String myId, userId;
-  TextEditingController messageController;
+  late String myId, userId;
+  late TextEditingController messageController;
   Timestamp past = new Timestamp.fromDate(new DateTime(2019));
-  DatabaseHelper dbHelper;
-  String chatId;
-  OfflineStorage offlineStorage;
-  Map<String, dynamic> userData;
+  late String chatId;
+  late Map<String, dynamic> userData;
   final _scaffKey = GlobalKey<ScaffoldState>();
 
-  final ImagePicker _picker = ImagePicker();
+  //final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -36,10 +35,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
             Map<dynamic, dynamic> user = val;
             userId = widget.userData['uid'].toString();
             myId = user['uid'].toString();
-            chatId = dbHelper.generateChatId(
-              username1: myId,
-              username2: userId,
-            );
+            chatId = ChatHandler.generateChatId(myId, userId);
             userData = widget.userData;
           },
         );
@@ -59,7 +55,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfileScreen(
+                  builder: (context) => ProfilePage(
                     userData: userData,
                   ),
                 ),
@@ -182,8 +178,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
               String message = messageController.text;
               if (message.isNotEmpty) {
                 messageController.clear();
-                await dbHelper.sendMessage(
-                    to: userId, from: myId, isText: true, msg: message);
+                await ChatHandler.sendMessage(
+                    userId, myId, true, message, fsadasd); //Path?
               }
             },
             child: Icon(
@@ -198,7 +194,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
 
   StreamBuilder<QuerySnapshot> _chatBody(String userId) {
     return StreamBuilder(
-      stream: dbHelper.getChat(userId: userId, myId: myId),
+      stream: ChatHandler.getChat(userId, myId),
       builder: (context, snapshot) {
         if (snapshot.hasData)
           return snapshot.data.docs.length != 0
@@ -265,15 +261,15 @@ class _ChatDetailedState extends State<ChatDetailed> {
   }
 
   _messageItem(DocumentSnapshot message, BuildContext context) {
-    final bool isMe = message.data()['from'] == myId;
-    Timestamp time = message.data()['time'];
+    final bool isMe = (message.data() as Map<String, dynamic>)['from'] == myId;
+    Timestamp time = (message.data() as Map<String, dynamic>)['time'];
     DateTime ttime = time.toDate();
     String minute = ttime.minute > 9
         ? ttime.minute.toString()
         : '0' + ttime.minute.toString();
     String ampm = ttime.hour >= 12 ? "PM" : "AM";
     int hour = ttime.hour >= 12 ? ttime.hour % 12 : ttime.hour;
-    if (message.data()['isText'])
+    if ((message.data() as Map<String, dynamic>)['isText'])
       return Align(
         alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
         child: Container(
@@ -301,7 +297,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                 ),
               ),
               Text(
-                message.data()['message'].toString(),
+                (message.data() as Map<String, dynamic>)['message'].toString(),
                 style: TextStyle(
                   color: isMe
                       ? Theme.of(context).colorScheme.onSecondary
@@ -328,7 +324,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
         ),
       );
     return FutureBuilder(
-      future: dbHelper.getURLforImage(message.data()['photo'].toString()),
+      future: ChatHandler.getURLforImage(message.data()['photo'].toString()),
       builder: (context, snapshot) {
         return Align(
           alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -601,4 +597,4 @@ class _ChatDetailedState extends State<ChatDetailed> {
     );
     _scaffKey.currentState.showSnackBar(snackMe);
   }
-}*/
+}

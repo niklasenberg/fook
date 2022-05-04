@@ -19,7 +19,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder(
-      future: UserHandler.getInfo(FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
+      future: UserHandler.getInfo(
+          FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Object> list = snapshot.data as List<Object>;
@@ -46,9 +47,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       Text(
                         (list[0] as fook.User).name,
-                      ),
-                      Text(
-                           list[2].toString(),
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,

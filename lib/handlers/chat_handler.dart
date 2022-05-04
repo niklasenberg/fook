@@ -1,12 +1,22 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:firebase_chatapp/Helper/Constants.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 
 class ChatHandler {
   static getUserByUsername(String username, FirebaseFirestore firestore) async {
     return await firestore.collection('users').doc(username).get();
+  }
+
+  static getChat(
+    String userId,
+    String myId,
+  ) {
+    String chatId = generateChatId(userId, myId);
+    return FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('time', descending: true)
+        .snapshots();
   }
 
   static Stream<QuerySnapshot> getChats(String uId) {
@@ -23,14 +33,15 @@ class ChatHandler {
         : username2.toString() + '-' + username1.toString();
   }
 
-  Future<bool> checkChatExistsOrNot(String username1, String username2) async {
+  static Future<bool> checkChatExistsOrNot(
+      String username1, String username2) async {
     String chatId = generateChatId(username1, username2);
     DocumentSnapshot doc =
         await FirebaseFirestore.instance.collection('chats').doc(chatId).get();
     return doc.exists;
   }
 
-  sendMessage(
+  static sendMessage(
     String to,
     String from,
     bool isText,

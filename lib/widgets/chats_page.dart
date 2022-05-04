@@ -68,8 +68,86 @@ class _ChatPageState extends State<ChatsPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
+                              child: InkWell(
+                                splashColor:
+                                    Theme.of(context).colorScheme.primary,
+                                /*onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatsDetailed(
+                                      _user
+                                    ),
+                                  ),*/
+
+                                child: Container(
+                                  margin: EdgeInsets.all(10.0),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.08,
+                                  child: Center(
+                                    child: Row(
+                                      children: [
+                                        Hero(
+                                          tag: _user['photo'].toString(),
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.15,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.15,
+                                            decoration: new BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: new DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: new NetworkImage(
+                                                  _user['photo'].toString(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.02,
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.43,
+                                          child: Text(
+                                            _user['name'].toString(),
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.3,
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: _timeDivider(
+                                                (docs[index].data() as Map<
+                                                    String,
+                                                    dynamic>)['lastActive']),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                             );
                           }
+
                           return Card(
                             margin: EdgeInsets.all(8.0),
                             elevation: 8.0,
