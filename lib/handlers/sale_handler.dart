@@ -29,7 +29,6 @@ class SaleHandler {
     return sales;
   }
 
-<<<<<<< Updated upstream
   //Checks if isbn is found in courses
   static Future<bool> isIsbnInCourses(
       String isbn, FirebaseFirestore firestore) async {
@@ -44,15 +43,12 @@ class SaleHandler {
       return false;
     }
   }
-
-=======
   //addsale
 /*
 */
 
   //is there a corresponding course
   // vill kolla om isbn finns i befintliga isbn
->>>>>>> Stashed changes
   //static Future<boolean> isValid()
 
 }
