@@ -32,8 +32,8 @@ class UserHandler {
 
   static Future<List<Object>> getInfo(
       String uId, FirebaseFirestore firestore) async {
-
-    List<Course> courses = await CourseHandler.updateUserCourses(uId, firestore);
+    List<Course> courses =
+        await CourseHandler.updateUserCourses(uId, firestore);
     List<Object> result = [];
 
     result.add(await UserHandler.getUser(uId, firestore));
