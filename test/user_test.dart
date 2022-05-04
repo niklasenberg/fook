@@ -1,3 +1,4 @@
+import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/course.dart';
@@ -73,11 +74,12 @@ void main() {
 
       for(Course c in userCourses){
         if(c.shortCode == 'SL'){
-          expect(c.literature['Canvas LMS Course Design'], {'9781118096345',
-            '9781800563827',
-            '9781782160656'});
+          var name = await BookHandler.getBookName('9781118096345');
+          expect(c.literature[name], {'9781118096345',
+            '1118096347'});
         }else if (c.shortCode == 'PROTO'){
-          expect(c.literature['Design av informationsteknik'], {'9144042035',
+          var name = await BookHandler.getBookName('9144042035');
+          expect(c.literature[name], {'9144042035',
             '9789144042039'});
         }
       }
