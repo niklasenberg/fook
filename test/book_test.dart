@@ -1,6 +1,6 @@
-import 'package:books_finder/books_finder.dart';
 import 'package:test/test.dart';
 import 'package:fook/handlers/book_handler.dart';
+import 'package:fook/model/book.dart';
 
 void main() {
   group('Book tests', () {
@@ -23,6 +23,14 @@ void main() {
       for (Book b in result) {
         assert((b.info.title + " " + b.info.subtitle).trim().toLowerCase().contains('the craft of research'));
       }
+    });
+
+    test('Get correct books', () async {
+      // String bookOne = await BookHandler.getBookName('9781408855652');
+      // expect(bookOne, "harry potter and the philosopher's stone");
+
+      // String bookTwo = await BookHandler.getBookName('9789100126537');
+      // expect(bookTwo.toLowerCase(), "jag är zlatan ibrahimovic");
     });
   });
 }

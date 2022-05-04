@@ -43,7 +43,7 @@ dependencies:
   test: ^1.19.5
   books_finder: ^4.3.0
   fake_cloud_firestore: ^1.2.2
-  uuid: ^3.0.6
+  firebase_storage: ^10.2.14
 
 dev_dependencies:
   flutter_test:

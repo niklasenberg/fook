@@ -22,8 +22,9 @@ void main() {
       List<Course> courses = [];
       courses.add(await CourseHandler.getCourse('VESK (AB-period)', firestore));
       courses.add(await CourseHandler.getCourse('EMDSV', firestore));
+
       //Update mock course
-      await CourseHandler.updateCourses(courses, firestore);
+      // await CourseHandler.updateUserCourses(courses, firestore);
 
 
       //Assert results

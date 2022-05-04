@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/model/user.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fook/handlers/course_handler.dart';
+import 'package:fook/model/course.dart';
 
 class UserHandler {
   static Future<User> getUser(
@@ -17,16 +20,26 @@ class UserHandler {
         .then((value) => print('Student added'));
   }
 
-  static void updateUsername(String username) async {
-
+  static Future<String> getPhotoUrl(
+      String userId, FirebaseFirestore firestore) async {
+    return FirebaseStorage.instance
+        .ref()
+        .child(userId + ".png")
+        .getDownloadURL();
   }
 
-  static Future<String> getCourseDocumentID(String shortCode) async {
-    QuerySnapshot query = await FirebaseFirestore.instance
-        .collection('courseTest')
-        .where('shortCode', isEqualTo: shortCode)
-        .get();
+  static void updateUsername(String username) async {}
 
-    return query.docs[0].id;
+  static Future<List<Object>> getInfo(
+      String uId, FirebaseFirestore firestore) async {
+
+    List<Course> courses = await CourseHandler.updateUserCourses(uId, firestore);
+    List<Object> result = [];
+
+    result.add(await UserHandler.getUser(uId, firestore));
+    result.add(await UserHandler.getPhotoUrl(uId, firestore));
+    result.add(courses);
+
+    return result;
   }
 }
