@@ -6,6 +6,7 @@ class Sale {
   final String course;
   Condition condition;
   int price;
+  final String saleID;
 
   Sale({
     required this.isbn,
@@ -13,6 +14,7 @@ class Sale {
     required this.course,
     required this.condition,
     required this.price,
+    required this.saleID,
   });
 
   factory Sale.fromMap(Map<String, dynamic> data) {
@@ -22,6 +24,7 @@ class Sale {
       course: data['course'],
       condition: data['condition'],
       price: data['price'],
+      saleID: data['saleID'],
     );
   }
 
@@ -32,6 +35,7 @@ class Sale {
       'course': course,
       'condition': condition,
       'price': price,
+      'saleID': saleID,
     };
   }
 
@@ -53,5 +57,9 @@ class Sale {
 
   String getuserID() {
     return userID;
+  }
+
+  String getSaleID() {
+    return saleID;
   }
 }
