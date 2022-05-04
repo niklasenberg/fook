@@ -38,9 +38,9 @@ class SaleHandler {
         .get();
 
     if (query.docs.isNotEmpty) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   }
 

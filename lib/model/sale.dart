@@ -59,6 +59,10 @@ class Sale {
     return userID;
   }
 
+  int getPrice() {
+    return price;
+  }
+
   String getSaleID() {
     return saleID;
   }
