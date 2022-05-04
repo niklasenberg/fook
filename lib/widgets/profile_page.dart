@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/widgets/chats_page.dart';
+import 'package:fook/model/course.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -45,6 +47,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       Text(
                         (list[0] as fook.User).name,
                       ),
+                      Text(
+                           list[2].toString(),
+                      ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,
                       ),
@@ -80,12 +85,15 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 Future<List<Object>> _getInfo() async {
-  List<Object> result = [];
 
+  List<Course> courses = await CourseHandler.updateUserCourses(FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
+
+  List<Object> result = [];
   result.add(await UserHandler.getUser(
       FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance));
   result.add(await UserHandler.getPhotoUrl(
       FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance));
+  result.add(courses);
 
   return result;
 }
