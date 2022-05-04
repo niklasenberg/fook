@@ -29,8 +29,20 @@ class SaleHandler {
     return sales;
   }
 
-  //is there a corresponding course
-  // vill kolla om isbn finns i befintliga isbn
+  //Checks if isbn is found in courses
+  static Future<bool> isIsbnInCourses(
+      String isbn, FirebaseFirestore firestore) async {
+    QuerySnapshot query = await firestore
+        .collection('courses')
+        .where('isbnNumbers', isEqualTo: isbn)
+        .get();
+
+    if (query.docs.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   //static Future<boolean> isValid()
 
