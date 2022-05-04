@@ -1,5 +1,3 @@
-//import 'package:uuid/uuid.dart';
-
 class User {
   final String name;
   final String lastName;
