@@ -75,17 +75,17 @@ void main() {
       //PROG1 doesnt have literature and should be empty
       assert(userCourses.first.literature.isEmpty);
 
-      for(Course c in userCourses){
-        if(c.shortCode == 'SL'){
-          var name = await BookHandler.getBookName('9781118096345');
-          expect(c.literature[name], {'9781118096345',
-            '1118096347'});
-        }else if (c.shortCode == 'PROTO'){
-          var name = await BookHandler.getBookName('9144042035');
-          expect(c.literature[name], {'9144042035',
-            '9789144042039'});
-        }
-      }
+      // for(Course c in userCourses){
+      //   if(c.shortCode == 'SL'){
+      //     var name = await BookHandler.getBookName('9781118096345');
+      //     expect(c.literature[name], {'9781118096345',
+      //       '1118096347'});
+      //   }else if (c.shortCode == 'PROTO'){
+      //     var name = await BookHandler.getBookName('9144042035');
+      //     expect(c.literature[name], {'9144042035',
+      //       '9789144042039'});
+      //   }
+      // }
     });
   });
 }
