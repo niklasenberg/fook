@@ -7,30 +7,37 @@ import 'package:fook/model/user.dart' as fook;
 import 'package:firebase_auth/firebase_auth.dart';
 
 class CourseHandler {
-  static Future<Course> getCourse(String shortCode, FirebaseFirestore firestore) async {
+  static Future<Course> getCourse(
+      String shortCode, FirebaseFirestore firestore) async {
     QuerySnapshot query = await firestore
         .collection('courses')
         .where('shortCode', isEqualTo: shortCode)
         .get();
 
-    if (query.docs.isNotEmpty){
+    if (query.docs.isNotEmpty) {
       return Course.fromMap(query.docs[0].data() as Map<String, dynamic>);
-    }else{
+    } else {
       //This shouldn't happen
-      return Course(code: '?',shortCode: '?',name: '?',literature: <String, Set<String>>{});
+      return Course(
+          code: '?',
+          shortCode: '?',
+          name: '?',
+          literature: <String, Set<String>>{});
     }
   }
 
-  static Future<List<Course>> getUserCourses(String uid, FirebaseFirestore firestore) async {
+  static Future<List<Course>> getUserCourses(
+      String uid, FirebaseFirestore firestore) async {
     fook.User user = await UserHandler.getUser(uid, firestore);
     List<String> shortCodes = user.courses;
     List<Course> result = [];
-    for(String shortCode in shortCodes){
+    for (String shortCode in shortCodes) {
       result.add(await CourseHandler.getCourse(shortCode, firestore));
     }
 
     return result;
   }
+
 
   static Future<List<Course>> updateUserCourses(String uid, FirebaseFirestore firestore) async {
     List<Course> courses = await getUserCourses(uid, firestore);
@@ -68,16 +75,29 @@ class CourseHandler {
     return courses;
   }
 
-  static Future<String> getCourseDocumentID(String shortCode, FirebaseFirestore firestore) async {
+  static Future<String> getCourseDocumentID(
+      String shortCode, FirebaseFirestore firestore) async {
     QuerySnapshot query = await firestore
         .collection('courses')
         .where('shortCode', isEqualTo: shortCode)
         .get();
 
-    if(query.docs.isNotEmpty){
+    if (query.docs.isNotEmpty) {
       return query.docs[0].id;
-    }else{
+    } else {
       return 'not found';
     }
+  }
+
+  static Future<List<Object>> getInfo(
+      String uId, FirebaseFirestore firestore) async {
+    List<Object> result = [];
+
+    result.add(await UserHandler.getUser(
+        FirebaseAuth.instance.currentUser!.uid, firestore));
+    result.add(await UserHandler.getPhotoUrl(
+        FirebaseAuth.instance.currentUser!.uid, firestore));
+
+    return result;
   }
 }

@@ -19,7 +19,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder(
-      future: _getInfo(),
+      future: UserHandler.getInfo(
+          FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Object> list = snapshot.data as List<Object>;
