@@ -1,9 +1,9 @@
-import 'package:books_finder/books_finder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:fook/handlers/sale_handler.dart';
 import 'package:test/test.dart';
 import 'package:fook/handlers/book_handler.dart';
+import 'package:fook/model/book.dart';
 
 void main() {
   group('Sale tests', () {

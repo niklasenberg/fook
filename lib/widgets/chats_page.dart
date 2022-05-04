@@ -97,11 +97,11 @@ class _ChatPageState extends State<ChatsPage> {
                                                     .size
                                                     .width *
                                                 0.15,
-                                            decoration: new BoxDecoration(
+                                            decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              image: new DecorationImage(
+                                              image: DecorationImage(
                                                 fit: BoxFit.cover,
-                                                image: new NetworkImage(
+                                                image: NetworkImage(
                                                   _user['photo'].toString(),
                                                 ),
                                               ),
