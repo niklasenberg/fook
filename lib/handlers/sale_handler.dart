@@ -34,10 +34,10 @@ class SaleHandler {
       String isbn, FirebaseFirestore firestore) async {
     QuerySnapshot query = await firestore
         .collection('courses')
-        .where('isbnNumbers', isEqualTo: isbn)
+        .where('isbnNumbers', arrayContains: isbn)
         .get();
 
-    if (query.docs.isNotEmpty) {
+    if (query.docs.isEmpty) {
       return false;
     } else {
       return true;
