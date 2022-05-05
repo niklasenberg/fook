@@ -182,7 +182,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
               if (message.isNotEmpty) {
                 messageController.clear();
                 await ChatHandler.sendMessage(
-                    userId, myId, true, message); //Path? Behövs bara om man ska skicka bilder
+                    userId, myId, true, message, FirebaseFirestore.instance); //Path? Behövs bara om man ska skicka bilder
               }
             },
             child: Icon(
@@ -197,7 +197,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
 
   StreamBuilder<QuerySnapshot> _chatBody(String userId) {
     return StreamBuilder(
-      stream: ChatHandler.getChat(userId, myId),
+      stream: ChatHandler.getChat(userId, myId, FirebaseFirestore.instance),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!.docs.isNotEmpty
