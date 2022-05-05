@@ -1,17 +1,13 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatHandler {
-  static getUserByUsername(String username, FirebaseFirestore firestore) async {
-    return await firestore.collection('users').doc(username).get();
-  }
-
   static getChat(
     String userId,
     String myId,
+      FirebaseFirestore firestore
   ) {
     String chatId = generateChatId(userId, myId);
-    return FirebaseFirestore.instance
+    return firestore
         .collection('chats')
         .doc(chatId)
         .collection('messages')
@@ -19,11 +15,12 @@ class ChatHandler {
         .snapshots();
   }
 
-  static Stream<QuerySnapshot> getChats(String uId) {
-    return FirebaseFirestore.instance
+  static Stream<QuerySnapshot> getChats(
+      String uId, FirebaseFirestore firestore) {
+    return firestore
         .collection("chats")
         .where("members", arrayContains: uId)
-        .orderBy("lastActive", descending: true)
+        //.orderBy("lastActive", descending: true)
         .snapshots();
   }
 
@@ -33,11 +30,11 @@ class ChatHandler {
         : username2.toString() + '-' + username1.toString();
   }
 
-  static Future<bool> checkChatExistsOrNot(
-      String username1, String username2) async {
+  static Future<bool> checkChatExists(
+      String username1, String username2, FirebaseFirestore firestore) async {
     String chatId = generateChatId(username1, username2);
     DocumentSnapshot doc =
-        await FirebaseFirestore.instance.collection('chats').doc(chatId).get();
+        await firestore.collection('chats').doc(chatId).get();
     return doc.exists;
   }
 
@@ -46,15 +43,21 @@ class ChatHandler {
     String from,
     bool isText,
     String msg,
-    String path,
+      FirebaseFirestore firestore
   ) async {
-    bool existsOrNot = await checkChatExistsOrNot(to, from);
-    FirebaseFirestore tempDb = FirebaseFirestore.instance;
+    bool existsOrNot = await checkChatExists(to, from, firestore);
     String chatId = generateChatId(from, to);
     Timestamp now = Timestamp.now();
     if (!existsOrNot) {
       List<String> members = [to, from];
-      isText
+      await firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .add(
+        {'from': from, 'message': msg, 'time': now, 'isText': true},
+      );
+      /*isText
           ? await tempDb
               .collection('chats')
               .doc(chatId)
@@ -68,13 +71,20 @@ class ChatHandler {
               .collection('messages')
               .add(
               {'from': from, 'photo': path, 'time': now, 'isText': false},
-            );
-      await tempDb
+            );*/
+      await firestore
           .collection('chats')
           .doc(chatId)
           .set({'lastActive': now, 'members': members});
     } else {
-      isText
+      await firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .add(
+        {'from': from, 'message': msg, 'time': now, 'isText': true},
+      );
+      /*isText
           ? await tempDb
               .collection('chats')
               .doc(chatId)
@@ -88,8 +98,8 @@ class ChatHandler {
               .collection('messages')
               .add(
               {'from': from, 'photo': path, 'time': now, 'isText': false},
-            );
-      await tempDb.collection('chats').doc(chatId).update({'lastActive': now});
+            );*/
+      await firestore.collection('chats').doc(chatId).update({'lastActive': now});
     }
   }
 

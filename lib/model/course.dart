@@ -69,6 +69,7 @@ class Course extends Object {
     isbnNumbers = numbers;
   }
 
+  @override
   String toString() {
     return name + " " + shortCode + " " + code + " " + literature.toString() + " " + isbnNumbers.toString();
   }

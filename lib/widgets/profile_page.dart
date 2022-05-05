@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/widgets/chats_page.dart';
-import 'package:fook/model/course.dart';
+import 'package:fook/widgets/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,6 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
         body: FutureBuilder(
       future: UserHandler.getInfo(
           FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
@@ -25,11 +25,11 @@ class _ProfilePageState extends State<ProfilePage> {
         if (snapshot.hasData) {
           List<Object> list = snapshot.data as List<Object>;
           return Center(
-            child: Container(
+            child: SizedBox(
               height: MediaQuery.of(context).size.width * 0.8,
               width: MediaQuery.of(context).size.width * 0.8,
               child: Card(
-                margin: EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(8.0),
                 elevation: 8.0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
@@ -46,14 +46,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       Text(
-                        (list[0] as fook.User).name,
+                        (list[0] as fook.User).name + " " + (list[0] as fook.User).lastName,
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,
                       ),
                       MaterialButton(
-                        onPressed: () => FirebaseAuth.instance.signOut(),
-                        child: Text('Signout'),
+                        onPressed: () => FirebaseAuth.instance.signOut().then(
+                            (value) => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()))),
+                        child: const Text('Signout'),
                         textColor: Theme.of(context).colorScheme.onSecondary,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -62,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const ChatsPage())),
-                        child: Text('Chats'),
+                        child: const Text('Chats'),
                         textColor: Theme.of(context).colorScheme.onSecondary,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -73,11 +77,13 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           );
         } else {
-          return const Center(
-            child: Text('Loading Profile...'),
+          return Center(
+            child: Text('Loading Profile...',
+              style: TextStyle(color: Theme.of(context).primaryColor
+              ),),
           );
         }
       },
-    ));
+        ));
   }
 }

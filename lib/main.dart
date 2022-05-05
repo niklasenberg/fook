@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
           primarySwatch: Colors.deepOrange,
-          backgroundColor: Colors.black26,
+          backgroundColor: Colors.grey.shade800,
+          cardColor: Colors.orange.shade50,
           fontFamily: 'Roboto',
           inputDecorationTheme: const InputDecorationTheme(
             labelStyle: TextStyle(color: Colors.deepOrangeAccent,
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide(color: Colors.deepOrangeAccent),
               borderRadius: BorderRadius.all(Radius.circular(25)),
             ),
+            hintStyle: TextStyle(color: Colors.deepOrangeAccent),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.deepOrangeAccent),
                 borderRadius: BorderRadius.all(Radius.circular(25))),
