@@ -212,8 +212,9 @@ Widget _timeDivider(Timestamp time) {
   String ampm = t.hour >= 12 ? "PM" : "AM";
   int hour = t.hour >= 12 ? t.hour % 12 : t.hour;
   DateTime press = DateTime.now();
-  if (press.year == t.year && press.month == t.month && press.day == t.day)
-    return Text(hour.toString() + ':' + minute + ' ' + ampm);
+  if (press.year == t.year && press.month == t.month && press.day == t.day) {
+    return Text(t.hour.toString() + ":" + t.minute.toString());
+  }
   return Text(t.day.toString() +
       '/' +
       (t.month + 1).toString() +

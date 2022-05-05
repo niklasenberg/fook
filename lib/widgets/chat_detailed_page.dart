@@ -137,8 +137,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: messageController,
-              decoration: const InputDecoration(
-                /*border: OutlineInputBorder(
+              /*decoration: const InputDecoration(
+                border: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -169,10 +169,10 @@ class _ChatDetailedState extends State<ChatDetailed> {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10.0),
                   ),
-                ),*/
+                ),
                 filled: true,
                 hintText: "Type in your message",
-              ),
+              ),*/
             ),
           ),
         ),
@@ -272,23 +272,18 @@ class _ChatDetailedState extends State<ChatDetailed> {
     final bool isMe = (message.data() as Map<String, dynamic>)['from'] == myId;
     Timestamp time = (message.data() as Map<String, dynamic>)['time'];
     DateTime ttime = time.toDate();
-    String minute = ttime.minute > 9
-        ? ttime.minute.toString()
-        : '0' + ttime.minute.toString();
-    String ampm = ttime.hour >= 12 ? "PM" : "AM";
-    int hour = ttime.hour >= 12 ? ttime.hour % 12 : ttime.hour;
-    if ((message.data() as Map<String, dynamic>)['isText'])
+    if ((message.data() as Map<String, dynamic>)['isText']) {
       return Align(
         alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
           margin: isMe
-              ? EdgeInsets.only(
+              ? const EdgeInsets.only(
                   left: 80.0,
                   bottom: 8.0,
                   top: 8.0,
                 )
-              : EdgeInsets.only(
+              : const EdgeInsets.only(
                   right: 80.0,
                   bottom: 8.0,
                   top: 8.0,
@@ -297,7 +292,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                hour.toString() + ":" + minute.toString() + " " + ampm,
+                ttime.hour.toString() + ":" + ttime.minute.toString(),
                 style: TextStyle(
                   color: Color(0xfff0f696),
                   fontSize: 12.0,
@@ -331,6 +326,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
           ),
         ),
       );
+    }
     /*return FutureBuilder(
       future: ChatHandler.getURLforImage(message.data()['photo'].toString()),
       builder: (context, snapshot) {
