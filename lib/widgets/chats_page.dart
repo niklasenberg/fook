@@ -196,7 +196,7 @@ class _ChatPageState extends State<ChatsPage> {
 
 _getChatterInfo(String userId) async {
   List<Object> result = [];
-  result.add(await ChatHandler.getUserByUsername(
+  result.add(await UserHandler.getUserSnapshot(
       userId,
       FirebaseFirestore.instance));
   result.add(await UserHandler.getPhotoUrl(userId, FirebaseFirestore.instance));

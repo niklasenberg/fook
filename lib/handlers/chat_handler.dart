@@ -1,12 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatHandler {
-  static getUserByUsername(String uId, FirebaseFirestore firestore) async {
-    return await firestore.collection('users').doc(uId).get();
-  }
-
-  getUserChats() {}
-
   static getChat(
     String userId,
     String myId,

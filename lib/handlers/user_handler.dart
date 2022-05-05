@@ -13,6 +13,10 @@ class UserHandler {
     return User.fromMap(document.data() as Map<String, dynamic>);
   }
 
+  static getUserSnapshot(String uId, FirebaseFirestore firestore) async {
+    return await firestore.collection('users').doc(uId).get();
+  }
+
   static addUser(User user) async {
     FirebaseFirestore.instance
         .collection('users')
