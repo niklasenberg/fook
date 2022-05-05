@@ -20,11 +20,13 @@ class SaleHandler {
   //get sales for isbn
   static Future<List<Sale>> getSalesForISBN(
       String isbn, FirebaseFirestore firestore) async {
-    QuerySnapshot query =
-        await firestore.collection('sale').where('isbn', isEqualTo: isbn).get();
+    QuerySnapshot query = await firestore
+        .collection('sales')
+        .where('isbn', isEqualTo: isbn)
+        .get();
     List<Sale> sales = [];
     for (DocumentSnapshot a in query.docs) {
-      sales.add(Sale.fromMap(a as Map<String, dynamic>));
+      sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
     }
     return sales;
   }
@@ -53,10 +55,5 @@ class SaleHandler {
   }
 
   //addsale
-/*
-*/
 
-  //is there a corresponding course
-  // vill kolla om isbn finns i befintliga isbn
-  //static Future<boolean> isValid()
 }

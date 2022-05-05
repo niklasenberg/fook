@@ -1,17 +1,17 @@
-enum Condition { bad, good, shit }
+import 'package:fook/model/course.dart';
 
 class Sale {
   final String isbn;
   final String userID;
-  final String course;
-  Condition condition;
+  final List<String> courses;
+  String condition;
   int price;
   final String saleID;
 
   Sale({
     required this.isbn,
     required this.userID,
-    required this.course,
+    required this.courses,
     required this.condition,
     required this.price,
     required this.saleID,
@@ -21,7 +21,7 @@ class Sale {
     return Sale(
       isbn: data['isbn'],
       userID: data['userID'],
-      course: data['course'],
+      courses: List<String>.from(data['courses']),
       condition: data['condition'],
       price: data['price'],
       saleID: data['saleID'],
@@ -32,7 +32,7 @@ class Sale {
     return {
       'isbn': isbn,
       'userID': userID,
-      'course': course,
+      'courses': courses,
       'condition': condition,
       'price': price,
       'saleID': saleID,
@@ -43,7 +43,7 @@ class Sale {
     return price = newPrice;
   }
 
-  changeCondition(Condition c) {
+  changeCondition(String c) {
     return condition = c;
   }
 
@@ -51,8 +51,8 @@ class Sale {
     return isbn;
   }
 
-  String getCourse() {
-    return course;
+  List<String> getCourses() {
+    return courses;
   }
 
   String getuserID() {
@@ -65,5 +65,32 @@ class Sale {
 
   String getSaleID() {
     return saleID;
+  }
+
+  bool operator ==(Object other) {
+    // Long calculation involving a, b, c, d etc.
+
+    return other is Sale &&
+        other.isbn == isbn &&
+        other.userID == userID &&
+        other.courses == courses &&
+        other.condition == condition &&
+        other.price == price &&
+        other.saleID == saleID;
+  }
+
+  @override
+  String toString() {
+    return isbn +
+        " " +
+        userID +
+        " " +
+        courses.toString() +
+        " " +
+        condition +
+        " " +
+        price.toString() +
+        " " +
+        saleID;
   }
 }
