@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:developer';
 
 class DaisyHandler {
   static Future<Set<String>> getISBN(String code) async {

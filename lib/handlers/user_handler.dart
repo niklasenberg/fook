@@ -16,8 +16,7 @@ class UserHandler {
   static addUser(User user) async {
     FirebaseFirestore.instance
         .collection('users')
-        .add(user.toMap())
-        .then((value) => print('Student added'));
+        .add(user.toMap());
   }
 
   static Future<String> getPhotoUrl(

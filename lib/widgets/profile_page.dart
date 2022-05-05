@@ -25,11 +25,11 @@ class _ProfilePageState extends State<ProfilePage> {
         if (snapshot.hasData) {
           List<Object> list = snapshot.data as List<Object>;
           return Center(
-            child: Container(
+            child: SizedBox(
               height: MediaQuery.of(context).size.width * 0.8,
               width: MediaQuery.of(context).size.width * 0.8,
               child: Card(
-                margin: EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(8.0),
                 elevation: 8.0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
@@ -57,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const LoginPage()))),
-                        child: Text('Signout'),
+                        child: const Text('Signout'),
                         textColor: Theme.of(context).colorScheme.onSecondary,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const ChatsPage())),
-                        child: Text('Chats'),
+                        child: const Text('Chats'),
                         textColor: Theme.of(context).colorScheme.onSecondary,
                         color: Theme.of(context).colorScheme.secondary,
                       ),

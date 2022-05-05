@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fook/model/chat.dart';
 import 'package:fook/widgets/chat_detailed_page.dart';
 import 'package:fook/model/user.dart' as fook;
 
@@ -24,7 +22,7 @@ class _ChatPageState extends State<ChatsPage> {
         leading: BackButton(
           onPressed: () => Navigator.pop(context, false),
         ),
-        title: Text("Chats"),
+        title: const Text("Chats"),
       ),
       // key: _scaffKey,
       body: FutureBuilder(
@@ -32,7 +30,6 @@ class _ChatPageState extends State<ChatsPage> {
             FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
         builder: (BuildContext context, AsyncSnapshot userDataSnapshot) {
           if (userDataSnapshot.hasData) {
-            fook.User user = userDataSnapshot.data;
             String myId = FirebaseAuth.instance.currentUser!.uid;
             return StreamBuilder(
               stream: ChatHandler.getChats(
@@ -42,10 +39,11 @@ class _ChatPageState extends State<ChatsPage> {
                 if (snapshot.hasData) {
                   QuerySnapshot qSnap = snapshot.data as QuerySnapshot;
                   List<DocumentSnapshot> docs = qSnap.docs;
-                  if (docs.isEmpty)
-                    return Center(
+                  if (docs.isEmpty) {
+                    return const Center(
                       child: Text('No Chats yet!'),
                     );
+                  }
                   return ListView.builder(
                     itemCount: docs.length,
                     itemBuilder: (context, index) {
@@ -65,7 +63,7 @@ class _ChatPageState extends State<ChatsPage> {
                             fook.User otherUser = fook.User.fromMap(docSnapUser.data() as Map<String, dynamic>);
 
                             return Card(
-                              margin: EdgeInsets.all(8.0),
+                              margin: const EdgeInsets.all(8.0),
                               elevation: 8.0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -82,7 +80,7 @@ class _ChatPageState extends State<ChatsPage> {
                                   ),
                                 ),
                                 child: Container(
-                                  margin: EdgeInsets.all(10.0),
+                                  margin: const EdgeInsets.all(10.0),
                                   height:
                                       MediaQuery.of(context).size.height * 0.08,
                                   child: Center(
@@ -123,7 +121,7 @@ class _ChatPageState extends State<ChatsPage> {
                                               0.43,
                                           child: Text(
                                             otherUser.name.toString(),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -151,13 +149,13 @@ class _ChatPageState extends State<ChatsPage> {
                           }
 
                           return Card(
-                            margin: EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.all(8.0),
                             elevation: 8.0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             child: Container(
-                              margin: EdgeInsets.all(10.0),
+                              margin: const EdgeInsets.all(10.0),
                               height: MediaQuery.of(context).size.height * 0.08,
                               child: Center(
                                 child: CircularProgressIndicator(
@@ -207,10 +205,6 @@ _getChatterInfo(String userId) async {
 }
 Widget _timeDivider(Timestamp time) {
   DateTime t = time.toDate();
-  String minute =
-      t.minute > 9 ? t.minute.toString() : '0' + t.minute.toString();
-  String ampm = t.hour >= 12 ? "PM" : "AM";
-  int hour = t.hour >= 12 ? t.hour % 12 : t.hour;
   DateTime press = DateTime.now();
   if (press.year == t.year && press.month == t.month && press.day == t.day) {
     return Text(t.hour.toString() + ":" + t.minute.toString());

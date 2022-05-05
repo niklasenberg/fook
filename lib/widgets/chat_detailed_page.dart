@@ -1,15 +1,13 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
-import 'package:fook/widgets/profile_page.dart';
+import 'package:fook/model/constants.dart';
 import 'package:fook/model/user.dart' as fook;
 
 class ChatDetailed extends StatefulWidget {
-  List<Object> infoList;
-  ChatDetailed(this.infoList, {Key? key}) : super(key: key);
+  final List<Object> infoList;
+  const ChatDetailed(this.infoList, {Key? key}) : super(key: key);
   @override
   _ChatDetailedState createState() => _ChatDetailedState();
 }
@@ -69,7 +67,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
               focusColor: Theme.of(context).colorScheme.primary,
               highlightColor: Theme.of(context).colorScheme.primary,
               hoverColor: Theme.of(context).colorScheme.primary,
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Row(
                   children: [
@@ -103,7 +101,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
           Flexible(
             child: _chatBody(userId),
           ),
-          Divider(
+          const Divider(
             height: 1.0,
           ),
           SizedBox(
@@ -118,8 +116,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
   Widget _messageComposer() {
     return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           /*child: InkWell(
             onTap: () => showDialog(
               // barrierDismissible: false,
@@ -202,7 +200,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
       stream: ChatHandler.getChat(userId, myId),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return snapshot.data!.docs.length != 0
+          return snapshot.data!.docs.isNotEmpty
               ? ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   reverse: true,
@@ -242,9 +240,9 @@ class _ChatDetailedState extends State<ChatDetailed> {
                           );
                   },
                 )
-              : Center(child: const Text("No messages yet!"));
+              : const Center(child: Text("No messages yet!"));
         }
-        return Center(
+        return const Center(
           child: Text('Loading...'),
         );
       },
@@ -260,8 +258,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
         t.year.toString());
   }
 
-  bool sameDay(Timestamp present, Timestamp passt) {
-    DateTime pastTime = passt.toDate();
+  bool sameDay(Timestamp present, Timestamp past) {
+    DateTime pastTime = past.toDate();
     DateTime presentTime = present.toDate();
     if (pastTime.year < presentTime.year) return false;
     if (pastTime.month < presentTime.month) return false;
@@ -293,7 +291,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
             children: [
               Text(
                 ttime.hour.toString() + ":" + ttime.minute.toString(),
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xfff0f696),
                   fontSize: 12.0,
                   fontWeight: FontWeight.w800,
@@ -313,13 +311,13 @@ class _ChatDetailedState extends State<ChatDetailed> {
           decoration: BoxDecoration(
             color: isMe
                 ? Theme.of(context).colorScheme.secondary
-                : Theme.of(context).colorScheme.secondaryVariant,
+                : Theme.of(context).colorScheme.secondaryContainer,
             borderRadius: isMe
-                ? BorderRadius.only(
+                ? const BorderRadius.only(
                     topLeft: Radius.circular(15.0),
                     bottomLeft: Radius.circular(15.0),
                   )
-                : BorderRadius.only(
+                : const BorderRadius.only(
                     topRight: Radius.circular(15.0),
                     bottomRight: Radius.circular(15.0),
                   ),
@@ -576,21 +574,4 @@ class _ChatDetailedState extends State<ChatDetailed> {
       ),
     );
   }*/
-}
-
-class Constants {
-  static List<String> months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
 }

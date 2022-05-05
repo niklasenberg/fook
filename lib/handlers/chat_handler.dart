@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fook/model/user.dart' as fook;
 
 class ChatHandler {
   static getUserByUsername(String uId, FirebaseFirestore firestore) async {
