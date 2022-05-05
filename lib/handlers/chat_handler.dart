@@ -4,8 +4,7 @@ import 'package:fook/model/user.dart' as fook;
 
 class ChatHandler {
   static getUserByUsername(String uId, FirebaseFirestore firestore) async {
-    return fook.User.fromMap(await firestore.collection('users').doc(uId).get()
-        as Map<String, dynamic>);
+    return await firestore.collection('users').doc(uId).get();
   }
 
   getUserChats() {}
@@ -51,7 +50,6 @@ class ChatHandler {
     String from,
     bool isText,
     String msg,
-    String path,
   ) async {
     bool existsOrNot = await checkChatExistsOrNot(to, from);
     FirebaseFirestore tempDb = FirebaseFirestore.instance;
@@ -59,7 +57,14 @@ class ChatHandler {
     Timestamp now = Timestamp.now();
     if (!existsOrNot) {
       List<String> members = [to, from];
-      isText
+      await tempDb
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .add(
+        {'from': from, 'message': msg, 'time': now, 'isText': true},
+      );
+      /*isText
           ? await tempDb
               .collection('chats')
               .doc(chatId)
@@ -73,13 +78,20 @@ class ChatHandler {
               .collection('messages')
               .add(
               {'from': from, 'photo': path, 'time': now, 'isText': false},
-            );
+            );*/
       await tempDb
           .collection('chats')
           .doc(chatId)
           .set({'lastActive': now, 'members': members});
     } else {
-      isText
+      await tempDb
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .add(
+        {'from': from, 'message': msg, 'time': now, 'isText': true},
+      );
+      /*isText
           ? await tempDb
               .collection('chats')
               .doc(chatId)
@@ -93,7 +105,7 @@ class ChatHandler {
               .collection('messages')
               .add(
               {'from': from, 'photo': path, 'time': now, 'isText': false},
-            );
+            );*/
       await tempDb.collection('chats').doc(chatId).update({'lastActive': now});
     }
   }

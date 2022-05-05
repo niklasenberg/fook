@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
 import 'package:fook/handlers/user_handler.dart';
@@ -18,6 +19,7 @@ class _ChatPageState extends State<ChatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         leading: BackButton(
           onPressed: () => Navigator.pop(context, false),
@@ -54,12 +56,13 @@ class _ChatPageState extends State<ChatsPage> {
                           ? members.elementAt(1)
                           : members.elementAt(0);
                       return FutureBuilder(
-                        future: ChatHandler.getUserByUsername(
-                            FirebaseAuth.instance.currentUser!.uid,
-                            FirebaseFirestore.instance),
+                        future: _getChatterInfo(userId),
                         builder: (context, _snapshot) {
                           if (_snapshot.hasData) {
-                            fook.User otherUser = _snapshot as fook.User;
+                            List<Object> infoList = (_snapshot.data as List<Object>);
+                            infoList.add(userId);
+                            DocumentSnapshot docSnapUser = infoList[0] as DocumentSnapshot;
+                            fook.User otherUser = fook.User.fromMap(docSnapUser.data() as Map<String, dynamic>);
 
                             return Card(
                               margin: EdgeInsets.all(8.0),
@@ -70,14 +73,14 @@ class _ChatPageState extends State<ChatsPage> {
                               child: InkWell(
                                 splashColor:
                                     Theme.of(context).colorScheme.primary,
-                                /*onTap: () => Navigator.push(
+                                  onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ChatsDetailed(
-                                      _user
+                                    builder: (context) => ChatDetailed(
+                                      infoList
                                     ),
-                                  ),*/
-
+                                  ),
+                                ),
                                 child: Container(
                                   margin: EdgeInsets.all(10.0),
                                   height:
@@ -85,8 +88,8 @@ class _ChatPageState extends State<ChatsPage> {
                                   child: Center(
                                     child: Row(
                                       children: [
-                                        /* Hero(
-                                          tag: _user['photo'].toString(),
+                                         Hero(
+                                          tag: infoList[1].toString() + "1",
                                           child: Container(
                                             width: MediaQuery.of(context)
                                                     .size
@@ -101,12 +104,12 @@ class _ChatPageState extends State<ChatsPage> {
                                               image: DecorationImage(
                                                 fit: BoxFit.cover,
                                                 image: NetworkImage(
-                                                  _user['photo'].toString(),
+                                                    infoList[1].toString(),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),*/
+                                        ),
                                         SizedBox(
                                           width: MediaQuery.of(context)
                                                   .size
@@ -119,14 +122,14 @@ class _ChatPageState extends State<ChatsPage> {
                                                   .width *
                                               0.43,
                                           child: Text(
-                                            user.name.toString(),
+                                            otherUser.name.toString(),
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ),
-                                        /*SizedBox(
+                                        SizedBox(
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
@@ -138,7 +141,7 @@ class _ChatPageState extends State<ChatsPage> {
                                                     String,
                                                     dynamic>)['lastActive']),
                                           ),
-                                        ),*/
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -158,7 +161,7 @@ class _ChatPageState extends State<ChatsPage> {
                               height: MediaQuery.of(context).size.height * 0.08,
                               child: Center(
                                 child: CircularProgressIndicator(
-                                  valueColor: new AlwaysStoppedAnimation(
+                                  valueColor: AlwaysStoppedAnimation(
                                     Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
@@ -172,7 +175,7 @@ class _ChatPageState extends State<ChatsPage> {
                 }
                 return Center(
                   child: CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation(
+                    valueColor: AlwaysStoppedAnimation(
                       Theme.of(context).colorScheme.primary,
                     ),
                   ),
@@ -182,7 +185,7 @@ class _ChatPageState extends State<ChatsPage> {
           }
           return Center(
             child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation(
+              valueColor: AlwaysStoppedAnimation(
                 Theme.of(context).colorScheme.primary,
               ),
             ),
@@ -193,6 +196,15 @@ class _ChatPageState extends State<ChatsPage> {
   }
 }
 
+_getChatterInfo(String userId) async {
+  List<Object> result = [];
+  result.add(await ChatHandler.getUserByUsername(
+      userId,
+      FirebaseFirestore.instance));
+  result.add(await UserHandler.getPhotoUrl(userId, FirebaseFirestore.instance));
+
+  return result;
+}
 Widget _timeDivider(Timestamp time) {
   DateTime t = time.toDate();
   String minute =

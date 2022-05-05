@@ -50,7 +50,7 @@ var postID = newPostRef.key;
     return name;
   }
 
-  String getlastName() {
+  String getLastName() {
     return lastName;
   }
 

@@ -1,13 +1,15 @@
-/*import 'dart:io';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
 import 'package:fook/widgets/profile_page.dart';
+import 'package:fook/model/user.dart' as fook;
 
 class ChatDetailed extends StatefulWidget {
-  Map<String, dynamic> userData;
-  ChatDetailed(this.userData);
+  List<Object> infoList;
+  ChatDetailed(this.infoList, {Key? key}) : super(key: key);
   @override
   _ChatDetailedState createState() => _ChatDetailedState();
 }
@@ -15,9 +17,10 @@ class ChatDetailed extends StatefulWidget {
 class _ChatDetailedState extends State<ChatDetailed> {
   late String myId, userId;
   late TextEditingController messageController;
-  Timestamp past = new Timestamp.fromDate(new DateTime(2019));
+  Timestamp past = Timestamp.fromDate(DateTime(2019));
   late String chatId;
-  late Map<String, dynamic> userData;
+  late String photoUrl;
+  late fook.User otherUser;
   final _scaffKey = GlobalKey<ScaffoldState>();
 
   //final ImagePicker _picker = ImagePicker();
@@ -25,10 +28,13 @@ class _ChatDetailedState extends State<ChatDetailed> {
   @override
   void initState() {
     super.initState();
-    messageController = new TextEditingController();
-    dbHelper = new DatabaseHelper();
-    offlineStorage = new OfflineStorage();
-    offlineStorage.getUserInfo().then(
+    messageController = TextEditingController();
+    userId = widget.infoList[2].toString();
+    myId = FirebaseAuth.instance.currentUser!.uid;
+    chatId = ChatHandler.generateChatId(myId, userId);
+    photoUrl = widget.infoList[1].toString();
+    otherUser = fook.User.fromMap((widget.infoList[0] as DocumentSnapshot).data() as Map<String, dynamic>);
+    /*offlineStorage.getUserInfo().then(
       (val) {
         setState(
           () {
@@ -40,26 +46,25 @@ class _ChatDetailedState extends State<ChatDetailed> {
           },
         );
       },
-    );
+    );*/
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       key: _scaffKey,
       body: Column(
         children: [
           AppBar(
             backgroundColor: Theme.of(context).colorScheme.primary,
             title: InkWell(
-              onTap: () => Navigator.push(
+              /*onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(
-                    userData: userData,
-                  ),
+                  builder: (context) => ProfilePage(),
                 ),
-              ),
+              ),*/
               splashColor: Theme.of(context).colorScheme.primary,
               focusColor: Theme.of(context).colorScheme.primary,
               highlightColor: Theme.of(context).colorScheme.primary,
@@ -69,16 +74,16 @@ class _ChatDetailedState extends State<ChatDetailed> {
                 child: Row(
                   children: [
                     Hero(
-                      tag: userData['photo'].toString(),
+                      tag: photoUrl,
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.1,
                         height: MediaQuery.of(context).size.width * 0.1,
-                        decoration: new BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          image: new DecorationImage(
+                          image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: new NetworkImage(
-                              userData['photo'].toString(),
+                            image: NetworkImage(
+                              photoUrl,
                             ),
                           ),
                         ),
@@ -86,7 +91,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.02),
                     Text(
-                      userData['name'].toString(),
+                      otherUser.name + " " + otherUser.lastName,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary),
                     )
@@ -98,7 +103,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
           Flexible(
             child: _chatBody(userId),
           ),
-          new Divider(
+          Divider(
             height: 1.0,
           ),
           SizedBox(
@@ -115,7 +120,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: InkWell(
+          /*child: InkWell(
             onTap: () => showDialog(
               // barrierDismissible: false,
               context: context,
@@ -125,15 +130,15 @@ class _ChatDetailedState extends State<ChatDetailed> {
               Icons.image,
               color: Theme.of(context).colorScheme.secondary,
             ),
-          ),
+          ),*/
         ),
         Flexible(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: messageController,
-              decoration: new InputDecoration(
-                border: new OutlineInputBorder(
+              decoration: const InputDecoration(
+                /*border: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -141,30 +146,30 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     const Radius.circular(10.0),
                   ),
                 ),
-                focusedBorder: new OutlineInputBorder(
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   borderRadius: const BorderRadius.all(
-                    const Radius.circular(10.0),
+                    Radius.circular(10.0),
                   ),
                 ),
-                enabledBorder: new OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   borderRadius: const BorderRadius.all(
-                    const Radius.circular(10.0),
+                    Radius.circular(10.0),
                   ),
                 ),
-                errorBorder: new OutlineInputBorder(
+                errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).colorScheme.error,
                   ),
                   borderRadius: const BorderRadius.all(
-                    const Radius.circular(10.0),
+                    Radius.circular(10.0),
                   ),
-                ),
+                ),*/
                 filled: true,
                 hintText: "Type in your message",
               ),
@@ -179,7 +184,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
               if (message.isNotEmpty) {
                 messageController.clear();
                 await ChatHandler.sendMessage(
-                    userId, myId, true, message, fsadasd); //Path?
+                    userId, myId, true, message); //Path? Behövs bara om man ska skicka bilder
               }
             },
             child: Icon(
@@ -196,36 +201,38 @@ class _ChatDetailedState extends State<ChatDetailed> {
     return StreamBuilder(
       stream: ChatHandler.getChat(userId, myId),
       builder: (context, snapshot) {
-        if (snapshot.hasData)
-          return snapshot.data.docs.length != 0
+        if (snapshot.hasData) {
+          return snapshot.data!.docs.length != 0
               ? ListView.builder(
-                  itemCount: snapshot.data.docs.length,
+                  itemCount: snapshot.data!.docs.length,
                   reverse: true,
                   itemBuilder: (context, index) {
-                    DocumentSnapshot message = snapshot.data.docs[index];
-                    if (snapshot.data.docs.length == 1)
+                    DocumentSnapshot message = snapshot.data!.docs[index];
+                    if (snapshot.data!.docs.length == 1) {
                       return Column(
                         children: [
-                          _timeDivider(message.data()['time']),
+                          _timeDivider((message.data() as Map<String, dynamic>)['time']),
                           _messageItem(message, context),
                         ],
                       );
+                    }
                     if (index == 0) {
-                      past = message.data()['time'];
+                      past = (message.data() as Map<String, dynamic>)['time'];
                       return _messageItem(message, context);
                     }
                     Timestamp toPass = past;
-                    if (index == snapshot.data.docs.length - 1)
+                    if (index == snapshot.data!.docs.length - 1) {
                       return Column(
                         children: [
-                          _timeDivider(message.data()['time']),
+                          _timeDivider((message.data() as Map<String, dynamic>)['time']),
                           _messageItem(message, context),
-                          if (!sameDay(toPass, message.data()['time']))
+                          if (!sameDay(toPass, (message.data() as Map<String, dynamic>)['time']))
                             _timeDivider(toPass),
                         ],
                       );
-                    past = message.data()['time'];
-                    return sameDay(message.data()['time'], toPass)
+                    }
+                    past = (message.data() as Map<String, dynamic>)['time'];
+                    return sameDay((message.data() as Map<String, dynamic>)['time'], toPass)
                         ? _messageItem(message, context)
                         : Column(
                             children: [
@@ -235,7 +242,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
                           );
                   },
                 )
-              : Center(child: Text("No messages yet!"));
+              : Center(child: const Text("No messages yet!"));
+        }
         return Center(
           child: Text('Loading...'),
         );
@@ -323,7 +331,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
           ),
         ),
       );
-    return FutureBuilder(
+    /*return FutureBuilder(
       future: ChatHandler.getURLforImage(message.data()['photo'].toString()),
       builder: (context, snapshot) {
         return Align(
@@ -378,7 +386,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                       )
                     : Center(
                         child: CircularProgressIndicator(
-                          valueColor: new AlwaysStoppedAnimation(
+                          valueColor: AlwaysStoppedAnimation(
                             Theme.of(context).colorScheme.primary,
                           ),
                         ),
@@ -402,10 +410,10 @@ class _ChatDetailedState extends State<ChatDetailed> {
           ),
         );
       },
-    );
+    );*/
   }
 
-  Widget _buildPopUpImagePicker(context) {
+  /*Widget _buildPopUpImagePicker(context) {
     PickedFile _imageFile;
     StorageUploadTask _taskUpload;
     bool uploadBool = false;
@@ -571,30 +579,22 @@ class _ChatDetailedState extends State<ChatDetailed> {
         ),
       ),
     );
-  }
+  }*/
+}
 
-  showSnackPlz(BuildContext context, String username) {
-    final SnackBar snackMe = SnackBar(
-      content: new RichText(
-        text: new TextSpan(
-          style: new TextStyle(
-            fontSize: 14.0,
-          ),
-          children: <TextSpan>[
-            new TextSpan(
-              text: 'User with email ',
-            ),
-            new TextSpan(
-              text: username,
-              style: new TextStyle(fontWeight: FontWeight.bold),
-            ),
-            new TextSpan(
-              text: '@gmail.com not in the database!',
-            ),
-          ],
-        ),
-      ),
-    );
-    _scaffKey.currentState.showSnackBar(snackMe);
-  }
-}*/
+class Constants {
+  static List<String> months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+}
