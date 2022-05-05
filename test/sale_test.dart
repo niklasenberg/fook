@@ -66,9 +66,53 @@ void main() {
       'price': 290,
       'saleID': 'kl98'
     });
+
+    await firestore.collection('sales').doc('2').set({
+      'isbn': '1236',
+      'userID': 'piot2333',
+      'courses': ['PROTO'],
+      'condition': 'bad',
+      'price': 220,
+      'saleID': 'kl98'
+    });
+
+    await firestore.collection('sales').doc('3').set({
+      'isbn': '1236',
+      'userID': 'piot2333',
+      'courses': ['PROG1', 'PROG2'],
+      'condition': 'good',
+      'price': 280,
+      'saleID': 'kl98'
+    });
   });
 
   group('Sale tests', () {
+    test('get sales for user', () async {
+      Sale sale1 = Sale.fromMap({
+        'isbn': '1236',
+        'userID': 'piot2333',
+        'courses': ['PROG1', 'PROG2'],
+        'condition': 'good',
+        'price': 280,
+        'saleID': 'kl98'
+      });
+      Sale sale2 = Sale.fromMap({
+        'isbn': '1236',
+        'userID': 'piot2333',
+        'courses': ['PROTO'],
+        'condition': 'bad',
+        'price': 220,
+        'saleID': 'kl98'
+      });
+
+      List<Sale> compare = [sale1, sale2];
+      List<Sale> result =
+          await SaleHandler.getSalesForUser("piot2333", firestore);
+      for (Sale saleR in result) {
+        assert(compare.contains(saleR));
+      }
+    });
+
     test('get sales for isbn', () async {
       Sale sale = Sale.fromMap({
         'isbn': '1236',
@@ -80,7 +124,7 @@ void main() {
       });
 
       List<Sale> result = await SaleHandler.getSalesForISBN("1236", firestore);
-      expect(result[0].toString(), sale.toString());
+      expect(result[0], sale);
     });
 
     test('Is isbn in courses', () async {

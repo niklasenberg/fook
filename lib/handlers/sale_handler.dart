@@ -7,12 +7,12 @@ class SaleHandler {
   static Future<List<Sale>> getSalesForUser(
       String userId, FirebaseFirestore firestore) async {
     QuerySnapshot query = await firestore
-        .collection('sale')
+        .collection('sales')
         .where('userID', isEqualTo: userId)
         .get();
     List<Sale> sales = [];
     for (DocumentSnapshot a in query.docs) {
-      sales.add(Sale.fromMap(a as Map<String, dynamic>));
+      sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
     }
     return sales;
   }

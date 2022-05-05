@@ -70,13 +70,7 @@ class Sale {
   bool operator ==(Object other) {
     // Long calculation involving a, b, c, d etc.
 
-    return other is Sale &&
-        other.isbn == isbn &&
-        other.userID == userID &&
-        other.courses == courses &&
-        other.condition == condition &&
-        other.price == price &&
-        other.saleID == saleID;
+    return other is Sale && other.saleID == saleID;
   }
 
   @override
