@@ -246,7 +246,7 @@ class BookInfo {
       Uri uri = Uri.parse(value.toString());
       if (reschemeImageLinks) {
         if (uri.isScheme('HTTP')) {
-          uri = Uri.parse(value.toString().replaceAll('http://', 'https://'));
+          uri = Uri.parse(value.toString().replaceAll('https://', 'https://'));
         }
       }
       imageLinks.addAll({key: uri});
