@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fook/handlers/notification_handler.dart';
 import 'package:fook/widgets/nav_page.dart';
 import 'model/firebase_options.dart';
 import 'widgets/login_page.dart';
@@ -57,6 +59,8 @@ class MyApp extends StatelessWidget {
             );
           }
           if (snapshot.connectionState == ConnectionState.done) {
+            final notificationService = NotificationHandler(FirebaseMessaging.instance);
+            notificationService.initialise();
             return handleHomePage();
           }
 

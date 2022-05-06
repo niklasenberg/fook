@@ -55,7 +55,7 @@ class ChatHandler {
           .doc(chatId)
           .collection('messages')
           .add(
-        {'from': from, 'message': msg, 'time': now, 'isText': true},
+        {'to': to,'from': from, 'message': msg, 'time': now, 'isText': true},
       );
       /*isText
           ? await tempDb
@@ -82,7 +82,7 @@ class ChatHandler {
           .doc(chatId)
           .collection('messages')
           .add(
-        {'from': from, 'message': msg, 'time': now, 'isText': true},
+        {'to': to,'from': from, 'message': msg, 'time': now, 'isText': true},
       );
       /*isText
           ? await tempDb

@@ -13,6 +13,11 @@ class NavPage extends StatefulWidget {
 class _NavPageState extends State<NavPage> {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   static const List<Widget> _pages = <Widget>[
     Center(child: HomePage()),
     Center(child: ChatsPage()),
