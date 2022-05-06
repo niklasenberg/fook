@@ -1,8 +1,9 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:fook/widgets/nav_page.dart';
 import 'package:string_validator/string_validator.dart';
-import 'package:fook/widgets/profile_page.dart';
+import 'package:fook/widgets/nav_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class LoginForm extends StatelessWidget {
       listener: (oldState, state, controller) {
         if (state is SignedIn) {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const ProfilePage()));
+              MaterialPageRoute(builder: (context) => const NavPage()));
         } else if (state is AuthFailed) {
           Fluttertoast.showToast(
               msg: 'Login or password is invalid',
