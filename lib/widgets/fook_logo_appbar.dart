@@ -7,7 +7,7 @@ class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
 
   FookAppBar({
-    this.height = 90.0,
+    this.height = 85.0,
   });
 
   @override
@@ -16,6 +16,7 @@ class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       title: Image.asset(
         'lib/assets/logo_w.png',
         height: 50,

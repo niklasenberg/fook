@@ -32,8 +32,12 @@ class _ChatDetailedState extends State<ChatDetailed> {
     myId = FirebaseAuth.instance.currentUser!.uid;
     chatId = ChatHandler.generateChatId(myId, userId);
     photoUrl = widget.infoList['photoUrl'].toString();
-    otherUser = fook.User.fromMap((widget.infoList['otherUser'] as DocumentSnapshot).data() as Map<String, dynamic>);
-    thisUser = fook.User.fromMap((widget.infoList['thisUser'] as DocumentSnapshot).data() as Map<String, dynamic>);
+    otherUser = fook.User.fromMap(
+        (widget.infoList['otherUser'] as DocumentSnapshot).data()
+            as Map<String, dynamic>);
+    thisUser = fook.User.fromMap(
+        (widget.infoList['thisUser'] as DocumentSnapshot).data()
+            as Map<String, dynamic>);
     /*offlineStorage.getUserInfo().then(
       (val) {
         setState(
@@ -117,11 +121,16 @@ class _ChatDetailedState extends State<ChatDetailed> {
   }
 
   Widget _messageComposer() {
-    return Row(
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          /*child: InkWell(
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('lib/assets/Fook_back_sm.png'), fit: BoxFit.fill),
+      ),
+      child: Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            /*child: InkWell(
             onTap: () => showDialog(
               // barrierDismissible: false,
               context: context,
@@ -132,13 +141,15 @@ class _ChatDetailedState extends State<ChatDetailed> {
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),*/
-        ),
-        Flexible(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: messageController,
-              /*decoration: const InputDecoration(
+          ),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration:
+                    InputDecoration(fillColor: Colors.white, filled: true),
+                controller: messageController,
+                /*decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).colorScheme.primary,
@@ -174,27 +185,36 @@ class _ChatDetailedState extends State<ChatDetailed> {
                 filled: true,
                 hintText: "Type in your message",
               ),*/
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: FloatingActionButton(
-            onPressed: () async {
-              String message = messageController.text;
-              if (message.isNotEmpty) {
-                messageController.clear();
-                await ChatHandler.sendMessage(
-                    userId, myId, true, message, thisUser.name, FirebaseFirestore.instance); //Path? Behövs bara om man ska skicka bilder
-              }
-            },
-            child: Icon(
-              Icons.send,
-              color: Theme.of(context).colorScheme.onSecondary,
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: FloatingActionButton(
+              onPressed: () async {
+                String message = messageController.text;
+                if (message.isNotEmpty) {
+                  messageController.clear();
+                  await ChatHandler.sendMessage(
+                      userId,
+                      myId,
+                      true,
+                      message,
+                      thisUser.name,
+                      FirebaseFirestore
+                          .instance); //Path? Behövs bara om man ska skicka bilder
+                }
+              },
+              child: Icon(
+                Icons.send,
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+              shape:
+                  CircleBorder(side: BorderSide(width: 1, color: Colors.black)),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

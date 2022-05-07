@@ -6,6 +6,7 @@ import 'package:fook/widgets/nav_page.dart';
 import 'model/firebase_options.dart';
 import 'widgets/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fook/theme/colors.dart';
 
 //import 'package:fook/widgets/profile_page.dart';
 
@@ -25,9 +26,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
+          primaryColor: CustomColors.createMaterialColor(Color(0xFFFE7F18)),
+          primarySwatch: CustomColors.createMaterialColor(Color(0xFFFE7F18)),
           backgroundColor: Colors.grey.shade800,
-          cardColor: Colors.orange.shade50,
+          cardColor: CustomColors.createMaterialColor(Color(0xFFFE7F18)),
           fontFamily: 'Roboto',
           inputDecorationTheme: const InputDecorationTheme(
             labelStyle:
