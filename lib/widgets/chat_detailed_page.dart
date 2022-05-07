@@ -6,7 +6,7 @@ import 'package:fook/model/constants.dart';
 import 'package:fook/model/user.dart' as fook;
 
 class ChatDetailed extends StatefulWidget {
-  final List<Object> infoList;
+  final Map<String, dynamic> infoList;
   const ChatDetailed(this.infoList, {Key? key}) : super(key: key);
   @override
   _ChatDetailedState createState() => _ChatDetailedState();
@@ -18,7 +18,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
   Timestamp past = Timestamp.fromDate(DateTime(2019));
   late String chatId;
   late String photoUrl;
-  late fook.User otherUser;
+  late fook.User otherUser, thisUser;
   final _scaffKey = GlobalKey<ScaffoldState>();
 
   //final ImagePicker _picker = ImagePicker();
@@ -27,11 +27,12 @@ class _ChatDetailedState extends State<ChatDetailed> {
   void initState() {
     super.initState();
     messageController = TextEditingController();
-    userId = widget.infoList[2].toString();
+    userId = widget.infoList['userId'].toString();
     myId = FirebaseAuth.instance.currentUser!.uid;
     chatId = ChatHandler.generateChatId(myId, userId);
-    photoUrl = widget.infoList[1].toString();
-    otherUser = fook.User.fromMap((widget.infoList[0] as DocumentSnapshot).data() as Map<String, dynamic>);
+    photoUrl = widget.infoList['photoUrl'].toString();
+    otherUser = fook.User.fromMap((widget.infoList['otherUser'] as DocumentSnapshot).data() as Map<String, dynamic>);
+    thisUser = fook.User.fromMap((widget.infoList['thisUser'] as DocumentSnapshot).data() as Map<String, dynamic>);
     /*offlineStorage.getUserInfo().then(
       (val) {
         setState(
@@ -182,7 +183,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
               if (message.isNotEmpty) {
                 messageController.clear();
                 await ChatHandler.sendMessage(
-                    userId, myId, true, message, FirebaseFirestore.instance); //Path? Behövs bara om man ska skicka bilder
+                    userId, myId, true, message, thisUser.name, FirebaseFirestore.instance); //Path? Behövs bara om man ska skicka bilder
               }
             },
             child: Icon(

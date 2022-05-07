@@ -6,22 +6,25 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class NotificationHandler {
   final FirebaseMessaging firebaseMessaging;
-  final _firestore = FirebaseFirestore.instance;
 
   NotificationHandler(this.firebaseMessaging);
 
-  Future initialise() async {
-    firebaseMessaging.getToken().then((token) => _firestore
-            .collection('tokens')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .set({
-          'token': token,
-        })
+  static Future updateToken() async {
+    FirebaseMessaging.instance.getToken().then((token) => FirebaseFirestore.instance
+        .collection('tokens')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
+      'token': token,
+    })
     );
+  }
+
+  Future initialise() async {
+    await updateToken();
 
     //called when app is in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print(message.notification.toString());
+      print(message.notification!.body);
       Fluttertoast.showToast(
           msg: 'Message received!',
           toastLength: Toast.LENGTH_LONG,
@@ -34,14 +37,14 @@ class NotificationHandler {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('init called onResume');
-      Fluttertoast.showToast(
-          msg: 'Message received!',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      // Fluttertoast.showToast(
+      //     msg: 'Message received!',
+      //     toastLength: Toast.LENGTH_LONG,
+      //     gravity: ToastGravity.CENTER,
+      //     timeInSecForIosWeb: 2,
+      //     backgroundColor: Colors.red,
+      //     textColor: Colors.white,
+      //     fontSize: 16.0);
     });
 
 
