@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
 import 'package:fook/model/constants.dart';
 import 'package:fook/model/user.dart' as fook;
+import 'package:fook/widgets/fook_logo_appbar.dart';
 
 class ChatDetailed extends StatefulWidget {
   final Map<String, dynamic> infoList;
@@ -51,6 +52,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: FookAppBar(),
       backgroundColor: Theme.of(context).backgroundColor,
       key: _scaffKey,
       body: Column(
@@ -210,7 +212,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     if (snapshot.data!.docs.length == 1) {
                       return Column(
                         children: [
-                          _timeDivider((message.data() as Map<String, dynamic>)['time']),
+                          _timeDivider(
+                              (message.data() as Map<String, dynamic>)['time']),
                           _messageItem(message, context),
                         ],
                       );
@@ -223,15 +226,19 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     if (index == snapshot.data!.docs.length - 1) {
                       return Column(
                         children: [
-                          _timeDivider((message.data() as Map<String, dynamic>)['time']),
+                          _timeDivider(
+                              (message.data() as Map<String, dynamic>)['time']),
                           _messageItem(message, context),
-                          if (!sameDay(toPass, (message.data() as Map<String, dynamic>)['time']))
+                          if (!sameDay(toPass,
+                              (message.data() as Map<String, dynamic>)['time']))
                             _timeDivider(toPass),
                         ],
                       );
                     }
                     past = (message.data() as Map<String, dynamic>)['time'];
-                    return sameDay((message.data() as Map<String, dynamic>)['time'], toPass)
+                    return sameDay(
+                            (message.data() as Map<String, dynamic>)['time'],
+                            toPass)
                         ? _messageItem(message, context)
                         : Column(
                             children: [

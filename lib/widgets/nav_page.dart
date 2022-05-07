@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fook/widgets/chats_page.dart';
 import 'package:fook/widgets/home_page.dart';
 import 'package:fook/widgets/profile_page.dart';
+import 'package:fook/widgets/fook_logo_appbar.dart';
 
 class NavPage extends StatefulWidget {
   const NavPage({Key? key}) : super(key: key);
@@ -33,22 +34,7 @@ class _NavPageState extends State<NavPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(90.0),
-        child: AppBar(
-          title: Image.asset(
-            'lib/assets/logo_w.png',
-            height: 50,
-          ),
-          centerTitle: true,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('lib/assets/Fook_back.png'),
-                    fit: BoxFit.fill)),
-          ),
-        ),
-      ),
+      appBar: FookAppBar(),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,

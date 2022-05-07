@@ -18,7 +18,12 @@ class CourseHandler {
       return Course.fromMap(query.docs[0].data() as Map<String, dynamic>);
     } else {
       //This shouldn't happen
-      return Course(code: '?',shortCode: '?',name: '?',literature: <String, Set<String>>{}, isbnNumbers: <String>{});
+      return Course(
+          code: '?',
+          shortCode: '?',
+          name: '?',
+          literature: <String, Set<String>>{},
+          isbnNumbers: <String>{});
     }
   }
 
@@ -34,11 +39,11 @@ class CourseHandler {
     return result;
   }
 
-
-  static Future<List<Course>> updateUserCourses(String uid, FirebaseFirestore firestore) async {
+  static Future<List<Course>> updateUserCourses(
+      String uid, FirebaseFirestore firestore) async {
     List<Course> courses = await getUserCourses(uid, firestore);
 
-    for(Course course in courses){
+    for (Course course in courses) {
       //Get current ISBN for course from Daisy
       Set<String> isbnList = await DaisyHandler.getISBN(course.getCode());
 
