@@ -6,6 +6,7 @@ import 'package:fook/widgets/nav_page.dart';
 import 'model/firebase_options.dart';
 import 'widgets/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 //import 'package:fook/widgets/profile_page.dart';
 
 Future<void> main() async {
@@ -59,7 +60,8 @@ class MyApp extends StatelessWidget {
             );
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            final notificationService = NotificationHandler(FirebaseMessaging.instance);
+            final notificationService =
+                NotificationHandler(FirebaseMessaging.instance);
             notificationService.initialise();
             return handleHomePage();
           }

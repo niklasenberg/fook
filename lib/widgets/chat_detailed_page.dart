@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
 import 'package:fook/model/constants.dart';
 import 'package:fook/model/user.dart' as fook;
+import 'package:fook/widgets/fook_logo_appbar.dart';
 
 class ChatDetailed extends StatefulWidget {
   final List<Object> infoList;
@@ -31,7 +32,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
     myId = FirebaseAuth.instance.currentUser!.uid;
     chatId = ChatHandler.generateChatId(myId, userId);
     photoUrl = widget.infoList[1].toString();
-    otherUser = fook.User.fromMap((widget.infoList[0] as DocumentSnapshot).data() as Map<String, dynamic>);
+    otherUser = fook.User.fromMap((widget.infoList[0] as DocumentSnapshot)
+        .data() as Map<String, dynamic>);
     /*offlineStorage.getUserInfo().then(
       (val) {
         setState(
@@ -50,6 +52,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: FookAppBar(),
       backgroundColor: Theme.of(context).backgroundColor,
       key: _scaffKey,
       body: Column(
@@ -182,7 +185,12 @@ class _ChatDetailedState extends State<ChatDetailed> {
               if (message.isNotEmpty) {
                 messageController.clear();
                 await ChatHandler.sendMessage(
-                    userId, myId, true, message, FirebaseFirestore.instance); //Path? Behövs bara om man ska skicka bilder
+                    userId,
+                    myId,
+                    true,
+                    message,
+                    FirebaseFirestore
+                        .instance); //Path? Behövs bara om man ska skicka bilder
               }
             },
             child: Icon(
@@ -209,7 +217,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     if (snapshot.data!.docs.length == 1) {
                       return Column(
                         children: [
-                          _timeDivider((message.data() as Map<String, dynamic>)['time']),
+                          _timeDivider(
+                              (message.data() as Map<String, dynamic>)['time']),
                           _messageItem(message, context),
                         ],
                       );
@@ -222,15 +231,19 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     if (index == snapshot.data!.docs.length - 1) {
                       return Column(
                         children: [
-                          _timeDivider((message.data() as Map<String, dynamic>)['time']),
+                          _timeDivider(
+                              (message.data() as Map<String, dynamic>)['time']),
                           _messageItem(message, context),
-                          if (!sameDay(toPass, (message.data() as Map<String, dynamic>)['time']))
+                          if (!sameDay(toPass,
+                              (message.data() as Map<String, dynamic>)['time']))
                             _timeDivider(toPass),
                         ],
                       );
                     }
                     past = (message.data() as Map<String, dynamic>)['time'];
-                    return sameDay((message.data() as Map<String, dynamic>)['time'], toPass)
+                    return sameDay(
+                            (message.data() as Map<String, dynamic>)['time'],
+                            toPass)
                         ? _messageItem(message, context)
                         : Column(
                             children: [
