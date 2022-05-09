@@ -18,6 +18,11 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
+  MaterialColor fookOrange =
+      CustomColors.createMaterialColor(Color(0xFFFE8A13));
+
+ 
+
   final Future<FirebaseApp> _initialization = Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -26,16 +31,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          primaryColor: CustomColors.createMaterialColor(Color(0xFFFE7F18)),
-          primarySwatch: CustomColors.createMaterialColor(Color(0xFFFE7F18)),
-          backgroundColor: Colors.grey.shade800,
-          cardColor: CustomColors.createMaterialColor(Color(0xFFFE7F18)),
+          primaryColor: fookOrange,
+          primarySwatch: fookOrange,
+          splashColor: CustomColors.createMaterialColor(Color(0xFFE5E5E5)),
+          backgroundColor: CustomColors.createMaterialColor(Color(0xFFE5E5E5)),
+          cardColor: CustomColors.createMaterialColor(Color(0xFFE5E5E5)),
           fontFamily: 'Roboto',
           inputDecorationTheme: const InputDecorationTheme(
             labelStyle:
                 TextStyle(color: Colors.deepOrangeAccent, fontFamily: 'Roboto'),
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.deepOrangeAccent),
+              borderSide: BorderSide(color: Colors.deepOrange),
               borderRadius: BorderRadius.all(Radius.circular(25)),
             ),
             hintStyle: TextStyle(color: Colors.deepOrangeAccent),

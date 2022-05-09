@@ -205,12 +205,12 @@ class _ChatDetailedState extends State<ChatDetailed> {
                           .instance); //Path? Behövs bara om man ska skicka bilder
                 }
               },
-              child: Icon(
+              child: const Icon(
                 Icons.send,
-                color: Theme.of(context).colorScheme.onSecondary,
+                color: Colors.white,
               ),
               shape:
-                  CircleBorder(side: BorderSide(width: 1, color: Colors.black)),
+                  CircleBorder(side: BorderSide(width: 1, color: Colors.white)),
             ),
           ),
         ],
@@ -320,7 +320,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
               Text(
                 ttime.hour.toString() + ":" + ttime.minute.toString(),
                 style: const TextStyle(
-                  color: Color(0xfff0f696),
+                  color: Colors.black,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w800,
                 ),
@@ -338,7 +338,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
           ),
           decoration: BoxDecoration(
             color: isMe
-                ? Theme.of(context).colorScheme.secondary
+                ? Colors.white
                 : Theme.of(context).colorScheme.secondaryContainer,
             borderRadius: isMe
                 ? const BorderRadius.only(
