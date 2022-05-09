@@ -3,6 +3,8 @@ import 'package:fook/widgets/chats_page.dart';
 import 'package:fook/widgets/home_page.dart';
 import 'package:fook/widgets/profile_page.dart';
 import 'package:fook/widgets/fook_logo_appbar.dart';
+import 'package:fook/widgets/sale_page.dart';
+import 'package:fluttericon/elusive_icons.dart';
 
 class NavPage extends StatefulWidget {
   const NavPage({Key? key}) : super(key: key);
@@ -21,6 +23,7 @@ class _NavPageState extends State<NavPage> {
 
   static const List<Widget> _pages = <Widget>[
     Center(child: HomePage()),
+    Center(child: SalePage()),
     Center(child: ChatsPage()),
     Center(child: ProfilePage()),
   ];
@@ -54,7 +57,12 @@ class _NavPageState extends State<NavPage> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Hem',
+              label: 'Home',
+              backgroundColor: Colors.white,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Elusive.tag),
+              label: 'Sale',
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
@@ -64,7 +72,7 @@ class _NavPageState extends State<NavPage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              label: 'Profil',
+              label: 'Profile',
               backgroundColor: Colors.white,
             ),
           ],

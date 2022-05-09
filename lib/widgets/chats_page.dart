@@ -64,7 +64,7 @@ class _ChatPageState extends State<ChatsPage> {
                               margin: const EdgeInsets.all(8.0),
                               elevation: 8.0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
+                                borderRadius: BorderRadius.circular(15.0),
                               ),
                               child: InkWell(
                                 splashColor:

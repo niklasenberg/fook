@@ -32,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 margin: const EdgeInsets.all(8.0),
                 elevation: 8.0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: Center(
                   child: Column(
@@ -52,21 +52,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: MediaQuery.of(context).size.height * 0.02,
                       ),
                       MaterialButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)
+                        ),
                         onPressed: () => FirebaseAuth.instance.signOut().then(
                             (value) => Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const LoginPage()))),
                         child: const Text('Signout'),
-                        textColor: Theme.of(context).colorScheme.onSecondary,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      MaterialButton(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ChatsPage())),
-                        child: const Text('Chats'),
                         textColor: Theme.of(context).colorScheme.onSecondary,
                         color: Theme.of(context).colorScheme.secondary,
                       ),

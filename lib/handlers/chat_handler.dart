@@ -21,7 +21,7 @@ class ChatHandler {
     return firestore
         .collection("chats")
         .where("members", arrayContains: uId)
-        .orderBy("lastActive", descending: true)
+        //.orderBy("lastActive", descending: true)
         .snapshots();
   }
 

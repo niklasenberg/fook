@@ -45,6 +45,7 @@ dependencies:
   fake_cloud_firestore: ^1.2.2
   firebase_storage: ^10.2.14
   firebase_messaging: ^11.3.0
+  fluttericon: ^2.0.0
 
 dev_dependencies:
   flutter_test:
