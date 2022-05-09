@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
 import 'package:fook/model/constants.dart';
 import 'package:fook/model/user.dart' as fook;
+import 'package:fook/widgets/fook_logo_appbar.dart';
 
 class ChatDetailed extends StatefulWidget {
-  final List<Object> infoList;
+  final Map<String, dynamic> infoList;
   const ChatDetailed(this.infoList, {Key? key}) : super(key: key);
   @override
   _ChatDetailedState createState() => _ChatDetailedState();
@@ -18,7 +19,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
   Timestamp past = Timestamp.fromDate(DateTime(2019));
   late String chatId;
   late String photoUrl;
-  late fook.User otherUser;
+  late fook.User otherUser, thisUser;
   final _scaffKey = GlobalKey<ScaffoldState>();
 
   //final ImagePicker _picker = ImagePicker();
@@ -27,11 +28,16 @@ class _ChatDetailedState extends State<ChatDetailed> {
   void initState() {
     super.initState();
     messageController = TextEditingController();
-    userId = widget.infoList[2].toString();
+    userId = widget.infoList['userId'].toString();
     myId = FirebaseAuth.instance.currentUser!.uid;
     chatId = ChatHandler.generateChatId(myId, userId);
-    photoUrl = widget.infoList[1].toString();
-    otherUser = fook.User.fromMap((widget.infoList[0] as DocumentSnapshot).data() as Map<String, dynamic>);
+    photoUrl = widget.infoList['photoUrl'].toString();
+    otherUser = fook.User.fromMap(
+        (widget.infoList['otherUser'] as DocumentSnapshot).data()
+            as Map<String, dynamic>);
+    thisUser = fook.User.fromMap(
+        (widget.infoList['thisUser'] as DocumentSnapshot).data()
+            as Map<String, dynamic>);
     /*offlineStorage.getUserInfo().then(
       (val) {
         setState(
@@ -50,6 +56,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: FookAppBar(),
       backgroundColor: Theme.of(context).backgroundColor,
       key: _scaffKey,
       body: Column(
@@ -114,11 +121,16 @@ class _ChatDetailedState extends State<ChatDetailed> {
   }
 
   Widget _messageComposer() {
-    return Row(
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          /*child: InkWell(
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('lib/assets/Fook_back_sm.png'), fit: BoxFit.fill),
+      ),
+      child: Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            /*child: InkWell(
             onTap: () => showDialog(
               // barrierDismissible: false,
               context: context,
@@ -129,13 +141,15 @@ class _ChatDetailedState extends State<ChatDetailed> {
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),*/
-        ),
-        Flexible(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: messageController,
-              /*decoration: const InputDecoration(
+          ),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration:
+                    InputDecoration(fillColor: Colors.white, filled: true),
+                controller: messageController,
+                /*decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).colorScheme.primary,
@@ -171,27 +185,36 @@ class _ChatDetailedState extends State<ChatDetailed> {
                 filled: true,
                 hintText: "Type in your message",
               ),*/
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: FloatingActionButton(
-            onPressed: () async {
-              String message = messageController.text;
-              if (message.isNotEmpty) {
-                messageController.clear();
-                await ChatHandler.sendMessage(
-                    userId, myId, true, message, FirebaseFirestore.instance); //Path? Behövs bara om man ska skicka bilder
-              }
-            },
-            child: Icon(
-              Icons.send,
-              color: Theme.of(context).colorScheme.onSecondary,
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: FloatingActionButton(
+              onPressed: () async {
+                String message = messageController.text;
+                if (message.isNotEmpty) {
+                  messageController.clear();
+                  await ChatHandler.sendMessage(
+                      userId,
+                      myId,
+                      true,
+                      message,
+                      thisUser.name,
+                      FirebaseFirestore
+                          .instance); //Path? Behövs bara om man ska skicka bilder
+                }
+              },
+              child: const Icon(
+                Icons.send,
+                color: Colors.white,
+              ),
+              shape:
+                  CircleBorder(side: BorderSide(width: 1, color: Colors.white)),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -209,7 +232,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     if (snapshot.data!.docs.length == 1) {
                       return Column(
                         children: [
-                          _timeDivider((message.data() as Map<String, dynamic>)['time']),
+                          _timeDivider(
+                              (message.data() as Map<String, dynamic>)['time']),
                           _messageItem(message, context),
                         ],
                       );
@@ -222,15 +246,19 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     if (index == snapshot.data!.docs.length - 1) {
                       return Column(
                         children: [
-                          _timeDivider((message.data() as Map<String, dynamic>)['time']),
+                          _timeDivider(
+                              (message.data() as Map<String, dynamic>)['time']),
                           _messageItem(message, context),
-                          if (!sameDay(toPass, (message.data() as Map<String, dynamic>)['time']))
+                          if (!sameDay(toPass,
+                              (message.data() as Map<String, dynamic>)['time']))
                             _timeDivider(toPass),
                         ],
                       );
                     }
                     past = (message.data() as Map<String, dynamic>)['time'];
-                    return sameDay((message.data() as Map<String, dynamic>)['time'], toPass)
+                    return sameDay(
+                            (message.data() as Map<String, dynamic>)['time'],
+                            toPass)
                         ? _messageItem(message, context)
                         : Column(
                             children: [
@@ -292,7 +320,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
               Text(
                 ttime.hour.toString() + ":" + ttime.minute.toString(),
                 style: const TextStyle(
-                  color: Color(0xfff0f696),
+                  color: Colors.black,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w800,
                 ),
@@ -310,7 +338,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
           ),
           decoration: BoxDecoration(
             color: isMe
-                ? Theme.of(context).colorScheme.secondary
+                ? Colors.white
                 : Theme.of(context).colorScheme.secondaryContainer,
             borderRadius: isMe
                 ? const BorderRadius.only(

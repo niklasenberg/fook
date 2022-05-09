@@ -18,12 +18,7 @@ class _ChatPageState extends State<ChatsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        leading: BackButton(
-          onPressed: () => Navigator.pop(context, false),
-        ),
-        title: const Text("Chats"),
-      ),
+
       // key: _scaffKey,
       body: FutureBuilder(
         future: UserHandler.getUser(
@@ -57,10 +52,13 @@ class _ChatPageState extends State<ChatsPage> {
                         future: _getChatterInfo(userId),
                         builder: (context, _snapshot) {
                           if (_snapshot.hasData) {
-                            List<Object> infoList = (_snapshot.data as List<Object>);
-                            infoList.add(userId);
-                            DocumentSnapshot docSnapUser = infoList[0] as DocumentSnapshot;
-                            fook.User otherUser = fook.User.fromMap(docSnapUser.data() as Map<String, dynamic>);
+                            Map<String, dynamic> infoMap =
+                                (_snapshot.data as Map<String, dynamic>);
+                            infoMap['userId'] = userId;
+                            DocumentSnapshot docSnapUser =
+                                infoMap['otherUser'] as DocumentSnapshot;
+                            fook.User otherUser = fook.User.fromMap(
+                                docSnapUser.data() as Map<String, dynamic>);
 
                             return Card(
                               margin: const EdgeInsets.all(8.0),
@@ -71,12 +69,11 @@ class _ChatPageState extends State<ChatsPage> {
                               child: InkWell(
                                 splashColor:
                                     Theme.of(context).colorScheme.primary,
-                                  onTap: () => Navigator.push(
+                                onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ChatDetailed(
-                                      infoList
-                                    ),
+                                    builder: (context) =>
+                                        ChatDetailed(infoMap),
                                   ),
                                 ),
                                 child: Container(
@@ -86,8 +83,8 @@ class _ChatPageState extends State<ChatsPage> {
                                   child: Center(
                                     child: Row(
                                       children: [
-                                         Hero(
-                                          tag: infoList[1].toString() + "1",
+                                        Hero(
+                                          tag: infoMap[1].toString() + "1",
                                           child: Container(
                                             width: MediaQuery.of(context)
                                                     .size
@@ -102,7 +99,7 @@ class _ChatPageState extends State<ChatsPage> {
                                               image: DecorationImage(
                                                 fit: BoxFit.cover,
                                                 image: NetworkImage(
-                                                    infoList[1].toString(),
+                                                  infoMap['photoUrl'].toString(),
                                                 ),
                                               ),
                                             ),
@@ -195,14 +192,14 @@ class _ChatPageState extends State<ChatsPage> {
 }
 
 _getChatterInfo(String userId) async {
-  List<Object> result = [];
-  result.add(await UserHandler.getUserSnapshot(
-      userId,
-      FirebaseFirestore.instance));
-  result.add(await UserHandler.getPhotoUrl(userId, FirebaseFirestore.instance));
+  Map<String, dynamic> result = {};
+  result['otherUser'] = await UserHandler.getUserSnapshot(userId, FirebaseFirestore.instance);
+  result['photoUrl'] = await UserHandler.getPhotoUrl(userId, FirebaseFirestore.instance);
+  result['thisUser'] = await UserHandler.getUserSnapshot(FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
 
   return result;
 }
+
 Widget _timeDivider(Timestamp time) {
   DateTime t = time.toDate();
   DateTime press = DateTime.now();

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fook/handlers/user_handler.dart';
 
 class ChatHandler {
   static getChat(
@@ -43,6 +44,7 @@ class ChatHandler {
     String from,
     bool isText,
     String msg,
+      String senderName,
       FirebaseFirestore firestore
   ) async {
     bool existsOrNot = await checkChatExists(to, from, firestore);
@@ -55,7 +57,7 @@ class ChatHandler {
           .doc(chatId)
           .collection('messages')
           .add(
-        {'from': from, 'message': msg, 'time': now, 'isText': true},
+        {'to': to,'from': from, 'message': msg, 'time': now, 'isText': true, 'senderName': senderName},
       );
       /*isText
           ? await tempDb
@@ -82,7 +84,7 @@ class ChatHandler {
           .doc(chatId)
           .collection('messages')
           .add(
-        {'from': from, 'message': msg, 'time': now, 'isText': true},
+        {'to': to,'from': from, 'message': msg, 'time': now, 'isText': true, 'senderName': senderName},
       );
       /*isText
           ? await tempDb

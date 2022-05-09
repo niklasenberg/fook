@@ -54,12 +54,12 @@ void main() {
     });
 
     test('Check for existing chat', () async {
-      await ChatHandler.sendMessage('1', '2', true, 'hej', firestore);
+      await ChatHandler.sendMessage('1', '2', true, 'hej', "anders", firestore);
       expect(await ChatHandler.checkChatExists('1', '2', firestore), true);
     });
 
     test('Send message', () async {
-      await ChatHandler.sendMessage('3', '4', true, 'hej', firestore);
+      await ChatHandler.sendMessage('3', '4', true, 'hej', "anders", firestore);
 
       QuerySnapshot query = await firestore.collection('chats').doc('3-4').collection('messages').get();
 
