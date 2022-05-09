@@ -9,7 +9,22 @@ class SalePage extends StatefulWidget {
 
 class _SalePageState extends State<SalePage> {
   @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(
+          title: const Text('My sales'),
+          centerTitle: true,
+          backgroundColor: Colors.white),
+      body: const Center(
+        child: Text('Create, edit or delete ads'),
+      ));
+
+  /*
+      appBar: AppBar(
+          title: const Text('My sales'),
+          centerTitle: true,
+          backgroundColor: Colors.white),
+      body: const Center(
+        child: Text('Create, edit or delete ads'),
+      ) 
+      */
 }
