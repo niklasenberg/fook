@@ -46,8 +46,6 @@ class _HomePageState extends State<HomePage> {
             }),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
-      floatingActionButton: FloatingActionButton(
-          onPressed: () => signOut(context), child: const Icon(Icons.logout)),
     );
   }
 }
@@ -59,5 +57,6 @@ signOut(BuildContext context) async {
 }
 
 Future<List<Course>> _update() async {
-  return await CourseHandler.updateUserCourses(FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
+  return await CourseHandler.updateUserCourses(
+      FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
 }

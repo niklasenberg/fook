@@ -1,9 +1,14 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fook/handlers/notification_handler.dart';
+import 'package:fook/widgets/nav_page.dart';
 import 'model/firebase_options.dart';
 import 'widgets/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fook/widgets/profile_page.dart';
+import 'package:fook/theme/colors.dart';
+
+//import 'package:fook/widgets/profile_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +18,11 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
+  MaterialColor fookOrange =
+      CustomColors.createMaterialColor(Color(0xFFFE8A13));
+
+ 
+
   final Future<FirebaseApp> _initialization = Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -21,15 +31,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
-          backgroundColor: Colors.grey.shade800,
-          cardColor: Colors.orange.shade50,
+          primaryColor: fookOrange,
+          primarySwatch: fookOrange,
+          splashColor: CustomColors.createMaterialColor(Color(0xFFE5E5E5)),
+          backgroundColor: CustomColors.createMaterialColor(Color(0xFFE5E5E5)),
+          cardColor: CustomColors.createMaterialColor(Color(0xFFE5E5E5)),
           fontFamily: 'Roboto',
           inputDecorationTheme: const InputDecorationTheme(
-            labelStyle: TextStyle(color: Colors.deepOrangeAccent,
-                fontFamily: 'Roboto'),
+            labelStyle:
+                TextStyle(color: Colors.deepOrangeAccent, fontFamily: 'Roboto'),
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.deepOrangeAccent),
+              borderSide: BorderSide(color: Colors.deepOrange),
               borderRadius: BorderRadius.all(Radius.circular(25)),
             ),
             hintStyle: TextStyle(color: Colors.deepOrangeAccent),
@@ -55,7 +67,10 @@ class MyApp extends StatelessWidget {
               child: Text('Something went wrong!'),
             );
           }
-          if (snapshot.connectionState == ConnectionState.done){
+          if (snapshot.connectionState == ConnectionState.done) {
+            final notificationService =
+                NotificationHandler(FirebaseMessaging.instance);
+            notificationService.initialise();
             return handleHomePage();
           }
 
@@ -72,15 +87,13 @@ Widget handleHomePage() {
   return StreamBuilder(
     stream: FirebaseAuth.instance.authStateChanges(),
     builder: (BuildContext context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting){
+      if (snapshot.connectionState == ConnectionState.waiting) {
         return const Scaffold(
           body: CircularProgressIndicator(),
         );
-      }
-      else if (snapshot.hasData){
-        return const ProfilePage();
-      }
-      else{
+      } else if (snapshot.hasData) {
+        return const NavPage();
+      } else {
         return const LoginPage();
       }
     },

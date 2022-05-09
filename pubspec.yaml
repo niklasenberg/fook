@@ -44,6 +44,7 @@ dependencies:
   books_finder: ^4.3.0
   fake_cloud_firestore: ^1.2.2
   firebase_storage: ^10.2.14
+  firebase_messaging: ^11.3.0
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,9 @@ flutter:
   uses-material-design: true
   assets:
   - lib/assets/logo_o.png
+  - lib/assets/Fook_back.png
+  - lib/assets/logo_w.png
+  - lib/assets/Fook_back_sm.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

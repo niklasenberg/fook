@@ -2,7 +2,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:fook/handlers/sale_handler.dart';
 import 'package:fook/model/sale.dart';
 import 'package:test/test.dart';
-import 'package:fook/handlers/book_handler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
   final firestore = FakeFirebaseFirestore();
@@ -130,6 +130,30 @@ void main() {
       bool result = await SaleHandler.isIsbnInCourses("123123", firestore);
 
       expect(true, result);
+    });
+
+    test('Add sale', () async {
+      Sale sale = Sale.fromMap({
+        'isbn': '1111',
+        'userID': 'doav7858',
+        'courses': ['SL'],
+        'condition': 'medium',
+        'price': 210,
+        'saleID': 'kl38'
+      });
+
+      SaleHandler.addSale(firestore, sale);
+
+      QuerySnapshot query = await firestore
+          .collection('sales')
+          .where('isbn', isEqualTo: '1111')
+          .get(); //.where('isbn', isEqualTo: '1111');
+
+      bool result = false;
+      for (DocumentSnapshot a in query.docs) {
+        Sale random = Sale.fromMap(a.data() as Map<String, dynamic>);
+        expect(random, sale);
+      }
     });
   });
 }

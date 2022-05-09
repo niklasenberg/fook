@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "293825347027",
+    "project_id": "fook-604f3",
+    "storage_bucket": "fook-604f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293825347027:android:ca4eb491260620c1a4c326",
+        "android_client_info": {
+          "package_name": "com.example.fook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293825347027-lup5264hvbrtere664rs40tq148eb7r8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkv0pymB7OlIGJGF9cHoffdTjq148ruYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293825347027-lup5264hvbrtere664rs40tq148eb7r8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "293825347027-uun7qb3iboetjsvgeo07f78l4ccn2kn7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fook"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
