@@ -30,6 +30,18 @@ class BookHandler {
     return (books[0].info.title + " " + books[0].info.subtitle).trim();
   }
 
+  static Future<Book> getBook(String isbn) async {
+    final List<Book> books = await queryBooks(
+      isbn,
+      queryType: QueryType.isbn,
+      maxResults: 1,
+      printType: PrintType.books,
+      orderBy: OrderBy.relevance,
+    );
+
+    return books[0];
+  }
+
   static Future<List<Book>> getBookObjects(String name) async {
     List<Book> books = await queryBooks(
       name,
