@@ -1,10 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/widgets/chats_page.dart';
 import 'package:fook/widgets/home_page.dart';
 import 'package:fook/widgets/profile_page.dart';
 import 'package:fook/widgets/fook_logo_appbar.dart';
-import 'package:fook/widgets/sale_page.dart';
-import 'package:fluttericon/elusive_icons.dart';
 
 class NavPage extends StatefulWidget {
   const NavPage({Key? key}) : super(key: key);
@@ -20,15 +19,6 @@ class _NavPageState extends State<NavPage> {
   void initState() {
     super.initState();
   }
-
-  static const List<Widget> _pages = <Widget>[
-    Center(child: HomePage()),
-    Center(child: SalePage()),
-    Center(child: ChatsPage()),
-    Center(child: ProfilePage()),
-    Center(child: DummyPage()),
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -37,50 +27,58 @@ class _NavPageState extends State<NavPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        backgroundColor: Colors.transparent,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+            backgroundColor: Colors.white,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble),
+            label: 'Chat',
+            backgroundColor: Colors.white,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+            backgroundColor: Colors.white,
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+      tabBuilder: (context, index) {
+        switch (index) {
+          case 0:
+            return HomePage();
+          case 1:
+            return ChatsPage();
+          case 2:
+            return ProfilePage();
+          default:
+            return HomePage();
+        }
+      },
+    );
+  }
+}
+
+
+/*return CupertinoTabScaffold(
       appBar: FookAppBar(),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
       ),
-      bottomNavigationBar: Container(
+      cupertinoTabBar: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('lib/assets/Fook_back_sm.png'),
               fit: BoxFit.fill),
         ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.white,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-              backgroundColor: Colors.white,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Elusive.tag),
-              label: 'Sale',
-              backgroundColor: Colors.white,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble),
-              label: 'Chat',
-              backgroundColor: Colors.white,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-              backgroundColor: Colors.white,
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-        ),
+        child: 
       ),
-    );
-  }
-}
+    );*/
