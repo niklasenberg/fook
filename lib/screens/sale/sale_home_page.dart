@@ -4,6 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/handlers/sale_handler.dart';
 import 'package:fook/model/sale.dart';
+import 'package:fook/screens/sale/widgets/rounded_app_bar.dart';
+import 'package:fook/screens/sale/sale_create_new.dart';
 
 class SaleHomePage extends StatefulWidget {
   const SaleHomePage({Key? key}) : super(key: key);
@@ -15,12 +17,13 @@ class SaleHomePage extends StatefulWidget {
 class _SaleHomePageState extends State<SaleHomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
+      //appBar: RoundedAppBar("dorra", Colors.blue),
+      appBar:AppBar(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20))),
-          title: const Text('MY SALES', style: TextStyle(color: Colors.orange)),
+          title:  Text("MY SALES", style: TextStyle(color: Colors.orange)),
           centerTitle: true,
           backgroundColor: Colors.white),
       body: Center(
@@ -48,10 +51,12 @@ class _SaleHomePageState extends State<SaleHomePage> {
                 child: ElevatedButton.icon(
                   icon: const Text('Create new'),
                   label: const Icon(Icons.add_business),
-                  onPressed: () => Fluttertoast.showToast(
-                    //handler för skapa anons ska in här
-                    msg: 'lägg in fkn handler bro',
-                    fontSize: 10,
+                  onPressed: () =>  Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SaleCreateNew(),
+                                  ),
                   ),
                 ))
           ])));

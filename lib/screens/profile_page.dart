@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fook/widgets/chats_page.dart';
-import 'package:fook/widgets/login_page.dart';
+import 'package:fook/screens/chats_page.dart';
+import 'package:fook/screens/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);

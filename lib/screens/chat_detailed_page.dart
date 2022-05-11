@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
 import 'package:fook/model/constants.dart';
 import 'package:fook/model/user.dart' as fook;
-import 'package:fook/widgets/fook_logo_appbar.dart';
+import 'package:fook/screens/fook_logo_appbar.dart';
 
 class ChatDetailed extends StatefulWidget {
   final Map<String, dynamic> infoList;
