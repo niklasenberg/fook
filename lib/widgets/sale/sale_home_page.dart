@@ -5,14 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/handlers/sale_handler.dart';
 import 'package:fook/model/sale.dart';
 
-class SalePage extends StatefulWidget {
-  const SalePage({Key? key}) : super(key: key);
+class SaleHomePage extends StatefulWidget {
+  const SaleHomePage({Key? key}) : super(key: key);
 
   @override
-  State<SalePage> createState() => _SalePageState();
+  State<SaleHomePage> createState() => _SaleHomePageState();
 }
 
-class _SalePageState extends State<SalePage> {
+class _SaleHomePageState extends State<SaleHomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
