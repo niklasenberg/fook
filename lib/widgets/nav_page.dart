@@ -67,7 +67,7 @@ class _NavPageState extends State<NavPage> {
             break;
           case 1:
             return CupertinoTabView(builder: (context) {
-              return CupertinoPageScaffold(child: SalePage());
+              return CupertinoPageScaffold(child: SaleHomePage());
             });
             break;
           case 2:
