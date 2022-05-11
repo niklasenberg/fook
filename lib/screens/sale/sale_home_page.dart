@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/handlers/sale_handler.dart';
 import 'package:fook/model/sale.dart';
-import 'package:fook/pages/sale/widgets/rounded_app_bar.dart';
-import 'package:fook/pages/sale/sale_create_new.dart';
+import 'package:fook/screens/sale/widgets/rounded_app_bar.dart';
+import 'package:fook/screens/sale/sale_create_new.dart';
 
 class SaleHomePage extends StatefulWidget {
   const SaleHomePage({Key? key}) : super(key: key);
