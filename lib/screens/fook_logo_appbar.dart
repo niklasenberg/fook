@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fook/widgets/chats_page.dart';
-import 'package:fook/widgets/home_page.dart';
-import 'package:fook/widgets/profile_page.dart';
+import 'package:fook/screens/chats_page.dart';
+import 'package:fook/screens/home_page.dart';
+import 'package:fook/screens/profile_page.dart';
 
 class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
