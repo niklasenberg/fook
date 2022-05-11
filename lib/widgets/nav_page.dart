@@ -4,6 +4,8 @@ import 'package:fook/widgets/chats_page.dart';
 import 'package:fook/widgets/home_page.dart';
 import 'package:fook/widgets/profile_page.dart';
 import 'package:fook/widgets/fook_logo_appbar.dart';
+import 'package:fook/widgets/sale_page.dart';
+import 'package:fluttericon/elusive_icons.dart';
 
 class NavPage extends StatefulWidget {
   const NavPage({Key? key}) : super(key: key);
@@ -19,6 +21,7 @@ class _NavPageState extends State<NavPage> {
   void initState() {
     super.initState();
   }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -34,6 +37,11 @@ class _NavPageState extends State<NavPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+            backgroundColor: Colors.white,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Elusive.tag),
+            label: 'Sales',
             backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
@@ -53,13 +61,29 @@ class _NavPageState extends State<NavPage> {
       tabBuilder: (context, index) {
         switch (index) {
           case 0:
-            return HomePage();
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(child: HomePage());
+            });
+            break;
           case 1:
-            return ChatsPage();
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(child: SalePage());
+            });
+            break;
           case 2:
-            return ProfilePage();
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(child: ChatsPage());
+            });
+            break;
+          case 3:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(child: ProfilePage());
+            });
+            break;
           default:
-            return HomePage();
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(child: HomePage());
+            });
         }
       },
     );
