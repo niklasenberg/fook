@@ -46,12 +46,16 @@ class SaleHandler {
     }
   }
 
+  static getSaleId(FirebaseFirestore firestore) async {
+    int saleId =
+        (await firestore.collection('sales').doc("1").get()).data()!["counter"];
+    firestore.collection('sales').doc("1").update({"counter": saleId + 1});
+    return saleId;
+  }
+
   //addsale
   static void addSale(FirebaseFirestore firestore, Sale sale) async {
-    await firestore
-        .collection('course')
-        .doc(sale.getSaleID())
-        .set(sale.toMap());
+    await firestore.collection('sales').doc(sale.saleID).set(sale.toMap());
   }
 
   //addsale

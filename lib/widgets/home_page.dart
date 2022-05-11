@@ -134,7 +134,7 @@ Widget SaleCarousel(Course course, BuildContext context){
       if (sales.isEmpty){
         return const Center(child: Text("No current literature available.\n"
             "Try pressing the \"Show all\" button"),);
-      }else{
+      }else{ //TODO: Ska vi ha listview eller Carousel?
         return ListView.builder(scrollDirection: Axis.horizontal,
           itemCount: sales.length,
             itemBuilder: (BuildContext context, int index) => SaleCard(sales[index], context));
@@ -154,44 +154,47 @@ Widget SaleCarousel(Course course, BuildContext context){
 }
 
 Widget SaleCard(Sale sale, context) {
-  return SizedBox( width: 100,child: Card(
-      child: FutureBuilder(
-        future: BookHandler.getBook(sale.isbn),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Book book = snapshot.data as Book;
-            return InkWell(
-                onTap: () => _doSomething(),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 100,
-                      width: 70,
-                      child: Ink.image(
-                        image: NetworkImage(book.info.imageLinks['smallThumbnail'].toString()),
-                        fit: BoxFit.fill,
-                      ),
+  return Card(child: FutureBuilder(
+      future: BookHandler.getBook(sale.isbn),
+      builder: (context, snapshot) {
+        if (snapshot.hasData){
+          Book book = snapshot.data as Book;
+          return InkWell(
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DummyPage())),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 100,
+                    width: 70,
+                    child: Ink.image(
+                      image: NetworkImage(book
+                          .info.imageLinks['smallThumbnail']
+                          .toString()),
+                      fit: BoxFit.fill,
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(16.0),
-                      alignment: Alignment.centerLeft,
-                      child: Text(sale.condition),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      book.info.title,
+                      style: const TextStyle(fontSize: 10),
                     ),
-                  ],
-                ));
-          } else {
-            return Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(
-                      Theme.of(context).colorScheme.primary,
-                    )));
-          }
-        },
-      )),);
-}
-
-_doSomething(){
-  //Placeholder
+                  ),
+                  MaterialButton(onPressed: null,
+                      textColor: Theme.of(context).colorScheme.onSecondary,
+                      color: Theme.of(context).colorScheme.secondary,
+                      child: Text(sale.price.toString())),
+                ],
+              ));
+        }else{
+          return Center(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(
+                    Theme.of(context).colorScheme.primary,
+                  )));
+        }
+      }));
 }
 
 Future<List<Course>> _update() async {
@@ -206,3 +209,18 @@ Future<List<Sale>> _getSales(Course course) async {
   }
   return result;
 }
+
+class DummyPage extends StatefulWidget {
+  const DummyPage({Key? key}) : super(key: key);
+
+  @override
+  State<DummyPage> createState() => _DummyPageState();
+}
+
+class _DummyPageState extends State<DummyPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+

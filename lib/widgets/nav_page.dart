@@ -26,6 +26,7 @@ class _NavPageState extends State<NavPage> {
     Center(child: SalePage()),
     Center(child: ChatsPage()),
     Center(child: ProfilePage()),
+    Center(child: DummyPage()),
   ];
 
   void _onItemTapped(int index) {
