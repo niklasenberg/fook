@@ -23,7 +23,7 @@ class _SaleHomePageState extends State<SaleHomePage> {
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20))),
-          title: Text("MY SALES", style: TextStyle(color: Colors.orange)),
+          title: const Text("MY SALES", style: TextStyle(color: Colors.orange)),
           centerTitle: true,
           backgroundColor: Colors.white),
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
