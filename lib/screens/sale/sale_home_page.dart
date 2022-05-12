@@ -17,7 +17,6 @@ class SaleHomePage extends StatefulWidget {
 class _SaleHomePageState extends State<SaleHomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
-      //appBar: RoundedAppBar("dorra", Colors.blue),
       appBar: AppBar(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(

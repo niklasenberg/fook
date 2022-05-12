@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-
 
 import '../fook_logo_appbar.dart';
 
@@ -15,24 +13,43 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: FookAppBar(),
-
-      body: Column(
-        children: [    
-          Container(
-            height: 100.0,
-            width: double.infinity,
-            child: Text("SKAPA ANNONS", style: TextStyle(color: Colors.orange)),
-            decoration:BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(20), color: Colors.blue, )
- 
-           ),
-        
+      body: Column(children: [
         Container(
           height: 100.0,
+          width: double.infinity,
+          child: const Text("SKAPA ANNONS",
+              style: TextStyle(color: Colors.orange)),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 10.0,
+                offset: Offset(0.0, 10.0),
+              )
+            ],
+          ),
+        ),
+        Container(
+            height: 100.0,
             width: double.infinity,
-            child: Text("SKAPA ANNONS", style: TextStyle(color: Colors.yellow)),
-            decoration:BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(20), color: Colors.blue, )
-        )])
-
+            child: const Text("SKAPA ANNONS",
+                style: TextStyle(color: Colors.yellow)),
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 10.0,
+                  offset: Offset(0.0, 10.0),
+                )
+              ],
+            ))
+      ])
 
       /*AppBar(
           shape: const RoundedRectangleBorder(
