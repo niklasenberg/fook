@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fook/widgets/chats_page.dart';
-import 'package:fook/widgets/home_page.dart';
-import 'package:fook/widgets/profile_page.dart';
-import 'package:fook/widgets/fook_logo_appbar.dart';
-import 'package:fook/widgets/sale/sale_home_page.dart';
+import 'package:fook/screens/chats_page.dart';
+import 'package:fook/screens/home_page.dart';
+import 'package:fook/screens/profile_page.dart';
+import 'package:fook/screens/fook_logo_appbar.dart';
+import 'package:fook/screens/sale/sale_home_page.dart';
 import 'package:fluttericon/elusive_icons.dart';
 
 class NavPage extends StatefulWidget {

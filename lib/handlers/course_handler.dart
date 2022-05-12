@@ -92,16 +92,4 @@ class CourseHandler {
       return 'not found';
     }
   }
-
-  static Future<List<Object>> getInfo(
-      String uId, FirebaseFirestore firestore) async {
-    List<Object> result = [];
-
-    result.add(await UserHandler.getUser(
-        FirebaseAuth.instance.currentUser!.uid, firestore));
-    result.add(await UserHandler.getPhotoUrl(
-        FirebaseAuth.instance.currentUser!.uid, firestore));
-
-    return result;
-  }
 }

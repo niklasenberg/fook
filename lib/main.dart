@@ -2,9 +2,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fook/handlers/notification_handler.dart';
-import 'package:fook/widgets/nav_page.dart';
+import 'package:fook/screens/nav_page.dart';
 import 'model/firebase_options.dart';
-import 'widgets/login_page.dart';
+import 'screens/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fook/theme/colors.dart';
 

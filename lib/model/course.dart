@@ -45,6 +45,14 @@ class Course extends Object {
     return code;
   }
 
+  List<String> getCurrentIsbns(){
+    List<String> result = [];
+    for(String name in literature.keys){
+      result.add(literature[name]!.first);
+    }
+    return result;
+  }
+
   List<String> getBookName() {
     return List.from(literature.keys);
   }

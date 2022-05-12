@@ -8,10 +8,11 @@ class BookHandler {
     Set<String> result = {};
 
     for (Book book in bookList) {
-      List<IndustryIdentifier> isbnList = List.from(book.info.industryIdentifiers);
+      List<IndustryIdentifier> isbnList =
+          List.from(book.info.industryIdentifiers);
 
-      for (IndustryIdentifier number in isbnList){
-          result.add(number.identifier);
+      for (IndustryIdentifier number in isbnList) {
+        result.add(number.identifier);
       }
     }
 
@@ -30,6 +31,22 @@ class BookHandler {
     return (books[0].info.title + " " + books[0].info.subtitle).trim();
   }
 
+  static Future<Book> getBook(String isbn) async {
+    final List<Book> books = await queryBooks(
+      isbn,
+      queryType: QueryType.isbn,
+      maxResults: 1,
+      printType: PrintType.books,
+      orderBy: OrderBy.relevance,
+    );
+
+<<<<<<< HEAD
+    return (books[0]);
+=======
+    return books[0];
+>>>>>>> bb9fb2f94a92415fb12f81e29adb8f1ecbaef526
+  }
+
   static Future<List<Book>> getBookObjects(String name) async {
     List<Book> books = await queryBooks(
       name,
@@ -41,22 +58,26 @@ class BookHandler {
     books
         .sort((a, b) => b.info.publishedDate!.compareTo(a.info.publishedDate!));
 
-    books = List.from(books.where((book) => (book.info.title + " " + book.info.subtitle).toLowerCase().trim().contains(name.toLowerCase())));
+    books = List.from(books.where((book) =>
+        (book.info.title + " " + book.info.subtitle)
+            .toLowerCase()
+            .trim()
+            .contains(name.toLowerCase())));
 
     return books;
   }
 }
 
 Future<List<Book>> queryBooks(
-    String query, {
-      QueryType? queryType,
-      String? langRestrict,
-      int maxResults = 10,
-      OrderBy? orderBy,
-      PrintType? printType = PrintType.all,
-      int startIndex = 0,
-      bool reschemeImageLinks = false,
-    }) async {
+  String query, {
+  QueryType? queryType,
+  String? langRestrict,
+  int maxResults = 10,
+  OrderBy? orderBy,
+  PrintType? printType = PrintType.all,
+  int startIndex = 0,
+  bool reschemeImageLinks = false,
+}) async {
   assert(query.isNotEmpty);
 
   var url = 'https://www.googleapis.com/books/v1/volumes?q=';

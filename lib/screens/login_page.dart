@@ -2,7 +2,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:fook/handlers/notification_handler.dart';
-import 'package:fook/widgets/nav_page.dart';
+import 'package:fook/screens/nav_page.dart';
 import 'package:string_validator/string_validator.dart';
 
 class LoginPage extends StatelessWidget {

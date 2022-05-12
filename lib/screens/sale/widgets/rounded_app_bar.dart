@@ -1,9 +1,10 @@
-//import 'package:firebase_auth/firebase_auth.dart';
+/*//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/foundation/diagnostics.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class RoundedAppBar extends StatelessWidget {
+class RoundedAppBar extends StatefulWidget implements PreferredSizeWidget {
   String _text;
   Color _color;
 
@@ -15,6 +16,7 @@ class RoundedAppBar extends StatelessWidget {
   Widget build(BuildContext context){
     return AppBar(
           shape: const RoundedRectangleBorder(
+            
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20))),
@@ -22,4 +24,4 @@ class RoundedAppBar extends StatelessWidget {
           centerTitle: true,
           backgroundColor: Colors.white); 
   }
-  }
+  }*/
