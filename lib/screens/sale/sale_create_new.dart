@@ -14,7 +14,6 @@ class SaleCreateNew extends StatefulWidget {
 class _SaleCreateNewState extends State<SaleCreateNew> {
   @override
   Widget build(BuildContext context) => Scaffold(
-      
       appBar: FookAppBar(),
 
       body: Column(
@@ -28,6 +27,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
            ),
         
         Container()])
+
 
       /*AppBar(
           shape: const RoundedRectangleBorder(
@@ -45,6 +45,6 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   preferredSize: const Size.fromHeight(1),
                 ),
           backgroundColor: Colors.white)*/
-          
-          
-          );}
+
+      );
+}
