@@ -87,13 +87,16 @@ class _SaleHomePageState extends State<SaleHomePage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Book book = snapshot.data as Book;
-            String a = book.info.imageLinks['smallThumbnail'].toString();
+            //String a = book.info.imageLinks['smallThumbnail'].toString();
             return ListTile(
               title: Text(sale.getIsbn()),
               subtitle: Text('Price: ' + sale.getPrice().toString() + " SEK"),
               //leading använd a
+              leading: CircleAvatar(
+                backgroundImage: AssetImage(
+                    book.info.imageLinks['smallThumbnail'].toString()),
+              ),
               onTap: () => _doSomething(), //lägg till ontap
-
               //leading fixa en bild med
             );
           }
