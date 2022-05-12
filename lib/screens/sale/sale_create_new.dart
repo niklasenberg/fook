@@ -26,7 +26,12 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
  
            ),
         
-        Container()])
+        Container(
+          height: 100.0,
+            width: double.infinity,
+            child: Text("SKAPA ANNONS", style: TextStyle(color: Colors.yellow)),
+            decoration:BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(20), color: Colors.blue, )
+        )])
 
 
       /*AppBar(
