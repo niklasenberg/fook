@@ -8,10 +8,11 @@ class BookHandler {
     Set<String> result = {};
 
     for (Book book in bookList) {
-      List<IndustryIdentifier> isbnList = List.from(book.info.industryIdentifiers);
+      List<IndustryIdentifier> isbnList =
+          List.from(book.info.industryIdentifiers);
 
-      for (IndustryIdentifier number in isbnList){
-          result.add(number.identifier);
+      for (IndustryIdentifier number in isbnList) {
+        result.add(number.identifier);
       }
     }
 
@@ -39,7 +40,7 @@ class BookHandler {
       orderBy: OrderBy.relevance,
     );
 
-    return books[0];
+    return (books[0]);
   }
 
   static Future<List<Book>> getBookObjects(String name) async {
@@ -53,22 +54,26 @@ class BookHandler {
     books
         .sort((a, b) => b.info.publishedDate!.compareTo(a.info.publishedDate!));
 
-    books = List.from(books.where((book) => (book.info.title + " " + book.info.subtitle).toLowerCase().trim().contains(name.toLowerCase())));
+    books = List.from(books.where((book) =>
+        (book.info.title + " " + book.info.subtitle)
+            .toLowerCase()
+            .trim()
+            .contains(name.toLowerCase())));
 
     return books;
   }
 }
 
 Future<List<Book>> queryBooks(
-    String query, {
-      QueryType? queryType,
-      String? langRestrict,
-      int maxResults = 10,
-      OrderBy? orderBy,
-      PrintType? printType = PrintType.all,
-      int startIndex = 0,
-      bool reschemeImageLinks = false,
-    }) async {
+  String query, {
+  QueryType? queryType,
+  String? langRestrict,
+  int maxResults = 10,
+  OrderBy? orderBy,
+  PrintType? printType = PrintType.all,
+  int startIndex = 0,
+  bool reschemeImageLinks = false,
+}) async {
   assert(query.isNotEmpty);
 
   var url = 'https://www.googleapis.com/books/v1/volumes?q=';

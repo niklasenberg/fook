@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/handlers/sale_handler.dart';
 import 'package:fook/model/sale.dart';
-import 'package:fook/screens/sale/widgets/rounded_app_bar.dart';
+import 'package:fook/model/book.dart';
+import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/screens/sale/sale_create_new.dart';
 
 class SaleHomePage extends StatefulWidget {
@@ -18,107 +18,96 @@ class _SaleHomePageState extends State<SaleHomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       //appBar: RoundedAppBar("dorra", Colors.blue),
-      appBar:AppBar(
+      appBar: AppBar(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20))),
-          title:  Text("MY SALES", style: TextStyle(color: Colors.orange)),
+          title: Text("MY SALES", style: TextStyle(color: Colors.orange)),
           centerTitle: true,
           backgroundColor: Colors.white),
-      body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-            SizedBox(
-              height: 300,
-              width: 300,
-              child: LimitedBox(
-                maxHeight: 160,
-                maxWidth: 160,
-                child: Container(
-                    color: Colors.grey,
-                    child: Container(
-                      child: myBooksales(),
-                    )),
+      body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        SizedBox(
+            height: 300,
+            width: 300,
+            child: LimitedBox(
+              maxHeight: 160,
+              maxWidth: 160,
+              child: Container(
+                  color: Colors.grey,
+                  child: Container(
+                    child: buildA(context),
+                  )),
+            )),
+        Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(32),
+            child: ElevatedButton.icon(
+              icon: const Text('Create new'),
+              label: const Icon(Icons.add_business),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SaleCreateNew(),
+                ),
               ),
-              //lägga in en lista av alla ens böcker till försälning
-              //om listan är tom ska det stå 'no ads to be shown'
+            ))
+      ]));
+
+  Widget buildA(BuildContext context) {
+    return FutureBuilder(
+        future: SaleHandler.getSalesForUser(
+            FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Sale> sales = snapshot.data as List<Sale>;
+            return Scaffold(
+              body: Center(
+                child: ListView.builder(
+                    itemCount: sales.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return SaleCard(sales[index], context);
+                    }),
+              ),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(
+                Theme.of(context).colorScheme.primary,
+              ),
             ),
-            Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(32),
-                child: ElevatedButton.icon(
-                  icon: const Text('Create new'),
-                  label: const Icon(Icons.add_business),
-                  onPressed: () =>  Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SaleCreateNew(),
-                                  ),
-                  ),
-                ))
-          ])));
-
-  /*Widget myBooksales() => ListView(
-        children: const [
-          ListTile(
-            leading: Icon(Icons.book),
-            title: Text('Bok 1'),
-            subtitle: Text('info1'),
-          ),
-          ListTile(
-            leading: Icon(Icons.book),
-            title: Text('Bok 2'),
-            subtitle: Text('info2'),
-          ),
-        ],
-      );*/
-
-  Widget myBooksales() => ListView.builder(
-        itemBuilder: (_, i) {
-          return ListTile(
-            //hämta bokobjekten
-            //välj hur de ska bli displayade här
-            title: Text('$i'),
-            //Gör en ontap för bokobbjekten en ny page
-            onTap: () {}, //lägg till ontap
           );
-        },
-      );
+        });
+  }
 
-  //Widget
+  Widget SaleCard(Sale sale, BuildContext context) {
+    return FutureBuilder(
+        future: BookHandler.getBook(sale.getIsbn()),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Book book = snapshot.data as Book;
+            String a = book.info.imageLinks['smallThumbnail'].toString();
+            return ListTile(
+              title: Text(sale.getIsbn()),
+              subtitle: Text('Price: ' + sale.getPrice().toString() + " SEK"),
+              //leading använd a
+              onTap: () => _doSomething(), //lägg till ontap
 
-  //List<Sale> mySales = await SaleHandler.getSalesForUser(FirebaseAuth.instance.currentUser!.uid,
-  //      FirebaseFirestore.instance),
+              //leading fixa en bild med
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(
+                Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          );
+        });
+  }
 
-}
-/*
-class ListPage extends StatefulWidget {
-  const ListPage({Key? key}) : super(key: key);
-
-  @override
-  State<ListPage> createState() => _ListPageState();
-}
-
-class _ListPageState extends State<ListPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
+  _doSomething() {
+    //Placeholder
   }
 }
-
-class DetailPage extends StatefulWidget {
-  const DetailPage({Key? key}) : super(key: key);
-
-  @override
-  State<DetailPage> createState() => _DetailPageState();
-}
-
-class _DetailPageState extends State<DetailPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}*/
