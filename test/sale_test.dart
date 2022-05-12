@@ -18,7 +18,7 @@ void main() {
         'The Gamification of Learning and instruction Game-based Methods and Strategies for Training and Education':
             ['9781118096345', '1118096347'],
       },
-      'isbnNumbers': ['123123']
+      'isbnNumbers': ['123123'],
     });
 
     await firestore.collection('courses').doc('1').set({
@@ -54,7 +54,8 @@ void main() {
       'courses': ['PROTO'],
       'condition': 'good',
       'price': '290',
-      'saleID': 'kl98'
+      'saleID': 'kl98',
+    'description': "Great book"
     });
 
     await firestore.collection('sales').doc('1').set({
@@ -63,7 +64,8 @@ void main() {
       'courses': ['PROG1', 'PROG2'],
       'condition': 'good',
       'price': 290,
-      'saleID': 'kl98'
+      'saleID': 'kl98',
+      'description': "Great book"
     });
 
     await firestore.collection('sales').doc('2').set({
@@ -72,7 +74,8 @@ void main() {
       'courses': ['PROTO'],
       'condition': 'bad',
       'price': 220,
-      'saleID': 'kl98'
+      'saleID': 'kl98',
+      'description': "Great book"
     });
 
     await firestore.collection('sales').doc('3').set({
@@ -81,7 +84,8 @@ void main() {
       'courses': ['PROG1', 'PROG2'],
       'condition': 'good',
       'price': 280,
-      'saleID': 'kl98'
+      'saleID': 'kl98',
+      'description': "Great book"
     });
   });
 
@@ -93,7 +97,8 @@ void main() {
         'courses': ['PROG1', 'PROG2'],
         'condition': 'good',
         'price': 280,
-        'saleID': 'kl98'
+        'saleID': 'kl98',
+        'description': "Great book"
       });
       Sale sale2 = Sale.fromMap({
         'isbn': '1236',
@@ -101,7 +106,8 @@ void main() {
         'courses': ['PROTO'],
         'condition': 'bad',
         'price': 220,
-        'saleID': 'kl98'
+        'saleID': 'kl98',
+        'description': "Great book"
       });
 
       List<Sale> compare = [sale1, sale2];
@@ -119,7 +125,8 @@ void main() {
         'courses': ['PROG1', 'PROG2'],
         'condition': 'good',
         'price': 290,
-        'saleID': 'kl98'
+        'saleID': 'kl98',
+        'description': "Great book"
       });
 
       List<Sale> result = await SaleHandler.getSalesForISBN("1236", firestore);
@@ -139,7 +146,8 @@ void main() {
         'courses': ['SL'],
         'condition': 'medium',
         'price': 210,
-        'saleID': 'kl38'
+        'saleID': 'kl38',
+        'description': "Great book"
       });
 
       SaleHandler.addSale(firestore, sale);

@@ -19,6 +19,9 @@ class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: implyLeading,
+      iconTheme: const IconThemeData(
+        color: Colors.white, //change your color here
+      ),
       title: Image.asset(
         'lib/assets/logo_w.png',
         height: 50,
