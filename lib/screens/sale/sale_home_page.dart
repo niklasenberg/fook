@@ -32,7 +32,7 @@ class _SaleHomePageState extends State<SaleHomePage> {
             width: 300,
             child: LimitedBox(
               maxHeight: 160,
-              maxWidth: 160,
+              maxWidth: 300,
               child: Container(
                   color: Colors.grey,
                   child: Container(
@@ -87,17 +87,26 @@ class _SaleHomePageState extends State<SaleHomePage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Book book = snapshot.data as Book;
-            //String a = book.info.imageLinks['smallThumbnail'].toString();
+            String a = book.info.imageLinks['smallThumbnail'].toString();
             return ListTile(
-              title: Text(sale.getIsbn()),
-              subtitle: Text('Price: ' + sale.getPrice().toString() + " SEK"),
-              //leading använd a
-              leading: CircleAvatar(
-                backgroundImage: AssetImage(
-                    book.info.imageLinks['smallThumbnail'].toString()),
+              leading: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxHeight: 60,
+                  maxWidth: 60,
+                ),
+                child: Image.network(a),
               ),
+
+              title: Text('Title: ' + book.info.title),
+              subtitle: Text('ISBN: ' +
+                  sale.getIsbn() +
+                  '\n' +
+                  'Price: ' +
+                  sale.getPrice().toString() +
+                  ':- SEK'),
+              dense: true,
+
               onTap: () => _doSomething(), //lägg till ontap
-              //leading fixa en bild med
             );
           }
           return Center(
