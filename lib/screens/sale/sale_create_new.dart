@@ -1,13 +1,8 @@
 
-import 'dart:html';
-
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fook/screens/sale/widgets/rounded_app_bar.dart';
 
 
 import '../fook_logo_appbar.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SaleCreateNew extends StatefulWidget {
   const SaleCreateNew({Key? key}) : super(key: key);
@@ -22,10 +17,13 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
       
       appBar: FookAppBar(),
 
-      body: Column(children: [    
-        Container(
-          child: Text("SKAPA ANNONS", style: TextStyle(color: Colors.orange)),
-          decoration:BoxDecoration(shape: BoxShape.rectangle, color: Colors.blue)
+      body: Column(
+        children: [    
+          Container(
+            height: 100.0,
+            width: double.infinity,
+            child: Text("SKAPA ANNONS", style: TextStyle(color: Colors.orange)),
+            decoration:BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(20), color: Colors.blue, )
  
            ),
         
