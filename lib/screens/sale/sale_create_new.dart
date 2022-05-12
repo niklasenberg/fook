@@ -1,7 +1,8 @@
+
 import 'package:flutter/material.dart';
 
+
 import '../fook_logo_appbar.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SaleCreateNew extends StatefulWidget {
   const SaleCreateNew({Key? key}) : super(key: key);
@@ -14,13 +15,19 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: FookAppBar(),
-      body: Column(children: [
-        Container(
+
+      body: Column(
+        children: [    
+          Container(
+            height: 100.0,
+            width: double.infinity,
             child: Text("SKAPA ANNONS", style: TextStyle(color: Colors.orange)),
-            decoration:
-                BoxDecoration(shape: BoxShape.rectangle, color: Colors.blue)),
-        Container()
-      ])
+            decoration:BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(20), color: Colors.blue, )
+ 
+           ),
+        
+        Container()])
+
 
       /*AppBar(
           shape: const RoundedRectangleBorder(
