@@ -1,7 +1,12 @@
 //import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fook/screens/sale/widgets/rounded_app_bar.dart';
+
+
+import '../fook_logo_appbar.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SaleCreateNew extends StatefulWidget {
@@ -14,7 +19,19 @@ class SaleCreateNew extends StatefulWidget {
 class _SaleCreateNewState extends State<SaleCreateNew> {
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar:AppBar(
+      
+      appBar: FookAppBar(),
+
+      body: Column(children: [    
+        Container(
+          child: Text("SKAPA ANNONS", style: TextStyle(color: Colors.orange)),
+          decoration:BoxDecoration(shape: BoxShape.rectangle, color: Colors.blue)
+ 
+           ),
+        
+        Container()])
+
+      /*AppBar(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
@@ -29,4 +46,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   ),
                   preferredSize: const Size.fromHeight(1),
                 ),
-          backgroundColor: Colors.white),);}
+          backgroundColor: Colors.white)*/
+          
+          
+          );}
