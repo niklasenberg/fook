@@ -114,4 +114,3 @@ class _SaleHomePageState extends State<SaleHomePage> {
     //Placeholder
   }
 }
-//hejej
