@@ -40,11 +40,7 @@ class BookHandler {
       orderBy: OrderBy.relevance,
     );
 
-<<<<<<< HEAD
     return (books[0]);
-=======
-    return books[0];
->>>>>>> bb9fb2f94a92415fb12f81e29adb8f1ecbaef526
   }
 
   static Future<List<Book>> getBookObjects(String name) async {
