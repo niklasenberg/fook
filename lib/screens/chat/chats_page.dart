@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fook/screens/chat_detailed_page.dart';
+import 'package:fook/screens/chat/chat_detailed_page.dart';
 import 'package:fook/model/user.dart' as fook;
 
 class ChatsPage extends StatefulWidget {

@@ -10,6 +10,7 @@ import 'package:fook/model/user.dart' as fook;
 import 'package:fook/handlers/sale_handler.dart';
 import 'package:fook/model/sale.dart';
 import 'package:fook/model/book.dart';
+import 'package:fook/screens/home/sale_description_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -160,7 +161,7 @@ Widget SaleCard(Sale sale, context) {
         if (snapshot.hasData){
           Book book = snapshot.data as Book;
           return InkWell(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DummyPage())),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SaleDescription(sale))),
               child: Column(
                 children: [
                   SizedBox(
@@ -208,19 +209,5 @@ Future<List<Sale>> _getSales(Course course) async {
     result.addAll(await SaleHandler.getSalesForISBN(isbn, FirebaseFirestore.instance));
   }
   return result;
-}
-
-class DummyPage extends StatefulWidget {
-  const DummyPage({Key? key}) : super(key: key);
-
-  @override
-  State<DummyPage> createState() => _DummyPageState();
-}
-
-class _DummyPageState extends State<DummyPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
 }
 

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:fook/screens/chats_page.dart';
-import 'package:fook/screens/home_page.dart';
+import 'package:fook/screens/chat/chats_page.dart';
+import 'package:fook/screens/home/home_page.dart';
 import 'package:fook/screens/profile_page.dart';
 
 class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
+  bool implyLeading = false;
 
   FookAppBar({
     this.height = 85.0,
+    required this.implyLeading,
   });
 
   @override
@@ -16,7 +18,7 @@ class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: implyLeading,
       title: Image.asset(
         'lib/assets/logo_w.png',
         height: 50,
