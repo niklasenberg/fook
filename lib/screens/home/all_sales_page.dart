@@ -76,17 +76,6 @@ class _AllSalesPageState extends State<AllSalesPage> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.5,
                       ),
-                      SizedBox(height: 40,
-                          width: 50,child: CheckboxListTile(
-                        title: Text("Show older"),
-                        value: widget.showOlder,
-                        onChanged: (newValue) {
-                          setState(() {
-                            widget.showOlder = newValue!;
-                          });
-                        },
-                        controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
-                      ))
     ])
     ),
               Container(
