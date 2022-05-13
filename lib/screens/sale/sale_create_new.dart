@@ -28,7 +28,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
         
         Container( //Nedersta rektangeln (För att kunna färgfylla, skugga osv)
-        padding: const EdgeInsets.all(40),
+        padding: const EdgeInsets.all(15),
           height: 400.0,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -43,12 +43,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   )
                 ],
               ),
+          
           child: Column(  //Nedersta rektangeln, fyller ut containern den är i men strukturerar så att allt är vertikalt
           mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
-          
-
-
-
 
           children: [
             
@@ -99,11 +96,19 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                 ),
               ],
             ), 
+            
+            
+            
+            
+            const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+
+
+
 
             Column(/*Här ska Titel, Författar, väljsskick osv vara*/ 
             children: [
               //Titel:
-              const Text("Title:", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)), 
+              const Text("Title:", style: TextStyle(color: Colors.grey)), 
               
               Container(
                 height:40,
@@ -118,19 +123,73 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   )
                 ],
                   borderRadius: BorderRadius.circular(7)
-                  
-  ),
-),
+                  ),),
               
 
+
+              const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+
+
+
               //Författare:
-              const Text("Author:", textAlign: TextAlign.center), 
+              const Text("Author:", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)), 
+              Container(
+                height:40,
+                padding: const EdgeInsets.fromLTRB(50, 20, 50, 20),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 226, 229, 231),
+                  boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 5.0,
+                   offset: Offset(0.0, 5.0),
+                  )
+                ],
+                  borderRadius: BorderRadius.circular(7)
+                  ),),
+
+
+
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+
+
+
 
               //Välj skick-ruta:
-              const Text("Condition:", textAlign: TextAlign.center), 
+              //const Text("Author:", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)), 
+              Container(
+                height:40,
+                padding: const EdgeInsets.fromLTRB(50, 20, 50, 20),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 226, 229, 231),
+                  boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 121, 121, 121),
+                    blurRadius: 5.0,
+                   offset: Offset(0.0, 5.0),
+                  )
+                ],
+                  borderRadius: BorderRadius.circular(7)
+                  ),
+                  ),
+
+
+
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+
+
+
+
 
               //Begärt pris:
               const Text("Your price:", textAlign: TextAlign.center), 
+
+
+
+              const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+
+
+
 
               //Övriga kommentarer:
               const Text("Comments:", textAlign: TextAlign.center), 
