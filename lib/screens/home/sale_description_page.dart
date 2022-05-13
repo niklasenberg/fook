@@ -39,8 +39,8 @@ class _SaleDescriptionState extends State<SaleDescription> {
                       height: MediaQuery.of(context).size.height * 0.6,
                       child: Card(
                           shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      ),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
                           elevation: 4,
                           child: Column(
                             children: [
@@ -120,17 +120,18 @@ class _SaleDescriptionState extends State<SaleDescription> {
                           )),
                     ),
                     Padding(padding: EdgeInsets.fromLTRB(0, 30, 0, 0)),
-                    SizedBox(height: 50,
-                    width: MediaQuery.of(context).size.width*0.6,
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)
+                    SizedBox(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        onPressed: () {},
+                        child: const Text('Send message to seller'),
+                        textColor: Colors.white,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
-                      onPressed: () {},
-                      child: const Text('Send message to seller'),
-                      textColor: Colors.white,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),)
+                    )
                   ],
                 );
               }
