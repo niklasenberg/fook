@@ -224,25 +224,32 @@ Widget SaleCard(Sale sale, BuildContext context) {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          height: 100,
-                          width: 70,
-                          child: Ink.image(
-                            image: NetworkImage(book
-                                .info.imageLinks['smallThumbnail']
-                                .toString()),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            /*  Container(
-                              child: Image.network(book
-                                  .info.imageLinks["smallThumbnail"]
-                                  .toString()),
-                            ),*/
+                            SizedBox(
+                              height: 100,
+                              width: 70,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(2.0,
+                                          2.0), // shadow direction: bottom right
+                                    ),
+                                  ],
+                                ),
+                                height: 130,
+                                child: Image.network(book
+                                    .info.imageLinks["smallThumbnail"]
+                                    .toString()),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
