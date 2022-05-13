@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../fook_logo_appbar.dart';
+import '../widgets/fook_logo_appbar.dart';
+
+
+
+
+
+
+
+
 
 class SaleCreateNew extends StatefulWidget {
   const SaleCreateNew({Key? key}) : super(key: key);
@@ -8,32 +16,24 @@ class SaleCreateNew extends StatefulWidget {
   @override
   State<SaleCreateNew> createState() => _SaleCreateNewState();
 }
-
+/*AppBar(shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20))),
+          title: const Text("MY SALES", style: TextStyle(color: Colors.orange)),
+          centerTitle: true,
+          backgroundColor: Colors.white
+            ) */
 class _SaleCreateNewState extends State<SaleCreateNew> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: FookAppBar(),
-      body: Column(children: [  //Övergripande strukturen
+      body: Column(children: [ //Övergripande strukturen
+        AppBar(shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))), title: const Text ("MY SALES", style: TextStyle(color: Colors.orange),),centerTitle: true,
+          backgroundColor: Colors.white), 
         
-        Container(    //Översta rektangeln (Gamla "appBaren")
-          height: 100.0,
-          width: double.infinity,
-          child: Center(child: const Text("CREATE SALE", textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.orange))),  
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.white,
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.grey,
-                blurRadius: 10.0,
-                offset: Offset(0.0, 10.0),
-              )
-            ],
-          ),
-        ),
-
+        const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
+        
         Container( //Nedersta rektangeln (För att kunna färgfylla, skugga osv)
           height: 400.0,
               width: double.infinity,
@@ -58,12 +58,12 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
           children: [
             Row(   //Här ska isbn och skanna streckkod vara. BEhövs förmodligen två columns   
-              crossAxisAlignment: CrossAxisAlignment.center,
+              
               children: [
                 Expanded(
                   child: Column(  /*ISBN och ruta*/
                     children: [
-                      const Text("ISBN:", textAlign: TextAlign.left), 
+                      const Text("ISBN:", /*textAlign: TextAlign.left*/), 
                       
                       TextFormField(
                             validator: (value) {
@@ -89,7 +89,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   child: 
                   Column(/*Skanna streckkod och ruta*/
                   children: [
-                      const Text("Skanna streckkod:", textAlign: TextAlign.center), 
+                      const Text("Scan QR-code:", textAlign: TextAlign.center), 
                       MaterialButton(
                         shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0)
@@ -107,22 +107,24 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
             Column(/*Här ska Titel, Författar, väljsskick osv vara*/ 
             children: [
-              //Titel
-              //Ruta
-              //Författare
-              //Ruta
-              //Välj skick-ruta
-              //Begärt pris
-              //Ruta
-              //Övriga kommentarer
-              //Ruta
+              //Titel:
+              const Text("Title:", textAlign: TextAlign.center), 
+
+              //Författare:
+              const Text("Author:", textAlign: TextAlign.center), 
+
+              //Välj skick-ruta:
+              const Text("Condition:", textAlign: TextAlign.center), 
+
+              //Begärt pris:
+              const Text("Your price:", textAlign: TextAlign.center), 
+
+              //Övriga kommentarer:
+              const Text("Comments:", textAlign: TextAlign.center), 
+
             ],),
           ],
         ))
-])
-
-      
-  
-
+]),
       );
 }
