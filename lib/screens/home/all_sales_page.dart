@@ -1,155 +1,177 @@
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/book_handler.dart';
-import 'package:fook/model/sale.dart';
-import 'package:fook/model/user.dart';
-import 'package:fook/screens/fook_logo_appbar.dart';
-
-import '../../handlers/user_handler.dart';
+import 'package:fook/handlers/user_handler.dart';
+import 'package:fook/screens/home/sale_description_page.dart';
+import '../../handlers/sale_handler.dart';
 import '../../model/book.dart';
+import '../../model/course.dart';
+import '../../model/sale.dart';
+import '../../model/user.dart';
+import '../fook_logo_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SaleDescription extends StatefulWidget {
-  final Sale sale;
-
-  const SaleDescription(this.sale, {Key? key}) : super(key: key);
+class AllSalesPage extends StatefulWidget {
+  final Course course;
+  bool showOlder = false;
+  AllSalesPage(this.course, {Key? key}) : super(key: key);
 
   @override
-  State<SaleDescription> createState() => _SaleDescriptionState();
+  State<AllSalesPage> createState() => _AllSalesPageState();
 }
 
-class _SaleDescriptionState extends State<SaleDescription> {
+class _AllSalesPageState extends State<AllSalesPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: FookAppBar(
-          implyLeading: true,
+    return Scaffold(appBar: FookAppBar(
+      implyLeading: true,
+    ),
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Scaffold(appBar: AppBar(backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20))),
+        centerTitle: false,
+        title: RichText(
+          text: TextSpan(
+                text: widget.course.shortCode,
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 18)),
         ),
-        backgroundColor: Theme.of(context).backgroundColor,
-        body: FutureBuilder(
-            future: _getInfo(widget.sale),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                Map<String, dynamic> infoList =
-                    snapshot.data as Map<String, dynamic>;
-                Book book = infoList["book"] as Book;
-                User seller = infoList["seller"] as User;
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      child: Card(
-                          shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      ),
-                          elevation: 4,
-                          child: Column(
-                            children: [
-                              Padding(padding: EdgeInsets.all(4)),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  RichText(
-                                    text: TextSpan(children: <TextSpan>[
-                                      TextSpan(
-                                          text: "SELLER ",
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontSize: 20)),
-                                      TextSpan(
-                                          text: (seller.name +
-                                                  " " +
-                                                  seller.lastName)
-                                              .toUpperCase(),
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black,
-                                          )),
-                                    ]),
-                                  ),
-                                ],
-                              ),
-                              SaleCard(widget.sale, seller, book, context),
-                              Column(children: [
-                                Row(children: [
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      RichText(
-                                        text: TextSpan(
-                                            text: "Sellers description:",
-                                            style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16)),
-                                      ),
-                                    ],
-                                  ),
-                                ]),
-                                Container(
-                                    padding: EdgeInsets.all(8.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.grey.shade300,
-                                    ),
-                                    margin: EdgeInsets.all(10),
-                                    width: double.infinity,
-                                    height: 100,
-                                    child: Column(
-                                      children: [
-                                        Flexible(
-                                          child: RichText(
-                                            text: TextSpan(children: <TextSpan>[
-                                              TextSpan(
-                                                  text: widget.sale.description,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                  )),
-                                            ]),
-                                          ),
-                                        ),
-                                      ],
-                                    ))
-                              ]),
-                            ],
-                          )),
-                    ),
-                    Padding(padding: EdgeInsets.fromLTRB(0, 30, 0, 0)),
-                    SizedBox(height: 50,
-                    width: MediaQuery.of(context).size.width*0.6,
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)
-                      ),
-                      onPressed: () {},
-                      child: const Text('Send message to seller'),
-                      textColor: Colors.white,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),)
-                  ],
-                );
-              }
-              return Container(
-                  margin: EdgeInsets.all(10),
+        bottom: PreferredSize(
+          child: Container(padding: const EdgeInsets.fromLTRB(18, 0, 0, 5),
+            alignment: Alignment.centerLeft,
+            child: Text(widget.course.name,
+              style: TextStyle(fontSize: 14),),
+          ),
+          preferredSize: const Size.fromHeight(1),
+        ),
+      ),
+          body: Column(children: [
+              Container(
                   width: double.infinity,
-                  height: double.infinity,
-                  child: Center(
-                      child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(
-                    Theme.of(context).colorScheme.primary,
-                  ))));
-            }));
+                  margin: EdgeInsets.fromLTRB(4, 0, 0, 0),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 4,),
+                      DropdownButton<String>(
+                        hint: Text(
+                          'Sort by',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                        ),
+                        items:
+                            <String>['Price', 'Condition'].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (_) {},
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                      ),
+                      SizedBox(height: 40,
+                          width: 50,child: CheckboxListTile(
+                        title: Text("Show older"),
+                        value: widget.showOlder,
+                        onChanged: (newValue) {
+                          setState(() {
+                            widget.showOlder = newValue!;
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+                      ))
+    ])
+    ),
+              Container(
+            padding: EdgeInsets.all(4),
+            margin: EdgeInsets.all(8),
+            height: MediaQuery.of(context).size.height*0.64,
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                  ),
+                  BoxShadow(
+                    color: Colors.white,
+                    spreadRadius: -2.0,
+                    blurRadius: 12.0,
+                  ),
+                ], borderRadius: BorderRadius.all(Radius.circular(8))
+            ),child: FutureBuilder(future: SaleHandler.getSalesForCourse(widget.course.shortCode, FirebaseFirestore.instance),
+              builder: (context, snapshot){
+                if (snapshot.hasData) {
+                  List<Sale> sales = snapshot.data as List<Sale>;
+                  if (sales.isEmpty){
+                    return Center(child: Text("We are all out of books for this course! :("),);
+                  }
+                  return ListView.builder(
+                      itemCount: sales.length,
+                      itemBuilder: (context, index) => FutureBuilder(
+                        future: _getInfo(sales[index]),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            Map<String, dynamic> infoList =
+                            snapshot.data as Map<String, dynamic>;
+                            return GestureDetector(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SaleDescription(
+                                                sales[index]))),
+                                child: SaleCard(
+                                    sales[index],
+                                    infoList["seller"],
+                                    infoList["book"],
+                                    context));
+                          }
+                          return Container(decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Theme.of(context).backgroundColor,
+                                offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                              margin: EdgeInsets.all(10),
+                              width: double.infinity,
+                              height: 150,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation(
+                                        Theme.of(context).colorScheme.primary,
+                                      ))));
+                        },
+                      ));
+                }
+                return Center(
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(
+                          Theme.of(context).colorScheme.primary,
+                        )));
+              }),)],)),
+    );
   }
+}
+
+_getInfo(Sale sale) async {
+  Map<String, dynamic> infoList = {};
+  infoList["seller"] = await UserHandler.getUser(sale.userID, FirebaseFirestore.instance);
+  infoList["book"] = await BookHandler.getBook(sale.isbn);
+  return infoList;
 }
 
 Widget SaleCard(Sale sale, User seller, Book book, context) {
   Color background = Colors.grey.shade300;
-  Color fill = Theme.of(context).backgroundColor;
+  Color fill = Colors.white;
   final List<Color> gradient = [
     background,
     background,
@@ -159,9 +181,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
   const double fillPercent = 50; // fills 56.23% for container from bottom
   const double fillStop = (100 - fillPercent) / 100;
   const List<double> stops = [0.0, fillStop, fillStop, 1.0];
-  return Column(
-    children: [
-      Container(
+  return Container(
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -224,8 +244,8 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                                     text: TextSpan(children: <TextSpan>[
                                       TextSpan(
                                           text: (book.info.title +
-                                                  ": " +
-                                                  book.info.subtitle)
+                                              ": " +
+                                              book.info.subtitle)
                                               .toUpperCase(),
                                           style: const TextStyle(
                                             fontSize: 12,
@@ -319,7 +339,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                             ),
                             Container(
                               alignment: Alignment.bottomRight,
-                              padding: new EdgeInsets.fromLTRB(0, 0, 20, 0),
+                              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                               child: RichText(
                                 text: TextSpan(children: <TextSpan>[
                                   TextSpan(
@@ -338,15 +358,5 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                 ],
               ),
             ],
-          )),
-    ],
-  );
-}
-
-_getInfo(Sale sale) async {
-  Map<String, dynamic> infoList = {};
-  infoList["book"] = await BookHandler.getBook(sale.isbn);
-  infoList["seller"] =
-      await UserHandler.getUser(sale.userID, FirebaseFirestore.instance);
-  return infoList;
+          ));
 }

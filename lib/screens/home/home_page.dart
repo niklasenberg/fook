@@ -10,6 +10,7 @@ import 'package:fook/model/user.dart' as fook;
 import 'package:fook/handlers/sale_handler.dart';
 import 'package:fook/model/sale.dart';
 import 'package:fook/model/book.dart';
+import 'package:fook/screens/home/all_sales_page.dart';
 import 'package:fook/screens/home/sale_description_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,6 +36,10 @@ class _HomePageState extends State<HomePage> {
             fook.User thisUser = snapshot.data as fook.User;
             return Scaffold(
               appBar: AppBar(
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20))),
                 centerTitle: false,
                 title: RichText(
                   text: TextSpan(children: <TextSpan>[
@@ -59,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   preferredSize: const Size.fromHeight(1),
                 ),
-                backgroundColor: Theme.of(context).backgroundColor,
+                backgroundColor: Colors.white,
               ),
               body: Center(
                 child: FutureBuilder(
@@ -112,7 +117,7 @@ Widget CourseCard(Course course, BuildContext context) {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0)
         ),
-        onPressed: () {},
+        onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => AllSalesPage(course)));},
         child: const Text('Show all'),
         textColor: Theme.of(context).colorScheme.onSecondary,
         color: Theme.of(context).colorScheme.secondary,

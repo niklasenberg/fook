@@ -31,6 +31,20 @@ class SaleHandler {
     return sales;
   }
 
+  //get sales for course
+  static Future<List<Sale>> getSalesForCourse(
+      String shortCode, FirebaseFirestore firestore) async {
+    QuerySnapshot query = await firestore
+        .collection('sales')
+        .where('courses', arrayContains: shortCode)
+        .get();
+    List<Sale> sales = [];
+    for (DocumentSnapshot a in query.docs) {
+      sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
+    }
+    return sales;
+  }
+
   //Checks if isbn is found in courses
   static Future<bool> isIsbnInCourses(
       String isbn, FirebaseFirestore firestore) async {
