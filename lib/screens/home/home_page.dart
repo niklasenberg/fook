@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fook/handlers/book_handler.dart';
@@ -12,6 +11,8 @@ import 'package:fook/model/sale.dart';
 import 'package:fook/model/book.dart';
 import 'package:fook/screens/home/all_sales_page.dart';
 import 'package:fook/screens/home/sale_description_page.dart';
+import '../../handlers/user_handler.dart';
+import '../../model/book.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -57,10 +58,13 @@ class _HomePageState extends State<HomePage> {
                   ]),
                 ),
                 bottom: PreferredSize(
-                  child: Container(padding: const EdgeInsets.fromLTRB(18, 0, 0, 5),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(18, 0, 0, 5),
                     alignment: Alignment.centerLeft,
-                    child: const Text("Your current courses",
-                    style: TextStyle(fontSize: 16),),
+                    child: const Text(
+                      "Your current courses",
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
                   preferredSize: const Size.fromHeight(1),
                 ),
@@ -108,99 +112,214 @@ Widget CourseCard(Course course, BuildContext context) {
   return Card(
     elevation: 4.0,
     child: Column(
-  children: [
-    ListTile(
-      title: Text(course.shortCode,
-      style: TextStyle(color: Theme.of(context).primaryColor),),
-      subtitle: Text(course.name),
-      trailing: MaterialButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0)
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ListTile(
+          title: Text(
+            course.shortCode,
+            style: TextStyle(color: Theme.of(context).primaryColor),
+          ),
+          subtitle: Text(course.name),
+          trailing: MaterialButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0)),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AllSalesPage(course)));
+            },
+            child: const Text('Show all'),
+            textColor: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
         ),
-        onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => AllSalesPage(course)));},
-        child: const Text('Show all'),
-        textColor: Theme.of(context).colorScheme.onSecondary,
-        color: Theme.of(context).colorScheme.secondary,
-      ),
-    ),
-    SizedBox(
-      height: 200.0,
-      child: SaleCarousel(course, context)
-    ),
-  ],
+        SizedBox(height: 200.0, child: SaleCarousel(course, context)),
+      ],
     ),
   );
 }
 
-Widget SaleCarousel(Course course, BuildContext context){
-  return FutureBuilder(future: _getSales(course),
-  builder: (context, snapshot) {
-    if(snapshot.hasData){
-      List<Sale> sales = snapshot.data as List<Sale>;
-      if (sales.isEmpty){
-        return const Center(child: Text("No current literature available.\n"
-            "Try pressing the \"Show all\" button"),);
-      }else{ //TODO: Ska vi ha listview eller Carousel?
-        return ListView.builder(scrollDirection: Axis.horizontal,
-          itemCount: sales.length,
-            itemBuilder: (BuildContext context, int index) => SaleCard(sales[index], context));
-        /*return CarouselSlider(
+Widget SaleCarousel(Course course, BuildContext context) {
+  return FutureBuilder(
+      future: _getSales(course),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<Sale> sales = snapshot.data as List<Sale>;
+          if (sales.isEmpty) {
+            return const Center(
+              child: Text("No current literature available.\n"
+                  "Try pressing the \"Show all\" button"),
+            );
+          } else {
+            //TODO: Ska vi ha listview eller Carousel?
+            return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: sales.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    SaleCard(sales[index], context));
+            /*return CarouselSlider(
             options: CarouselOptions(enableInfiniteScroll: true),
     items: sales.map((sale) => SaleCard(sale, context)).toList(),
-        );*/}
-
-    }else{
-      return Center(
-          child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(
-                Theme.of(context).colorScheme.primary,
-              )));
-    }
-  });
-}
-
-Widget SaleCard(Sale sale, context) {
-  return Card(child: FutureBuilder(
-      future: BookHandler.getBook(sale.isbn),
-      builder: (context, snapshot) {
-        if (snapshot.hasData){
-          Book book = snapshot.data as Book;
-          return InkWell(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SaleDescription(sale))),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 100,
-                    width: 70,
-                    child: Ink.image(
-                      image: NetworkImage(book
-                          .info.imageLinks['smallThumbnail']
-                          .toString()),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(16.0),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      book.info.title,
-                      style: const TextStyle(fontSize: 10),
-                    ),
-                  ),
-                  MaterialButton(onPressed: null,
-                      textColor: Theme.of(context).colorScheme.onSecondary,
-                      color: Theme.of(context).colorScheme.secondary,
-                      child: Text(sale.price.toString())),
-                ],
-              ));
-        }else{
+        );*/
+          }
+        } else {
           return Center(
               child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(
-                    Theme.of(context).colorScheme.primary,
-                  )));
+            Theme.of(context).colorScheme.primary,
+          )));
         }
-      }));
+      });
+}
+
+Widget SaleCard(Sale sale, BuildContext context) {
+  Color background = Colors.grey.shade300;
+  Color fill = Theme.of(context).backgroundColor;
+  final List<Color> gradient = [
+    background,
+    background,
+    fill,
+    fill,
+  ];
+
+  const double fillPercent = 50; // fills 56.23% for container from bottom
+  const double fillStop = (100 - fillPercent) / 100;
+  const List<double> stops = [0.0, fillStop, fillStop, 1.0];
+  return Card(
+      color: Theme.of(context).colorScheme.background,
+      child: FutureBuilder(
+          future: _getInfo(sale),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              Map<String, dynamic> infoList =
+                  snapshot.data as Map<String, dynamic>;
+              Book book = infoList["book"] as Book;
+              fook.User seller = infoList["seller"] as fook.User;
+              return InkWell(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SaleDescription(sale))),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(
+                              2.0, 2.0), // shadow direction: bottom right
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        colors: gradient,
+                        stops: stops,
+                        end: Alignment.bottomCenter,
+                        begin: Alignment.topCenter,
+                      ),
+                    ),
+                    height: 100,
+                    width: 150,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 100,
+                          width: 70,
+                          child: Ink.image(
+                            image: NetworkImage(book
+                                .info.imageLinks['smallThumbnail']
+                                .toString()),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            /*  Container(
+                              child: Image.network(book
+                                  .info.imageLinks["smallThumbnail"]
+                                  .toString()),
+                            ),*/
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Text(
+                                    (book.info.title +
+                                            ": " +
+                                            book.info.subtitle)
+                                        .toUpperCase(),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(children: <TextSpan>[
+                                      const TextSpan(
+                                          text: "Condition: ",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12)),
+                                      TextSpan(
+                                          text: sale.condition,
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontSize: 12)),
+                                    ]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(children: <TextSpan>[
+                                      const TextSpan(
+                                          text: "Seller: ",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12)),
+                                      TextSpan(
+                                          text: seller.name +
+                                              " " +
+                                              seller.lastName,
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontSize: 12)),
+                                    ]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ));
+            } else {
+              return Center(
+                  child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(
+                Theme.of(context).colorScheme.primary,
+              )));
+            }
+          }));
 }
 
 Future<List<Course>> _update() async {
@@ -210,9 +329,17 @@ Future<List<Course>> _update() async {
 
 Future<List<Sale>> _getSales(Course course) async {
   List<Sale> result = [];
-  for(String isbn in course.getCurrentIsbns()){
-    result.addAll(await SaleHandler.getSalesForISBN(isbn, FirebaseFirestore.instance));
+  for (String isbn in course.getCurrentIsbns()) {
+    result.addAll(
+        await SaleHandler.getSalesForISBN(isbn, FirebaseFirestore.instance));
   }
   return result;
 }
 
+_getInfo(Sale sale) async {
+  Map<String, dynamic> infoList = {};
+  infoList["book"] = await BookHandler.getBook(sale.isbn);
+  infoList["seller"] =
+      await UserHandler.getUser(sale.userID, FirebaseFirestore.instance);
+  return infoList;
+}
