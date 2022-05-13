@@ -22,7 +22,7 @@ class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: 50,
       ),
       centerTitle: true,
-      flexibleSpace: Container(
+      flexibleSpace: Container( 
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('lib/assets/Fook_back.png'),

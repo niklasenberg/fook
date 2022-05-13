@@ -16,14 +16,7 @@ class SaleCreateNew extends StatefulWidget {
   @override
   State<SaleCreateNew> createState() => _SaleCreateNewState();
 }
-/*AppBar(shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20))),
-          title: const Text("MY SALES", style: TextStyle(color: Colors.orange)),
-          centerTitle: true,
-          backgroundColor: Colors.white
-            ) */
+
 class _SaleCreateNewState extends State<SaleCreateNew> {
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -35,6 +28,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
         
         Container( //Nedersta rektangeln (För att kunna färgfylla, skugga osv)
+        padding: const EdgeInsets.all(40),
           height: 400.0,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -57,9 +51,10 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
 
           children: [
+            
             Row(   //Här ska isbn och skanna streckkod vara. BEhövs förmodligen två columns   
               
-              children: [
+              children: [                
                 Expanded(
                   child: Column(  /*ISBN och ruta*/
                     children: [
@@ -108,7 +103,25 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
             Column(/*Här ska Titel, Författar, väljsskick osv vara*/ 
             children: [
               //Titel:
-              const Text("Title:", textAlign: TextAlign.center), 
+              const Text("Title:", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)), 
+              
+              Container(
+                height:40,
+                padding: const EdgeInsets.fromLTRB(50, 20, 50, 20),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 226, 229, 231),
+                  boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 5.0,
+                   offset: Offset(0.0, 5.0),
+                  )
+                ],
+                  borderRadius: BorderRadius.circular(7)
+                  
+  ),
+),
+              
 
               //Författare:
               const Text("Author:", textAlign: TextAlign.center), 
