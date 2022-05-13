@@ -105,7 +105,12 @@ class _SaleHomePageState extends State<SaleHomePage> {
                   ':- SEK'),
               dense: true,
 
-              onTap: () => _doSomething(), //lägg till ontap
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SaleCreateNew(),
+                ),
+              ), //lägg till ontap
             );
           }
           return Center(
