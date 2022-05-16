@@ -135,7 +135,7 @@ Widget CourseCard(Course course, BuildContext context) {
             color: Theme.of(context).colorScheme.secondary,
           ),
         ),
-        SizedBox(height: 200.0, child: SaleCarousel(course, context)),
+        SizedBox(height: 300.0, child: SaleCarousel(course, context)),
       ],
     ),
   );
@@ -205,7 +205,7 @@ Widget SaleCard(Sale sale, BuildContext context) {
                   child: Container(
                     decoration: BoxDecoration(
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.grey,
                           offset: Offset(
                               2.0, 2.0), // shadow direction: bottom right
@@ -223,11 +223,13 @@ Widget SaleCard(Sale sale, BuildContext context) {
                     width: 150,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
+                            SizedBox(height: 10),
                             SizedBox(
                               height: 100,
                               width: 70,
@@ -241,13 +243,13 @@ Widget SaleCard(Sale sale, BuildContext context) {
                                     ),
                                   ],
                                 ),
-                                height: 130,
+                                height: 50,
                                 child: Image.network(book
                                     .info.imageLinks["smallThumbnail"]
                                     .toString()),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -261,7 +263,7 @@ Widget SaleCard(Sale sale, BuildContext context) {
                                         .toUpperCase(),
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 12,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -320,11 +322,30 @@ Widget SaleCard(Sale sale, BuildContext context) {
                     ),
                   ));
             } else {
-              return Center(
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(
-                Theme.of(context).colorScheme.primary,
-              )));
+              return Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      const BoxShadow(
+                        color: Colors.grey,
+                        offset:
+                            Offset(2.0, 2.0), // shadow direction: bottom right
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                      colors: gradient,
+                      stops: stops,
+                      end: Alignment.bottomCenter,
+                      begin: Alignment.topCenter,
+                    ),
+                  ),
+                  height: 100,
+                  width: 150,
+                  child: Center(
+                      child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(
+                    Theme.of(context).colorScheme.primary,
+                  ))));
             }
           }));
 }
