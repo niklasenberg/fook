@@ -1,11 +1,11 @@
-
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:string_validator/string_validator.dart';
+import '../../handlers/sale_handler.dart';
 import '../../model/book.dart';
 import '../../model/sale.dart';
 import '../widgets/fook_logo_appbar.dart';
@@ -21,6 +21,8 @@ class SaleCreateNew extends StatefulWidget {
 class _SaleCreateNewState extends State<SaleCreateNew> {
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController conditionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -81,40 +83,77 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                               const Text(
                                 "ISBN:", /*textAlign: TextAlign.left*/
                               ),
-
                               TextFormField(
                                 //kollar nu enbart att den inte får vara längre än 13
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(13),
-                                  
                                 ],
                                 onFieldSubmitted: (String newValue) async {
                                   //If not 10 or 13 do this
                                   //kolla att numret är 10 eller 13 siffror långt och endast består av nummer
-                                  
-                                  if((newValue.length != 10 && newValue.length != 13) && isNumeric(newValue)){  // ex. 5677
-                                    toastMessage("ISBN should contain 10 or 13 characters");
-                                  }else if((newValue.length != 10 && newValue.length != 13) && !isNumeric(newValue)){ //ex. hjkhk
-                                    toastMessage("ISBN should contain 10 or 13 characters");
-                                    toastMessage("ISBN should only contain numbers");
-                                  }else if((newValue.length == 10 || newValue.length == 13) && !isNumeric(newValue)){
-                                    toastMessage("ISBN should only contain numbers");
-                                  }else {
 
-                                    //Kolla att ISBN finns 
+                                  if ((newValue.length != 10 &&
+                                          newValue.length != 13) &&
+                                      isNumeric(newValue)) {
+                                    // ex. 5677
+                                    toastMessage(
+                                        "ISBN should contain 10 or 13 characters");
+                                  } else if ((newValue.length != 10 &&
+                                          newValue.length != 13) &&
+                                      !isNumeric(newValue)) {
+                                    //ex. hjkhk
+                                    toastMessage(
+                                        "ISBN should contain 10 or 13 characters");
+                                    toastMessage(
+                                        "ISBN should only contain numbers");
+                                  } else if ((newValue.length == 10 ||
+                                          newValue.length == 13) &&
+                                      !isNumeric(newValue)) {
+                                    toastMessage(
+                                        "ISBN should only contain numbers");
+                                  } else {
+                                    //Kolla att ISBN finns
                                     setState(() async {
-                                    Book book =
-                                        await BookHandler.getBook(newValue);
-                                    titleController.text = book.info.title;
-                                    authorController.text = book
-                                        .info.authors[0]; //behöver alla authors
-                                  });}
+                                      Book book =
+                                          await BookHandler.getBook(newValue);
+                                      titleController.text = book.info.title;
+                                      authorController.text = book.info
+                                          .authors[0]; //behöver alla authors
+                                    });
 
+                                    setState(() async {
+                                      int inputPrice =
+                                          priceController.text as int;
+                                    });
 
+                                    setState(() {
+                                      var condition = conditionController;
+                                    });
+                                  }
 
-
-                              
                                   /* setState(() async{
+
+
+                                    setState(() async {
+                                      /* Sale sale = await SaleHandler.getSaleId(
+                                          FirebaseFirestore.instance);*/
+
+                                      List<Sale> sale =
+                                          await SaleHandler.getSalesForUser(
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid,
+                                              FirebaseFirestore.instance);
+
+                                      for (Sale s in sale) {
+                                        if (s.getPrice() != 0) {
+                                          priceController.text =
+                                              s.getPrice().toString();
+                                        }
+                                      }
+
+                                      /*  priceController.text =
+                                          sale.getPrice().toString();*/
+                                    });
                                   
 
                                 HÄMTA OCH SETTA pris, condition, kommentar                                      
@@ -238,7 +277,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: TextField(
                             //pricecontroller ska kunna ändra
-                            controller: titleController,
+                            controller: priceController,
                             decoration: const InputDecoration(
                                 filled: false, fillColor: Colors.white),
                             enabled: true,
@@ -260,6 +299,18 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                               //fixa textformfield här
                               ),
                         ),
+
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: ElevatedButton.icon(
+                            label: const Text('Publish'),
+                            icon: const Icon(Icons.publish),
+                            onPressed: (() => _doSomething(
+
+                                //create Sale object from the texteditingcontrollers
+                                )),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -268,19 +319,20 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         ))),
       );
 
-      toastMessage(String toastMessage, ){
-        Fluttertoast.showToast(
-                                      msg: toastMessage,
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0 );
-      }
-      
+  toastMessage(
+    String toastMessage,
+  ) {
+    Fluttertoast.showToast(
+        msg: toastMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  _doSomething() {
+    //Placeholder
+  }
 }
-
-
-
-

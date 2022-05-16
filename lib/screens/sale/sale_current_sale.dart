@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../handlers/sale_handler.dart';
 import '../../model/book.dart';
+import '../../model/sale.dart';
 import '../widgets/fook_logo_appbar.dart';
 import 'package:fook/handlers/book_handler.dart';
 
@@ -12,6 +15,11 @@ class SaleCurrentSale extends StatefulWidget {
 }
 
 class _SaleCurrentSale extends State<SaleCurrentSale> {
+  late String thisIsbn;
+  late String thisAuthor;
+  late String thisTitle;
+  late String thisPrice;
+  late String thisCondition;
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
 
@@ -294,4 +302,25 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
           ]),
         ))),
       );
+
+  Widget buildA(BuildContext context) {
+    return FutureBuilder(
+        future: SaleHandler.getSalesForUser(
+            FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Sale> sales = snapshot.data as List<Sale>;
+            return Scaffold(
+              body: Center(),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(
+                Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          );
+        });
+  }
 }
