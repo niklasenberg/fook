@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import '../../handlers/sale_handler.dart';
 import '../../model/book.dart';
-import '../../model/sale.dart';
 import '../widgets/fook_logo_appbar.dart';
 import 'package:fook/handlers/book_handler.dart';
 
-class SaleCreateNew extends StatefulWidget {
-  const SaleCreateNew({Key? key}) : super(key: key);
+class SaleCurrentSale extends StatefulWidget {
+  const SaleCurrentSale({Key? key}) : super(key: key);
 
   @override
-  State<SaleCreateNew> createState() => _SaleCreateNewState();
+  State<SaleCurrentSale> createState() => _SaleCurrentSale();
 }
 
-class _SaleCreateNewState extends State<SaleCreateNew> {
+class _SaleCurrentSale extends State<SaleCurrentSale> {
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
 
@@ -36,7 +33,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         bottomLeft: Radius.circular(20),
                         bottomRight: Radius.circular(20))),
                 title: const Text(
-                  "CREATE SALE",
+                  "CURRENT SALE",
                   style: TextStyle(color: Colors.orange),
                 ),
                 backgroundColor: Colors.white),
@@ -96,32 +93,20 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                 color: Theme.of(context).primaryColor),
                             controller: passwordCtrl) */
 
+                              //ISBN textformfield handler
                               TextFormField(
-                                //kollar nu enbart att den inte får vara längre än 13
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(13),
-                                ],
-                                onFieldSubmitted: (String newValue) async {
+                                onChanged: (String newValue) async {
                                   //kolla att numret är 10 eller 13 siffror långt och endast består av nummer
 
-                                  setState(() async {
-                                    Book book =
-                                        await BookHandler.getBook(newValue);
-                                    titleController.text = book.info.title;
-                                    authorController.text = book
-                                        .info.authors[0]; //behöver alla authors
-                                  });
-
-                                  /* setState(() async{
-                                  
-
-                                HÄMTA OCH SETTA pris, condition, kommentar                                      
-                                
-                                  Sale sale = await SaleHandler.getSaleId(firestore)
-                                });*/
+                                  Book book =
+                                      await BookHandler.getBook(newValue);
+                                  titleController.text =
+                                      book.info.title + book.info.subtitle;
+                                  authorController.text = book
+                                      .info.authors[0]; //behöver alla authors
                                 },
                                 decoration: const InputDecoration(
-                                  labelText: 'xxxxxxxxxx',
+                                  labelText: "hello",
                                   fillColor: Colors.white,
                                   focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
@@ -135,6 +120,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                             ],
                           ),
                         ),
+
+                        //Gråa ut knappen så den försvinner och ej går o klicka på
+                        //kanaske popupmeddelanden
                         Expanded(
                           child: Column(/*Skanna streckkod och ruta*/
                               children: [
@@ -158,6 +146,8 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         ),
                       ],
                     ),
+
+                    //Titel handler
                     Column(
                       /*Här ska Titel, Författar, väljsskick osv vara*/
 
@@ -177,12 +167,14 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                             margin: const EdgeInsets.only(bottom: 10),
                             child: TextField(
                               controller: titleController,
-                              decoration: const InputDecoration(
-                                  filled: false, fillColor: Colors.white),
+                              decoration: InputDecoration(
+                                  filled: true, fillColor: Colors.grey),
                               enabled: false,
                             )),
 
                         //Författare:
+
+                        //författare handler
                         const Align(
                           alignment: Alignment.bottomLeft,
                           child: Text(
@@ -192,14 +184,19 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         ),
 
                         Container(
-                          child: TextField(
-                            controller: authorController,
-                            decoration: const InputDecoration(
-                                filled: true, fillColor: Colors.white),
-                            enabled: false,
-                          ),
                           height: 55,
                           margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            color: Color.fromARGB(255, 226, 229, 231),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 5.0,
+                                offset: Offset(0.0, 5.0),
+                              )
+                            ],
+                          ),
                         ),
 
                         //Välj skick-ruta:
@@ -213,15 +210,23 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         ),
 
                         Align(
-                          alignment: Alignment.bottomLeft,
-                          child: TextField(
-                            //conditioncontroller, ska kunna ändra
-                            controller: titleController,
-                            decoration: const InputDecoration(
-                                filled: false, fillColor: Colors.white),
-                            enabled: true,
-                          ),
-                        ),
+                            alignment: Alignment.bottomLeft,
+                            child: Container(
+                              height: 40,
+                              width: 130,
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                color: Color.fromARGB(255, 226, 229, 231),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color.fromARGB(255, 121, 121, 121),
+                                    blurRadius: 5.0,
+                                    offset: Offset(0.0, 5.0),
+                                  )
+                                ],
+                              ),
+                            )),
 
                         //Begärt pris:
                         const Align(
@@ -234,12 +239,22 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
                         Align(
                           alignment: Alignment.bottomLeft,
-                          child: TextField(
-                            //pricecontroller ska kunna ändra
-                            controller: titleController,
-                            decoration: const InputDecoration(
-                                filled: false, fillColor: Colors.white),
-                            enabled: true,
+                          child: Container(
+                            alignment: Alignment.bottomLeft,
+                            height: 37,
+                            width: 90,
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              color: Color.fromARGB(255, 226, 229, 231),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color.fromARGB(255, 121, 121, 121),
+                                  blurRadius: 5.0,
+                                  offset: Offset(0.0, 5.0),
+                                )
+                              ],
+                            ),
                           ),
                         ),
 
@@ -254,9 +269,23 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
                         Align(
                           alignment: Alignment.bottomLeft,
-                          child: TextFormField(
-                              //fixa textformfield här
-                              ),
+                          child: Container(
+                            alignment: Alignment.bottomLeft,
+                            height: 200,
+                            width: 140,
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              color: Color.fromARGB(255, 226, 229, 231),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color.fromARGB(255, 121, 121, 121),
+                                  blurRadius: 5.0,
+                                  offset: Offset(0.0, 5.0),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),

@@ -6,6 +6,7 @@ import 'package:fook/model/sale.dart';
 import 'package:fook/model/book.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/screens/sale/sale_create_new.dart';
+import 'package:fook/screens/sale/sale_current_sale.dart';
 
 class SaleHomePage extends StatefulWidget {
   const SaleHomePage({Key? key}) : super(key: key);
@@ -108,7 +109,7 @@ class _SaleHomePageState extends State<SaleHomePage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SaleCreateNew(),
+                  builder: (context) => SaleCurrentSale(),
                 ),
               ), //lägg till ontap
             );
