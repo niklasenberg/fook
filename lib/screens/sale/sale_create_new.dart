@@ -19,7 +19,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
   Widget build(BuildContext context) => Scaffold(
     resizeToAvoidBottomInset : false,
     
-        appBar: FookAppBar(),
+        appBar: FookAppBar(implyLeading: true,),
         body: (SingleChildScrollView(
            child: ConstrainedBox(constraints: BoxConstraints(),
           child: Column(children: [

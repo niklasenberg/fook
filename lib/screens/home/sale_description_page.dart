@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/model/sale.dart';
 import 'package:fook/model/user.dart';
-import 'package:fook/screens/fook_logo_appbar.dart';
 
 import '../../handlers/user_handler.dart';
 import '../../model/book.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../widgets/fook_logo_appbar.dart';
 
 class SaleDescription extends StatefulWidget {
   final Sale sale;

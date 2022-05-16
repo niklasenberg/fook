@@ -7,8 +7,9 @@ import '../../model/book.dart';
 import '../../model/course.dart';
 import '../../model/sale.dart';
 import '../../model/user.dart';
-import '../fook_logo_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../widgets/fook_logo_appbar.dart';
 
 class AllSalesPage extends StatefulWidget {
   final Course course;
