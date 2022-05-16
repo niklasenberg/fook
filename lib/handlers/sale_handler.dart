@@ -2,6 +2,9 @@
 import 'package:fook/model/sale.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../model/course.dart';
+import 'course_handler.dart';
+
 class SaleHandler {
   //get sales for user x
   static Future<List<Sale>> getSalesForUser(
@@ -27,6 +30,50 @@ class SaleHandler {
     List<Sale> sales = [];
     for (DocumentSnapshot a in query.docs) {
       sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
+    }
+    return sales;
+  }
+
+  //get sales for course
+  static Future<List<Sale>> getSalesForCourse(
+      String shortCode, String order, FirebaseFirestore firestore) async {
+    QuerySnapshot query = await firestore
+        .collection('sales')
+        .where('courses', arrayContains: shortCode)
+        .get();
+    List<Sale> sales = [];
+    for (DocumentSnapshot a in query.docs) {
+      sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
+    }
+
+    if(order == "Price"){
+      sales.sort((a, b) => a.price.compareTo(b.price));
+    }else if (order == "Condition"){
+      sales.sort((a, b) => b.condition.compareTo(a.condition));
+    }
+    return sales;
+  }
+
+  //get sales for course
+  static Future<List<Sale>> getCurrentSalesForCourse(
+      String shortCode, String order, FirebaseFirestore firestore) async {
+    Course course = await CourseHandler.getCourse(shortCode, firestore);
+    QuerySnapshot query = await firestore
+        .collection('sales')
+        .where('courses', arrayContains: shortCode)
+        .get();
+    List<Sale> sales = [];
+    for (DocumentSnapshot a in query.docs) {
+      Sale sale = Sale.fromMap(a.data() as Map<String, dynamic>);
+      if(course.getCurrentIsbns().contains(sale.isbn)){
+        sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
+      }
+    }
+
+    if(order == "Price"){
+      sales.sort((a, b) => a.price.compareTo(b.price));
+    }else if (order == "Condition"){
+      sales.sort((a, b) => b.condition.compareTo(a.condition));
     }
     return sales;
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fook/screens/chats_page.dart';
-import 'package:fook/screens/home_page.dart';
+import 'package:fook/screens/chat/chats_page.dart';
+import 'package:fook/screens/home/home_page.dart';
 import 'package:fook/screens/profile_page.dart';
 import 'package:fook/screens/widgets/fook_logo_appbar.dart';
 import 'package:fook/screens/sale/sale_home_page.dart';
@@ -37,7 +37,7 @@ class _NavPageState extends State<NavPage>  {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: FookAppBar(),
+      appBar: FookAppBar(implyLeading: false,),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,

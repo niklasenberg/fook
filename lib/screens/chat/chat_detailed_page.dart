@@ -56,7 +56,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: FookAppBar(),
+      appBar: FookAppBar(implyLeading: false,),
       backgroundColor: Theme.of(context).backgroundColor,
       key: _scaffKey,
       body: Column(

@@ -21,8 +21,6 @@ class MyApp extends StatelessWidget {
   MaterialColor fookOrange =
       CustomColors.createMaterialColor(Color(0xFFFE8A13));
 
- 
-
   final Future<FirebaseApp> _initialization = Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
