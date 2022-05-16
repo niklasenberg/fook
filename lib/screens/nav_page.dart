@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fook/screens/chat/chats_page.dart';
 import 'package:fook/screens/home/home_page.dart';
 import 'package:fook/screens/profile_page.dart';
-import 'package:fook/screens/fook_logo_appbar.dart';
+import 'package:fook/screens/widgets/fook_logo_appbar.dart';
 import 'package:fook/screens/sale/sale_home_page.dart';
 import 'package:fluttericon/elusive_icons.dart';
 
@@ -13,7 +13,7 @@ class NavPage extends StatefulWidget {
   _NavPageState createState() => _NavPageState();
 }
 
-class _NavPageState extends State<NavPage> {
+class _NavPageState extends State<NavPage>  {
   int _selectedIndex = 0;
 
   @override

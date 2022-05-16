@@ -1,16 +1,15 @@
-/*//import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/diagnostics.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class RoundedAppBar extends StatefulWidget implements PreferredSizeWidget {
-  String _text;
-  Color _color;
+  final String _text;
+  final Color _color;
+
+
 
   RoundedAppBar(this._text, this._color);
-  
-
 
   @override
   Widget build(BuildContext context){
@@ -24,4 +23,33 @@ class RoundedAppBar extends StatefulWidget implements PreferredSizeWidget {
           centerTitle: true,
           backgroundColor: Colors.white); 
   }
-  }*/
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => throw UnimplementedError();
+  }
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
