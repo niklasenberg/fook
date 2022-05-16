@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../model/book.dart';
 import '../widgets/fook_logo_appbar.dart';
+import 'package:fook/handlers/book_handler.dart';
 
 class SaleCreateNew extends StatefulWidget {
   const SaleCreateNew( {Key? key}) : super(key: key);
@@ -10,6 +12,9 @@ class SaleCreateNew extends StatefulWidget {
 }
 
 class _SaleCreateNewState extends State<SaleCreateNew> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController authorController = TextEditingController();
+
   @override
   Widget build(BuildContext context) => Scaffold(
     resizeToAvoidBottomInset : false,
@@ -88,7 +93,14 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                             controller: passwordCtrl) */
 
 
-                              TextFormField(   
+                              TextFormField( onChanged: (String newValue) async {
+                                //kolla att numret är 10 eller 13 siffror långt och endast består av nummer
+
+
+                                Book book = await BookHandler.getBook(newValue);
+                                titleController.text = book.info.title + book.info.subtitle;
+                                authorController.text = book.info.authors[0]; //behöver alla authors
+                              },
                                 decoration: const InputDecoration(
                                   labelText: 'xxxxxxxxxx',
                                   fillColor: Colors.white,
@@ -141,16 +153,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         Container(
                           height: 55,
                           margin: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                              color: Color.fromARGB(255, 226, 229, 231),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 5.0,
-                                  offset: Offset(0.0, 5.0),
-                                )
-                              ],),
+
+                          child: TextField(controller: titleController, decoration: InputDecoration(filled: true, fillColor: Colors.grey),
+                            enabled: false,)
                         ),
 
                         //Författare:

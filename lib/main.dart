@@ -42,21 +42,21 @@ class MyApp extends StatelessWidget {
                 TextStyle(color: Colors.deepOrangeAccent, fontFamily: 'Roboto'),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.deepOrange),
-              borderRadius: BorderRadius.all(Radius.circular(25)),
+              borderRadius: BorderRadius.all(Radius.circular(15)),
             ),
             hintStyle: TextStyle(color: Colors.deepOrangeAccent),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.deepOrangeAccent),
-                borderRadius: BorderRadius.all(Radius.circular(25))),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.deepOrangeAccent),
-                borderRadius: BorderRadius.all(Radius.circular(25))),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
             errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red),
-                borderRadius: BorderRadius.all(Radius.circular(25))),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
             focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red),
-                borderRadius: BorderRadius.all(Radius.circular(25))),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
           )),
       home: FutureBuilder(
         future: _initialization,
