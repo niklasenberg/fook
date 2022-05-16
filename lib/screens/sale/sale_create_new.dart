@@ -1,7 +1,11 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../handlers/sale_handler.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:string_validator/string_validator.dart';
 import '../../model/book.dart';
 import '../../model/sale.dart';
 import '../widgets/fook_logo_appbar.dart';
@@ -78,40 +82,38 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                 "ISBN:", /*textAlign: TextAlign.left*/
                               ),
 
-                              /*TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Password can\'t be empty!';
-                              }
-                              return null;
-                            },
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25))),
-                              labelText: 'Password',
-                            ),
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor),
-                            controller: passwordCtrl) */
-
                               TextFormField(
                                 //kollar nu enbart att den inte får vara längre än 13
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(13),
+                                  
                                 ],
                                 onFieldSubmitted: (String newValue) async {
+                                  //If not 10 or 13 do this
                                   //kolla att numret är 10 eller 13 siffror långt och endast består av nummer
+                                  
+                                  if((newValue.length != 10 && newValue.length != 13) && isNumeric(newValue)){  // ex. 5677
+                                    toastMessage("ISBN should contain 10 or 13 characters");
+                                  }else if((newValue.length != 10 && newValue.length != 13) && !isNumeric(newValue)){ //ex. hjkhk
+                                    toastMessage("ISBN should contain 10 or 13 characters");
+                                    toastMessage("ISBN should only contain numbers");
+                                  }else if((newValue.length == 10 || newValue.length == 13) && !isNumeric(newValue)){
+                                    toastMessage("ISBN should only contain numbers");
+                                  }else {
 
-                                  setState(() async {
+                                    //Kolla att ISBN finns 
+                                    setState(() async {
                                     Book book =
                                         await BookHandler.getBook(newValue);
                                     titleController.text = book.info.title;
                                     authorController.text = book
                                         .info.authors[0]; //behöver alla authors
-                                  });
+                                  });}
 
+
+
+
+                              
                                   /* setState(() async{
                                   
 
@@ -265,4 +267,20 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
           ]),
         ))),
       );
+
+      toastMessage(String toastMessage, ){
+        Fluttertoast.showToast(
+                                      msg: toastMessage,
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0 );
+      }
+      
 }
+
+
+
+
