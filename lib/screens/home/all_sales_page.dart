@@ -12,7 +12,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AllSalesPage extends StatefulWidget {
   final Course course;
-  bool showOlder = false;
   List<Sale> sales = [];
 
   AllSalesPage(this.course, {Key? key}) : super(key: key);
@@ -22,8 +21,23 @@ class AllSalesPage extends StatefulWidget {
 }
 
 class _AllSalesPageState extends State<AllSalesPage> {
+  late Future _future;
+  late bool showOlder;
+  late String order;
+
+  @override
+  void initState() {
+    super.initState();
+    order = "Price";
+    _future = SaleHandler.getCurrentSalesForCourse(
+        widget.course.shortCode, order, FirebaseFirestore.instance);
+    showOlder = false;
+
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: FookAppBar(
         implyLeading: true,
@@ -69,34 +83,47 @@ class _AllSalesPageState extends State<AllSalesPage> {
                     ),
                     DropdownButton<String>(
                       hint: Text(
-                        'Sort by',
+                        'Sort by: ',
                         style: TextStyle(
                           color: Colors.black,
                         ),
                       ),
-                      items: <String>['price', 'condition'].map((String value) {
+                      items: <String>['Price', 'Condition'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
                         );
                       }).toList(),
-                      onChanged: (_) {
+                      onChanged: (newValue) {
                         setState(() {
-                          widget.sales.sort((a, b) => b.price.compareTo(a.price));
+                          order = newValue!;
+                          if(showOlder){
+                            _future = SaleHandler.getSalesForCourse(
+                                widget.course.shortCode, order, FirebaseFirestore.instance);
+                          }else{
+                            _future = SaleHandler.getCurrentSalesForCourse(
+                                widget.course.shortCode, order, FirebaseFirestore.instance);
+                          }
                         });
                       },
                     ),
-                    SizedBox(width: MediaQuery.of(context).size.width*0.16,),
                     Container(
                         width: 200,
                         child: CheckboxListTile(
 
                       title: Text("Show older",
                           textAlign: TextAlign.center),
-                      value: widget.showOlder,
+                      value: showOlder,
                       onChanged: (newValue) {
                         setState(() {
-                          widget.showOlder = newValue!;
+                          showOlder = newValue!;
+                          if(showOlder){
+                            _future = SaleHandler.getSalesForCourse(
+                                widget.course.shortCode, order, FirebaseFirestore.instance);
+                          }else{
+                            _future = SaleHandler.getCurrentSalesForCourse(
+                                widget.course.shortCode, order, FirebaseFirestore.instance);
+                          }
                         });
                       }, //  <-- leading Checkbox
                     ))
@@ -116,9 +143,15 @@ class _AllSalesPageState extends State<AllSalesPage> {
                   ),
                 ], borderRadius: BorderRadius.all(Radius.circular(8))),
                 child: FutureBuilder(
-                    future: SaleHandler.getSalesForCourse(
-                        widget.course.shortCode, FirebaseFirestore.instance),
+                    future: _future,
                     builder: (context, snapshot) {
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return Center(
+                            child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).colorScheme.primary,
+                                )));
+                      }
                       if (snapshot.hasData) {
                         widget.sales = snapshot.data as List<Sale>;
                         if (widget.sales.isEmpty) {
@@ -161,7 +194,7 @@ class _AllSalesPageState extends State<AllSalesPage> {
                                           borderRadius:
                                               BorderRadius.circular(20),
                                         ),
-                                        margin: EdgeInsets.all(10),
+                                        margin: EdgeInsets.all(5),
                                         width: double.infinity,
                                         height: 150,
                                         child: Center(

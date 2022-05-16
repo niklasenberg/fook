@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                           child: ListView.builder(
                               itemCount: courses.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return CourseCard(courses[index], context);
+                                return Container(height: 300, child: CourseCard(courses[index], context));
                               }),
                         );
                       } else if (snapshot.hasError) {
@@ -187,7 +187,8 @@ Widget SaleCard(Sale sale, BuildContext context) {
   const double fillPercent = 50; // fills 56.23% for container from bottom
   const double fillStop = (100 - fillPercent) / 100;
   const List<double> stops = [0.0, fillStop, fillStop, 1.0];
-  return Card(
+  return Container(
+    margin: EdgeInsets.all(2),
       color: Theme.of(context).colorScheme.background,
       child: FutureBuilder(
           future: _getInfo(sale),
