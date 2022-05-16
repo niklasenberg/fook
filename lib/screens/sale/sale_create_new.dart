@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:string_validator/string_validator.dart';
+import 'package:test/expect.dart';
 import '../../model/book.dart';
 import '../../model/sale.dart';
 import '../widgets/fook_logo_appbar.dart';
@@ -21,6 +22,8 @@ class SaleCreateNew extends StatefulWidget {
 class _SaleCreateNewState extends State<SaleCreateNew> {
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
+  final items = ["Bad", "OK", "Good", "Like new"];
+  String? value;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -43,7 +46,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   "CREATE SALE",
                   style: TextStyle(color: Colors.orange),
                 ),
-                backgroundColor: Colors.white),
+                backgroundColor: Color.fromARGB(255, 255, 255, 255)),
 
             Container(
                 //Nedersta rektangeln (För att kunna färgfylla, skugga osv)
@@ -78,26 +81,26 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: Column(
                             /*ISBN och ruta*/
                             children: [
-                              const Text(
-                                "ISBN:", /*textAlign: TextAlign.left*/
+                               const Text(
+                                "ISBN:",
+                                 textAlign: TextAlign.left
                               ),
 
                               TextFormField(
-                                //kollar nu enbart att den inte får vara längre än 13
+                                //Sätter max inmatning av karaktärer till 13
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(13),
                                   
                                 ],
                                 onFieldSubmitted: (String newValue) async {
-                                  //If not 10 or 13 do this
-                                  //kolla att numret är 10 eller 13 siffror långt och endast består av nummer
+                                  //Kontrollerar input
                                   
                                   if((newValue.length != 10 && newValue.length != 13) && isNumeric(newValue)){  // ex. 5677
                                     toastMessage("ISBN should contain 10 or 13 characters");
                                   }else if((newValue.length != 10 && newValue.length != 13) && !isNumeric(newValue)){ //ex. hjkhk
                                     toastMessage("ISBN should contain 10 or 13 characters");
                                     toastMessage("ISBN should only contain numbers");
-                                  }else if((newValue.length == 10 || newValue.length == 13) && !isNumeric(newValue)){
+                                  }else if((newValue.length == 10 || newValue.length == 13) && !isNumeric(newValue)){ //hejfkrttrr
                                     toastMessage("ISBN should only contain numbers");
                                   }else {
 
@@ -124,11 +127,17 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                 },
                                 decoration: const InputDecoration(
                                   labelText: 'xxxxxxxxxx',
-                                  fillColor: Colors.white,
+                                  fillColor: Color.fromARGB(255, 255, 255, 255),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(22, 8, 8, 8),
+                                      width:1
+                                    ),
+                                  ),
+
                                   focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Color.fromARGB(
-                                              255, 206, 204, 204),
+                                          color: Color.fromARGB(255, 10, 10, 10),
                                           width: 2),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10))),
@@ -180,7 +189,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                             child: TextField(
                               controller: titleController,
                               decoration: const InputDecoration(
-                                  filled: false, fillColor: Colors.white),
+                                  filled: true, fillColor: Color.fromARGB(255, 228, 227, 227)),
                               enabled: false,
                             )),
 
@@ -197,7 +206,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: TextField(
                             controller: authorController,
                             decoration: const InputDecoration(
-                                filled: true, fillColor: Colors.white),
+                                filled: true, fillColor: Color.fromARGB(255, 228, 227, 227)),
                             enabled: false,
                           ),
                           height: 55,
@@ -210,19 +219,28 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Condition',
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(color: Color.fromARGB(255, 12, 12, 12)),
                           ),
                         ),
 
                         Align(
                           alignment: Alignment.bottomLeft,
-                          child: TextField(
-                            //conditioncontroller, ska kunna ändra
-                            controller: titleController,
-                            decoration: const InputDecoration(
-                                filled: false, fillColor: Colors.white),
-                            enabled: true,
-                          ),
+                          child: Container(
+                            width: 200,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color:Colors.black, width:1)
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                              value: value,
+                              iconSize: 36,
+                              icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                              isExpanded: true,
+                              items: items.map(buildMenuItem).toList(), 
+                              onChanged: (value) => setState(() => this.value = value)),
+                            )),                      
                         ),
 
                         //Begärt pris:
@@ -230,7 +248,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Your price',
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(color: Color.fromARGB(255, 10, 10, 10)),
                           ),
                         ),
 
@@ -250,7 +268,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Comments',
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(color: Color.fromARGB(255, 8, 8, 8)),
                           ),
                         ),
 
@@ -278,6 +296,14 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                       textColor: Colors.white,
                                       fontSize: 16.0 );
       }
+
+      DropdownMenuItem<String> buildMenuItem(String item) =>
+      DropdownMenuItem(
+        value: item, 
+        child: Text(
+          item, 
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ));
       
 }
 
