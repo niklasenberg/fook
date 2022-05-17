@@ -238,60 +238,6 @@ class _BookDescriptionState extends State<BookDescription> {
   }
 }
 
-/*Row(mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.network(widget.book.info.imageLinks["smallThumbnail"].toString()),
-                        SizedBox(
-                          width: 4,
-                        ),
-                        DropdownButton<String>(
-                          hint: Text(
-                            'Sort by: ',
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          items: <String>['Price', 'Condition'].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              order = newValue!;
-                              if(showOlder){
-                                _future = SaleHandler.getSalesForBook(
-                                    widget.book, order, FirebaseFirestore.instance);
-                              }else{
-                                _future = SaleHandler.getCurrentSalesForBook(
-                                    widget.book, widget.shortCode, order, FirebaseFirestore.instance);
-                              }
-                            });
-                          },
-                        ),
-                        Container(
-                            width: 200,
-                            child: CheckboxListTile(
-
-                              title: Text("Show older",
-                                  textAlign: TextAlign.center),
-                              value: showOlder,
-                              onChanged: (newValue) {
-                                setState(() {
-                                  showOlder = newValue!;
-                                  if(showOlder){
-                                    _future = SaleHandler.getSalesForBook(
-                                        widget.book, order, FirebaseFirestore.instance);
-                                  }else{
-                                    _future = SaleHandler.getCurrentSalesForBook(
-                                        widget.book, widget.shortCode, order, FirebaseFirestore.instance);
-                                  }
-                                });
-                              }, //  <-- leading Checkbox
-                            ))*/
-
 _getInfo(Sale sale) async {
   Map<String, dynamic> infoList = {};
   infoList["seller"] =

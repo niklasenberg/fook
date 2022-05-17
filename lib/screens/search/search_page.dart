@@ -45,6 +45,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
             child: Column(
@@ -64,8 +65,8 @@ class _SearchPageState extends State<SearchPage> {
                       labelText: "Enter course name or code."),
                 )),
             Container(
-              padding: EdgeInsets.all(4),
-              margin: EdgeInsets.all(8),
+
+              margin: EdgeInsets.all(4),
               height: MediaQuery.of(context).size.height * 0.63,
               decoration: BoxDecoration(boxShadow: [
                 BoxShadow(
