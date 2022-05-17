@@ -39,6 +39,21 @@ class CourseHandler {
     return result;
   }
 
+    //Checks if isbn is found in courses
+  static Future<bool> isIsbnInCourses(
+      String isbn, FirebaseFirestore firestore) async {
+    QuerySnapshot query = await firestore
+        .collection('courses')
+        .where('isbnNumbers', arrayContains: isbn)
+        .get();
+
+    if (query.docs.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   static Future<List<Course>> updateUserCourses(
       String uid, FirebaseFirestore firestore) async {
     List<Course> courses = await getUserCourses(uid, firestore);

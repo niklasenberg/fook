@@ -1,4 +1,5 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/handlers/sale_handler.dart';
 import 'package:fook/model/sale.dart';
 import 'package:test/test.dart';
@@ -134,10 +135,12 @@ void main() {
     });
 
     test('Is isbn in courses', () async {
-      bool result = await SaleHandler.isIsbnInCourses("123123", firestore);
+      bool result = await CourseHandler.isIsbnInCourses("123123", firestore);
 
       expect(true, result);
     });
+
+    
 
     test('Add sale', () async {
       Sale sale = Sale.fromMap({
