@@ -129,7 +129,7 @@ void main() {
         'description': "Great book"
       });
 
-      List<Sale> result = await SaleHandler.getSalesForISBN("1236", firestore);
+      List<Sale> result = await SaleHandler.getSalesForISBN("1236", "Price", firestore);
       expect(result[0], sale);
     });
 

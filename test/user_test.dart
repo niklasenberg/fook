@@ -73,7 +73,7 @@ void main() {
       userCourses = await CourseHandler.updateUserCourses('boomerFc', firestore);
 
       //PROG1 doesnt have literature and should be empty
-      assert(userCourses.first.literature.isEmpty);
+      expect(userCourses.first.literature, {});
 
       // for(Course c in userCourses){
       //   if(c.shortCode == 'SL'){

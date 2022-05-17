@@ -1,9 +1,11 @@
 //import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/model/sale.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../model/course.dart';
 import 'course_handler.dart';
+import 'package:fook/model/book.dart';
 
 class SaleHandler {
   //get sales for user x
@@ -20,9 +22,18 @@ class SaleHandler {
     return sales;
   }
 
+  static Future<Sale> getSaleByID(String saleID, FirebaseFirestore firestore) async {
+    QuerySnapshot query = await firestore
+        .collection('sales')
+        .where('saleID', isEqualTo: saleID)
+        .get();
+
+    return Sale.fromMap(query.docs[0].data() as Map<String, dynamic>);
+  }
+
   //get sales for isbn
   static Future<List<Sale>> getSalesForISBN(
-      String isbn, FirebaseFirestore firestore) async {
+      String isbn, String order, FirebaseFirestore firestore) async {
     QuerySnapshot query = await firestore
         .collection('sales')
         .where('isbn', isEqualTo: isbn)
@@ -30,6 +41,61 @@ class SaleHandler {
     List<Sale> sales = [];
     for (DocumentSnapshot a in query.docs) {
       sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
+    }
+
+    if(order == "Price"){
+      sales.sort((a, b) => a.price.compareTo(b.price));
+    }else if (order == "Condition"){
+      sales.sort((a, b) => b.condition.compareTo(a.condition));
+    }
+    return sales;
+  }
+
+  static Future<List<Sale>> getSalesForBook(Book book,
+      String order, FirebaseFirestore firestore) async {
+    Set<String> isbns = await BookHandler.getBookEditions((book.info.title + " " + book.info.subtitle).trim());
+
+    List<Sale> sales = [];
+    for (String isbn in isbns) {
+      QuerySnapshot query = await firestore
+          .collection('sales')
+          .where('isbn', isEqualTo: isbn)
+          .get();
+
+      for (DocumentSnapshot a in query.docs) {
+        sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
+      }
+    }
+
+    if (order == "Price") {
+      sales.sort((a, b) => a.price.compareTo(b.price));
+    } else if (order == "Condition") {
+      sales.sort((a, b) => b.condition.compareTo(a.condition));
+    }
+    return sales;
+  }
+
+  static Future<List<Sale>> getCurrentSalesForBook(Book book, String shortCode,
+      String order, FirebaseFirestore firestore) async {
+    Course course = await CourseHandler.getCourse(shortCode, firestore);
+    List<Sale> sales = [];
+    for (IndustryIdentifier isbn in book.info.industryIdentifiers) {
+      QuerySnapshot query = await firestore
+          .collection('sales')
+          .where('isbn', isEqualTo: isbn.identifier)
+          .get();
+
+      for (DocumentSnapshot a in query.docs) {
+        if(course.getCurrentIsbns().contains(isbn.identifier)){
+          sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
+        }
+      }
+    }
+
+    if (order == "Price") {
+      sales.sort((a, b) => a.price.compareTo(b.price));
+    } else if (order == "Condition") {
+      sales.sort((a, b) => b.condition.compareTo(a.condition));
     }
     return sales;
   }
@@ -104,7 +170,5 @@ class SaleHandler {
   static void addSale(FirebaseFirestore firestore, Sale sale) async {
     await firestore.collection('sales').doc(sale.saleID).set(sale.toMap());
   }
-
-  //addsale
 
 }
