@@ -47,8 +47,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
         resizeToAvoidBottomInset: true,
-        body: SingleChildScrollView(
-            child: Column(
+        body: Column(
           children: [
             Container(
                 padding: EdgeInsets.all(4),
@@ -65,7 +64,6 @@ class _SearchPageState extends State<SearchPage> {
                       labelText: "Enter course name or code."),
                 )),
             Container(
-
               margin: EdgeInsets.all(4),
               height: MediaQuery.of(context).size.height * 0.63,
               decoration: BoxDecoration(boxShadow: [
@@ -78,7 +76,7 @@ class _SearchPageState extends State<SearchPage> {
                   blurRadius: 12.0,
                 ),
               ], borderRadius: BorderRadius.all(Radius.circular(8))),
-              child: StreamBuilder<List<AlgoliaObjectSnapshot>>(
+    child: StreamBuilder<List<AlgoliaObjectSnapshot>>(
                 stream: Stream.fromFuture(_operation(_searchTerm)),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || _searchTerm.isEmpty)
@@ -102,10 +100,9 @@ class _SearchPageState extends State<SearchPage> {
                     }
                   }
                 },
-              ),
-            )
+              ),)
           ],
-        )));
+        ));
   }
 }
 
@@ -126,6 +123,7 @@ _getBooks(String shortCode, BuildContext context) {
     else if (snapshot.hasData){
       List<Book> books = snapshot.data as List<Book>;
       return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: books.length,
           itemBuilder: (context, index) => BookCard(shortCode, books[index], context));

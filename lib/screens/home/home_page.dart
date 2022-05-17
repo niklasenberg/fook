@@ -6,7 +6,6 @@ import 'package:fook/model/course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/user.dart' as fook;
-import 'package:fook/model/sale.dart';
 import 'package:fook/model/book.dart';
 import 'package:fook/screens/widgets/book_description_page.dart';
 import '../../handlers/user_handler.dart';
@@ -78,8 +77,8 @@ class _HomePageState extends State<HomePage> {
                           child: ListView.builder(
                               itemCount: courses.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                    height: 400,
+                                return SizedBox(
+                                    height: 300,
                                     child: CourseCard(courses[index], context));
                               }),
                         );
@@ -135,7 +134,7 @@ Widget CourseCard(Course course, BuildContext context) {
             color: Theme.of(context).colorScheme.secondary,
           ),*/
         ),
-        SizedBox(height: 300.0, child: BookCarousel(course, context)),
+        SizedBox(height: 200.0, child: BookCarousel(course, context)),
       ],
     ),
   );
@@ -149,7 +148,8 @@ Widget BookCarousel(Course course, BuildContext context) {
           List<Book> books = snapshot.data as List<Book>;
           if (books.isEmpty) {
             return const Center(
-              child: Text("No literature listed for this course."),
+              child: Text("No literature listed for this course. \n"
+                  "Maybe you should tell your teacher!"),
             );
           } else {
             return ListView.builder(
@@ -244,7 +244,7 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
+                    Flexible(child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Flexible(
@@ -262,7 +262,7 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                           ),
                         ),
                       ],
-                    ),
+                    ),)
                   ],
                 ),
           )));
@@ -280,12 +280,4 @@ Future<List<Book>> _getBooks(Course course) async {
 Future<List<Course>> _update() async {
   return await CourseHandler.updateUserCourses(
       FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
-}
-
-_getInfo(Sale sale) async {
-  Map<String, dynamic> infoList = {};
-  infoList["book"] = await BookHandler.getBook(sale.isbn);
-  infoList["seller"] =
-      await UserHandler.getUser(sale.userID, FirebaseFirestore.instance);
-  return infoList;
 }

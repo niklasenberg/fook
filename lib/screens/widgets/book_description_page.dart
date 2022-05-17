@@ -178,7 +178,7 @@ class _BookDescriptionState extends State<BookDescription> {
                       if (widget.sales.isEmpty) {
                         return Center(
                           child: Text(
-                              "There are no current books for this course! :("),
+                              "No sales published for this book! :("),
                         );
                       }
                       return ListView.builder(
@@ -214,7 +214,8 @@ class _BookDescriptionState extends State<BookDescription> {
                                         ],
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      margin: EdgeInsets.all(5),
+                                      padding: EdgeInsets.all(4),
+                                      margin: EdgeInsets.all(8),
                                       width: double.infinity,
                                       height: 150,
                                       child: Center(
