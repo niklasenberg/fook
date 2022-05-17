@@ -33,7 +33,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         ),
         body: (SingleChildScrollView(
             child: ConstrainedBox(
-          constraints: BoxConstraints(),
+          constraints: const BoxConstraints(),
           child: Column(children: [
             //Övergripande strukturen
 
@@ -130,7 +130,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                   fillColor: Color.fromARGB(255, 255, 255, 255),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color.fromARGB(22, 8, 8, 8),
+                                      color: Color.fromARGB(255, 10, 10, 10),
                                       width:1
                                     ),
                                   ),
