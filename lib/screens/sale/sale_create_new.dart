@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:test/expect.dart';
+import '../../handlers/course_handler.dart';
 import '../../handlers/sale_handler.dart';
 
 import '../../model/book.dart';
@@ -96,6 +98,26 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(13),
                                 ],
+
+                                decoration: const InputDecoration(
+                                  labelText: 'xxxxxxxxxx',
+                                  fillColor: Color.fromARGB(255, 255, 255, 255),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 10, 10, 10),
+                                      width:1
+                                    ),
+                                  ),
+
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color.fromARGB(255, 10, 10, 10),
+                                          width: 2),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                ),
+
+
                                 onFieldSubmitted: (String newValue) async {
                                   if ((newValue.length != 10 &&
                                           newValue.length != 13) &&
@@ -118,71 +140,33 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                         "ISBN should only contain numbers");
                                   } else {
                                     //Kolla att ISBN finns
-                                    setState(() async {
+
+                                    Future<bool> isIsbnInCourses = CourseHandler.isIsbnInCourses(newValue, FirebaseFirestore.instance);
+                                    if(isIsbnInCourses == true){
+                                      toastMessage(
+                                        "I kurs");
+                                      
+                                    }
+
+                                    
+
+
+                                      setState(() async {
+
                                       Book book =
                                           await BookHandler.getBook(newValue);
+  
                                       titleController.text = book.info.title;
                                       authorController.text = book.info
                                           .authors[0]; //behöver alla authors
                                     });
 
-                                    setState(() async {
-                                      int inputPrice =
-                                          priceController.text as int;
-                                    });
-
-                                    setState(() {
-                                      var condition = conditionController;
-                                    });
-                                  }
-
-                                  /* setState(() async{
 
 
-                                    setState(() async {
-                                      /* Sale sale = await SaleHandler.getSaleId(
-                                          FirebaseFirestore.instance);*/
+       
+                                    
 
-                                      List<Sale> sale =
-                                          await SaleHandler.getSalesForUser(
-                                              FirebaseAuth
-                                                  .instance.currentUser!.uid,
-                                              FirebaseFirestore.instance);
-
-                                      for (Sale s in sale) {
-                                        if (s.getPrice() != 0) {
-                                          priceController.text =
-                                              s.getPrice().toString();
-                                        }
-                                      }
-
-                                      /*  priceController.text =
-                                          sale.getPrice().toString();*/
-                                    });
-                                  
-
-                                HÄMTA OCH SETTA pris, condition, kommentar                                      
-                                
-                                  Sale sale = await SaleHandler.getSaleId(firestore)
-                                });*/
-                                },
-                                decoration: const InputDecoration(
-                                  labelText: 'xxxxxxxxxx',
-                                  fillColor: Color.fromARGB(255, 255, 255, 255),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 10, 10, 10),
-                                      width:1
-                                    ),
-                                  ),
-
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Color.fromARGB(255, 10, 10, 10),
-                                          width: 2),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                ),
+                                }}
                               )
                             ],
                           ),
