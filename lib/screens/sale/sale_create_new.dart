@@ -318,9 +318,8 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                             enabled: true,
 
                             inputFormatters: [
-                                  LengthLimitingTextInputFormatter(4),
-                                ],
-                                
+                              LengthLimitingTextInputFormatter(4),
+                            ],
                           ),
                         ),
 
