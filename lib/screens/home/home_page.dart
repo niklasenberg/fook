@@ -174,9 +174,7 @@ Widget BookCarousel(Course course, BuildContext context) {
 
 Widget BookCard(String shortCode, Book book, BuildContext context) {
   Color background = Colors.grey.shade300;
-  Color fill = Theme
-      .of(context)
-      .backgroundColor;
+  Color fill = Colors.white;
   final List<Color> gradient = [
     background,
     background,
@@ -200,6 +198,8 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                   MaterialPageRoute(
                       builder: (context) => BookDescription(book, shortCode))),
           child: Container(
+            height: 40,
+            width: 150,
             decoration: BoxDecoration(
               boxShadow: [
                 const BoxShadow(
@@ -216,12 +216,7 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                 begin: Alignment.topCenter,
               ),
             ),
-            height: 100,
-            width: 150,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+            child:
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -258,6 +253,7 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                                 ": " +
                                 book.info.subtitle)
                                 .toUpperCase(),
+                            overflow: TextOverflow.fade,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 12,
@@ -269,8 +265,6 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                     ),
                   ],
                 ),
-              ],
-            ),
           )));
 }
 
