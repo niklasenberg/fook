@@ -96,7 +96,6 @@ class _SaleHomePageState extends State<SaleHomePage> {
                 ),
                 child: Image.network(a),
               ),
-
               title: Text('Title: ' + book.info.title),
               subtitle: Text('ISBN: ' +
                   sale.getIsbn() +
@@ -104,14 +103,22 @@ class _SaleHomePageState extends State<SaleHomePage> {
                   'Price: ' +
                   sale.getPrice().toString() +
                   ':- SEK'),
+              trailing: Text('Condition: ' + sale.condition),
               dense: true,
-
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SaleCurrentSale(),
+                  builder: (context) => SaleCurrentSale(
+                    thisisbn: sale.getIsbn(),
+                    title: book.info.title,
+                    authors: book.info.authors.toString(),
+                    price: sale.getPrice(),
+                    condition: sale.condition,
+                    //måste komma åt description i firestore
+                    comment: "",
+                  ),
                 ),
-              ), //lägg till ontap
+              ),
             );
           }
           return Center(
@@ -122,9 +129,5 @@ class _SaleHomePageState extends State<SaleHomePage> {
             ),
           );
         });
-  }
-
-  _doSomething() {
-    //Placeholder
   }
 }

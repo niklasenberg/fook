@@ -17,7 +17,22 @@ import '../widgets/fook_logo_appbar.dart';
 import 'package:fook/handlers/book_handler.dart';
 
 class SaleCurrentSale extends StatefulWidget {
-  const SaleCurrentSale({Key? key}) : super(key: key);
+  //const SaleCurrentSale({Key? key}) : super(key: key);
+  String thisisbn;
+  late String title;
+  late String authors;
+  late int price;
+  late String condition;
+  late String comment;
+  SaleCurrentSale({
+    Key? key,
+    required this.thisisbn,
+    required this.title,
+    required this.authors,
+    required this.price,
+    required this.condition,
+    required this.comment,
+  }) : super(key: key);
 
   @override
   State<SaleCurrentSale> createState() => _SaleCurrentSale();
@@ -45,8 +60,6 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
             child: ConstrainedBox(
           constraints: const BoxConstraints(),
           child: Column(children: [
-            //Övergripande strukturen
-
             AppBar(
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -57,7 +70,6 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                   style: TextStyle(color: Colors.orange),
                 ),
                 backgroundColor: Color.fromARGB(255, 255, 255, 255)),
-
             Container(
                 //Nedersta rektangeln (För att kunna färgfylla, skugga osv)
                 padding: const EdgeInsets.all(15),
@@ -79,13 +91,9 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                   ],
                 ),
                 child: Column(
-                  //Nedersta rektangeln, fyller ut containern den är i men strukturerar så att allt är vertikalt
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
                   children: [
                     Row(
-                      //Här ska isbn och skanna streckkod vara. BEhövs förmodligen två columns
-
                       children: [
                         Expanded(
                           child: Column(
@@ -93,60 +101,10 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             children: [
                               const Text("ISBN:", textAlign: TextAlign.left),
                               TextFormField(
-                                controller: isbnController,
+                                initialValue: widget.thisisbn,
+                                //controller: isbnController,
                                 enableInteractiveSelection: false,
                                 focusNode: new AlwaysDisabledFocusNode(),
-
-                                //Sätter max inmatning av karaktärer till 13
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(13),
-                                ],
-                                onFieldSubmitted: (String newValue) async {
-                                  isbnController.text = newValue;
-                                  if ((newValue.length != 10 &&
-                                          newValue.length != 13) &&
-                                      isNumeric(newValue)) {
-                                    // ex. 5677
-                                    toastMessage(
-                                        "ISBN should contain 10 or 13 characters",
-                                        1);
-                                  } else if ((newValue.length != 10 &&
-                                          newValue.length != 13) &&
-                                      !isNumeric(newValue)) {
-                                    //ex. hjkhk
-                                    toastMessage(
-                                        "ISBN should contain 10 or 13 characters",
-                                        1);
-                                    toastMessage(
-                                        "ISBN should only contain numbers", 1);
-                                  } else if ((newValue.length == 10 ||
-                                          newValue.length == 13) &&
-                                      !isNumeric(newValue)) {
-                                    toastMessage(
-                                        "ISBN should only contain numbers", 1);
-                                  } else {
-                                    //Kolla att ISBN finns
-                                    var isIsbnInCourses =
-                                        await CourseHandler.isIsbnInCourses(
-                                            newValue,
-                                            FirebaseFirestore.instance);
-                                    if (isIsbnInCourses) {
-                                      setState(() async {
-                                        Book book =
-                                            await BookHandler.getBook(newValue);
-
-                                        titleController.text = book.info.title;
-                                        authorController.text = book.info
-                                            .authors[0]; //behöver alla authors
-                                      });
-                                    } else {
-                                      toastMessage(
-                                          "ISBN don't match with any book in DSV's courses, therefor it can't be put up for sale in Fook.",
-                                          2);
-                                    }
-                                  }
-                                },
-
                                 decoration: const InputDecoration(
                                   filled: true,
                                   fillColor: Color.fromARGB(255, 228, 227, 227),
@@ -195,8 +153,9 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                         Container(
                             height: 55,
                             margin: const EdgeInsets.only(bottom: 10),
-                            child: TextField(
-                              controller: titleController,
+                            child: TextFormField(
+                              initialValue: widget.title,
+                              //controller: titleController,
                               decoration: const InputDecoration(
                                   filled: true,
                                   fillColor:
@@ -214,8 +173,9 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                         ),
 
                         Container(
-                          child: TextField(
-                            controller: authorController,
+                          child: TextFormField(
+                            initialValue: widget.authors,
+                            //controller: authorController,
                             decoration: const InputDecoration(
                                 filled: true,
                                 fillColor: Color.fromARGB(255, 228, 227, 227)),
@@ -248,6 +208,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                                       color: Colors.black, width: 1)),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
+                                    //Kolla vald condition och se till att den fortfarande kan ändras
                                     value: value,
                                     iconSize: 36,
                                     icon: const Icon(Icons.arrow_drop_down,
@@ -271,10 +232,12 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
 
                         Align(
                           alignment: Alignment.bottomLeft,
-                          child: TextField(
+                          child: TextFormField(
                             //pricecontroller ska kunna ändra
                             keyboardType: TextInputType.number,
-                            controller: priceController,
+                            initialValue: widget.price.toString(),
+                            //controller: priceController,
+                            //kan ej ha controller och initialvalue
                             decoration: const InputDecoration(
                                 filled: false, fillColor: Colors.white),
                             enabled: true,
@@ -298,7 +261,8 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: TextFormField(
-                            controller: commentController,
+                            //controller: commentController,
+                            initialValue: widget.comment,
                             decoration: const InputDecoration(
                                 filled: false, fillColor: Colors.white),
                             enabled: true,
