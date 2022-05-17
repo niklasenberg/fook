@@ -311,10 +311,16 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: TextField(
                             //pricecontroller ska kunna ändra
+                            keyboardType: TextInputType.number,
                             controller: priceController,
                             decoration: const InputDecoration(
                                 filled: false, fillColor: Colors.white),
                             enabled: true,
+
+                            inputFormatters: [
+                                  LengthLimitingTextInputFormatter(4),
+                                ],
+                                
                           ),
                         ),
 
