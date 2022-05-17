@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +23,7 @@ class SaleCreateNew extends StatefulWidget {
 }
 
 class _SaleCreateNewState extends State<SaleCreateNew> {
+  TextEditingController isbnController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
 
@@ -29,7 +32,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
   TextEditingController priceController = TextEditingController();
   TextEditingController conditionController = TextEditingController();
-
+  TextEditingController commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -87,16 +90,15 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: Column(
                             /*ISBN och ruta*/
                             children: [
-                               const Text(
-                                "ISBN:",
-                                 textAlign: TextAlign.left
-                              ),
+                              const Text("ISBN:", textAlign: TextAlign.left),
                               TextFormField(
+                                controller: isbnController,
                                 //Sätter max inmatning av karaktärer till 13
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(13),
                                 ],
                                 onFieldSubmitted: (String newValue) async {
+                                  isbnController.text = newValue;
                                   if ((newValue.length != 10 &&
                                           newValue.length != 13) &&
                                       isNumeric(newValue)) {
@@ -124,15 +126,6 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                       titleController.text = book.info.title;
                                       authorController.text = book.info
                                           .authors[0]; //behöver alla authors
-                                    });
-
-                                    setState(() async {
-                                      int inputPrice =
-                                          priceController.text as int;
-                                    });
-
-                                    setState(() {
-                                      var condition = conditionController;
                                     });
                                   }
 
@@ -171,14 +164,13 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                   fillColor: Color.fromARGB(255, 255, 255, 255),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 10, 10, 10),
-                                      width:1
-                                    ),
+                                        color: Color.fromARGB(255, 10, 10, 10),
+                                        width: 1),
                                   ),
-
                                   focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Color.fromARGB(255, 10, 10, 10),
+                                          color:
+                                              Color.fromARGB(255, 10, 10, 10),
                                           width: 2),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10))),
@@ -230,7 +222,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                             child: TextField(
                               controller: titleController,
                               decoration: const InputDecoration(
-                                  filled: true, fillColor: Color.fromARGB(255, 228, 227, 227)),
+                                  filled: true,
+                                  fillColor:
+                                      Color.fromARGB(255, 228, 227, 227)),
                               enabled: false,
                             )),
 
@@ -247,7 +241,8 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: TextField(
                             controller: authorController,
                             decoration: const InputDecoration(
-                                filled: true, fillColor: Color.fromARGB(255, 228, 227, 227)),
+                                filled: true,
+                                fillColor: Color.fromARGB(255, 228, 227, 227)),
                             enabled: false,
                           ),
                           height: 55,
@@ -260,28 +255,32 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Condition',
-                            style: TextStyle(color: Color.fromARGB(255, 12, 12, 12)),
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 12, 12, 12)),
                           ),
                         ),
 
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: Container(
-                            width: 200,
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(color:Colors.black, width:1)
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                              value: value,
-                              iconSize: 36,
-                              icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-                              isExpanded: true,
-                              items: items.map(buildMenuItem).toList(), 
-                              onChanged: (value) => setState(() => this.value = value)),
-                            )),                      
+                              width: 200,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                      color: Colors.black, width: 1)),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                    value: value,
+                                    iconSize: 36,
+                                    icon: const Icon(Icons.arrow_drop_down,
+                                        color: Colors.black),
+                                    isExpanded: true,
+                                    items: items.map(buildMenuItem).toList(),
+                                    onChanged: (value) => setState(() =>
+                                        conditionController.text = value!)),
+                              )),
                         ),
 
                         //Begärt pris:
@@ -289,7 +288,8 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Your price',
-                            style: TextStyle(color: Color.fromARGB(255, 10, 10, 10)),
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 10, 10, 10)),
                           ),
                         ),
 
@@ -309,15 +309,19 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Comments',
-                            style: TextStyle(color: Color.fromARGB(255, 8, 8, 8)),
+                            style:
+                                TextStyle(color: Color.fromARGB(255, 8, 8, 8)),
                           ),
                         ),
 
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: TextFormField(
-                              //fixa textformfield här
-                              ),
+                            controller: commentController,
+                            decoration: const InputDecoration(
+                                filled: false, fillColor: Colors.white),
+                            enabled: true,
+                          ),
                         ),
 
                         Align(
@@ -325,9 +329,12 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: ElevatedButton.icon(
                             label: const Text('Publish'),
                             icon: const Icon(Icons.publish),
-                            onPressed: (() => _doSomething(
-
-                                //create Sale object from the texteditingcontrollers
+                            onPressed: (() => createSale(
+                                  isbnController.text,
+                                  commentController.text,
+                                  conditionController.text,
+                                  int.parse(priceController.text),
+                                  context,
                                 )),
                           ),
                         ),
@@ -339,30 +346,51 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         ))),
       );
 
-
-      toastMessage(String toastMessage, ){
-        Fluttertoast.showToast(
-                                      msg: toastMessage,
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0 );
-      }
-
-      DropdownMenuItem<String> buildMenuItem(String item) =>
-      DropdownMenuItem(
-        value: item, 
-        child: Text(
-          item, 
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ));
-      
-
-
-  _doSomething() {
-    //Placeholder
+  toastMessage(
+    String toastMessage,
+  ) {
+    Fluttertoast.showToast(
+        msg: toastMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
+
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+      value: item,
+      child: Text(
+        item,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      ));
+
+  Future<bool> createSale(String isbn, String description, String condition,
+      int price, BuildContext context) async {
+    SaleHandler.addSale(
+      FirebaseFirestore.instance,
+      Sale(
+        isbn: isbn,
+        userID: FirebaseAuth.instance.currentUser!.uid,
+        price: price,
+        description: description,
+        condition: condition,
+        saleID: (await SaleHandler.getSaleId(FirebaseFirestore.instance))
+            .toString(),
+        courses: await SaleHandler.getCoursesForIsbn(
+            isbn, FirebaseFirestore.instance),
+      ),
+    );
+    toastMessage('Published');
+    Navigator.pop(context);
+
+    return true;
+  }
+
+  /*
+
+ 
+  */
 
 }

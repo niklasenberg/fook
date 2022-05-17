@@ -46,9 +46,9 @@ class SaleHandler {
       sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
     }
 
-    if(order == "Price"){
+    if (order == "Price") {
       sales.sort((a, b) => a.price.compareTo(b.price));
-    }else if (order == "Condition"){
+    } else if (order == "Condition") {
       sales.sort((a, b) => b.condition.compareTo(a.condition));
     }
     return sales;
@@ -65,14 +65,14 @@ class SaleHandler {
     List<Sale> sales = [];
     for (DocumentSnapshot a in query.docs) {
       Sale sale = Sale.fromMap(a.data() as Map<String, dynamic>);
-      if(course.getCurrentIsbns().contains(sale.isbn)){
+      if (course.getCurrentIsbns().contains(sale.isbn)) {
         sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
       }
     }
 
-    if(order == "Price"){
+    if (order == "Price") {
       sales.sort((a, b) => a.price.compareTo(b.price));
-    }else if (order == "Condition"){
+    } else if (order == "Condition") {
       sales.sort((a, b) => b.condition.compareTo(a.condition));
     }
     return sales;
@@ -91,6 +91,20 @@ class SaleHandler {
     } else {
       return true;
     }
+  }
+
+  static Future<List<String>> getCoursesForIsbn(
+      String isbn, FirebaseFirestore firestore) async {
+    QuerySnapshot query = await firestore
+        .collection('courses')
+        .where('isbnNumbers', arrayContains: isbn)
+        .get();
+
+    List<String> result = [];
+    for (DocumentSnapshot d in query.docs) {
+      result.add((d.data() as Map<String, dynamic>)['shortCode']);
+    }
+    return result;
   }
 
   static getSaleId(FirebaseFirestore firestore) async {
