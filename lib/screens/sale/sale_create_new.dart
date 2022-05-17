@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:test/expect.dart';
+import '../../handlers/course_handler.dart';
 import '../../handlers/sale_handler.dart';
 
 import '../../model/book.dart';
@@ -104,29 +105,42 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                       isNumeric(newValue)) {
                                     // ex. 5677
                                     toastMessage(
-                                        "ISBN should contain 10 or 13 characters");
+                                        "ISBN should contain 10 or 13 characters",
+                                        1);
                                   } else if ((newValue.length != 10 &&
                                           newValue.length != 13) &&
                                       !isNumeric(newValue)) {
                                     //ex. hjkhk
                                     toastMessage(
-                                        "ISBN should contain 10 or 13 characters");
+                                        "ISBN should contain 10 or 13 characters",
+                                        1);
                                     toastMessage(
-                                        "ISBN should only contain numbers");
+                                        "ISBN should only contain numbers", 1);
                                   } else if ((newValue.length == 10 ||
                                           newValue.length == 13) &&
                                       !isNumeric(newValue)) {
                                     toastMessage(
-                                        "ISBN should only contain numbers");
+                                        "ISBN should only contain numbers", 1);
                                   } else {
                                     //Kolla att ISBN finns
-                                    setState(() async {
-                                      Book book =
-                                          await BookHandler.getBook(newValue);
-                                      titleController.text = book.info.title;
-                                      authorController.text = book.info
-                                          .authors[0]; //behöver alla authors
-                                    });
+                                    var isIsbnInCourses =
+                                        await CourseHandler.isIsbnInCourses(
+                                            newValue,
+                                            FirebaseFirestore.instance);
+                                    if (isIsbnInCourses) {
+                                      setState(() async {
+                                        Book book =
+                                            await BookHandler.getBook(newValue);
+
+                                        titleController.text = book.info.title;
+                                        authorController.text = book.info
+                                            .authors[0]; //behöver alla authors
+                                      });
+                                    } else {
+                                      toastMessage(
+                                          "ISBN don't match with any book in DSV's courses, therefor it can't be put up for sale in Fook.",
+                                          2);
+                                    }
                                   }
 
                                   /* setState(() async{
@@ -278,8 +292,8 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                         color: Colors.black),
                                     isExpanded: true,
                                     items: items.map(buildMenuItem).toList(),
-                                    onChanged: (value) => setState(() =>
-                                        conditionController.text = value!)),
+                                    onChanged: (value) =>
+                                        setState(() => this.value = value)),
                               )),
                         ),
 
@@ -348,12 +362,13 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
   toastMessage(
     String toastMessage,
+    int sec,
   ) {
     Fluttertoast.showToast(
         msg: toastMessage,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: sec,
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
@@ -375,22 +390,15 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         userID: FirebaseAuth.instance.currentUser!.uid,
         price: price,
         description: description,
-        condition: condition,
+        condition: value.toString(),
         saleID: (await SaleHandler.getSaleId(FirebaseFirestore.instance))
             .toString(),
         courses: await SaleHandler.getCoursesForIsbn(
             isbn, FirebaseFirestore.instance),
       ),
     );
-    toastMessage('Published');
+    toastMessage('Published', 1);
     Navigator.pop(context);
-
     return true;
   }
-
-  /*
-
- 
-  */
-
 }

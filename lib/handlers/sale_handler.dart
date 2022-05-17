@@ -78,20 +78,6 @@ class SaleHandler {
     return sales;
   }
 
-  //Checks if isbn is found in courses
-  static Future<bool> isIsbnInCourses(
-      String isbn, FirebaseFirestore firestore) async {
-    QuerySnapshot query = await firestore
-        .collection('courses')
-        .where('isbnNumbers', arrayContains: isbn)
-        .get();
-
-    if (query.docs.isEmpty) {
-      return false;
-    } else {
-      return true;
-    }
-  }
 
   static Future<List<String>> getCoursesForIsbn(
       String isbn, FirebaseFirestore firestore) async {
