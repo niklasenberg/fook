@@ -24,15 +24,8 @@ class AlgoliaApplication{
 }
 
 class _SearchPageState extends State<SearchPage> {
-  late String _searchTerm;
+  String _searchTerm = "";
   final Algolia _algoliaApp = AlgoliaApplication.algolia;
-  TextEditingController input = TextEditingController();
-
-  @override
-  void initState(){
-    super.initState();
-    _searchTerm = input.text;
-  }
 
   Future<List<AlgoliaObjectSnapshot>> _operation(String input) async {
     AlgoliaQuery query = _algoliaApp.instance.index("courses").query(input);
@@ -52,9 +45,8 @@ class _SearchPageState extends State<SearchPage> {
             Container(
                 padding: EdgeInsets.all(4),
                 margin: EdgeInsets.all(4),
-                child: TextField(
-                  controller: input,
-                  onChanged: (val) {
+                child: TextFormField(
+                  onFieldSubmitted: (val) { //TODO: Change to onChanged for Realtime search
                     setState(() {
                       _searchTerm = val;
                     });
@@ -123,7 +115,7 @@ _getBooks(String shortCode, BuildContext context) {
     else if (snapshot.hasData){
       List<Book> books = snapshot.data as List<Book>;
       return ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: books.length,
           itemBuilder: (context, index) => BookCard(shortCode, books[index], context));
