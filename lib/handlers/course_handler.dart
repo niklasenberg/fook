@@ -66,7 +66,9 @@ class CourseHandler {
       List<String> names = [];
       Map<String, Set<String>> result = {};
       for (var number in isbnList) {
-        names.add(await BookHandler.getBookName(number));
+        if(number.isNotEmpty){
+          names.add(await BookHandler.getBookName(number));
+        }
       }
 
       //Use these names to get other book versions

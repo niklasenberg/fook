@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fook/screens/chat/chats_page.dart';
 import 'package:fook/screens/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -19,7 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
         body: FutureBuilder(
-      future: UserHandler.getInfo(
+      future: _getInfo(
           FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -80,4 +79,12 @@ class _ProfilePageState extends State<ProfilePage> {
       },
         ));
   }
+}
+
+Future<List<Object>> _getInfo(String uId, FirebaseFirestore firestore) async {
+  List<Object> result = [];
+  result.add(await UserHandler.getUser(uId, firestore));
+  result.add(await UserHandler.getPhotoUrl(uId, firestore));
+
+  return result;
 }
