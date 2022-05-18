@@ -187,16 +187,12 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
   const List<double> stops = [0.0, fillStop, fillStop, 1.0];
   return Container(
       margin: EdgeInsets.all(2),
-      color: Theme
-          .of(context)
-          .colorScheme
-          .background,
+      color: Theme.of(context).colorScheme.background,
       child: InkWell(
-        onTap: () =>
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => BookDescription(book, shortCode))),
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BookDescription(book, shortCode))),
           child: Container(
             height: 40,
             width: 150,
@@ -204,8 +200,7 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
               boxShadow: [
                 const BoxShadow(
                   color: Colors.grey,
-                  offset: Offset(
-                      2.0, 2.0), // shadow direction: bottom right
+                  offset: Offset(2.0, 2.0), // shadow direction: bottom right
                 ),
               ],
               borderRadius: BorderRadius.circular(20),
@@ -216,66 +211,63 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                 begin: Alignment.topCenter,
               ),
             ),
-            child:
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 10),
-                    SizedBox(
-                      height: 100,
-                      width: 70,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(2.0,
-                                  2.0), // shadow direction: bottom right
-                            ),
-                          ],
-                        ),
-                        height: 50,
-                        child: Image.network(book
-                            .info.imageLinks["smallThumbnail"]
-                            .toString()),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Flexible(child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Flexible(
-                          child: Text(
-                            (book.info.title +
-                                ": " +
-                                book.info.subtitle)
-                                .toUpperCase(),
-                            overflow: TextOverflow.fade,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                            ),
-                          ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 10),
+                SizedBox(
+                  height: 100,
+                  width: 70,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(
+                              2.0, 2.0), // shadow direction: bottom right
                         ),
                       ],
-                    ),)
-                  ],
+                    ),
+                    height: 50,
+                    child: Image.network(
+                        book.info.imageLinks["smallThumbnail"].toString()),
+                  ),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          (book.info.title + ": " + book.info.subtitle)
+                              .toUpperCase(),
+                          overflow: TextOverflow.fade,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           )));
 }
 
 Future<List<Book>> _getBooks(Course course) async {
   List<Book> result = [];
   for (String isbn in course.getCurrentIsbns()) {
-    result.add(
-        await BookHandler.getBook(isbn));
-    }
-        return result;
-    }
+    result.add(await BookHandler.getBook(isbn));
+  }
+  return result;
+}
 
 Future<List<Course>> _update() async {
   return await CourseHandler.updateUserCourses(

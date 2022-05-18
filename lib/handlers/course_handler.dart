@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/handlers/daisy_handler.dart';
 import 'package:fook/model/user.dart' as fook;
-import 'package:firebase_auth/firebase_auth.dart';
 
 class CourseHandler {
   static Future<Course> getCourse(

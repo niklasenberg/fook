@@ -153,12 +153,13 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15.0)),
                               onPressed: () async {
-                                String barcode = await FlutterBarcodeScanner.scanBarcode(
-                                    "#ff6666",
-                                    "Cancel",
-                                    false,
-                                    ScanMode.DEFAULT);
-                                if(barcode != "-1"){
+                                String barcode =
+                                    await FlutterBarcodeScanner.scanBarcode(
+                                        "#ff6666",
+                                        "Cancel",
+                                        false,
+                                        ScanMode.DEFAULT);
+                                if (barcode != "-1") {
                                   setState(() {
                                     isbnController.text = barcode;
                                   });
@@ -300,12 +301,12 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         ),
 
                         Align(
-                          alignment: Alignment.bottomLeft,
-                          child: ElevatedButton.icon(
-                            label: const Text('Publish'),
-                            icon: const Icon(Icons.publish),
-                            onPressed: (() {
-                                if(_isButtonEnabled){
+                            alignment: Alignment.bottomLeft,
+                            child: ElevatedButton.icon(
+                              label: const Text('Publish'),
+                              icon: const Icon(Icons.publish),
+                              onPressed: (() {
+                                if (_isButtonEnabled) {
                                   createSale(
                                     isbnController.text,
                                     commentController.text,
@@ -313,12 +314,11 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                     int.parse(priceController.text),
                                     context,
                                   );
-                                }else{
+                                } else {
                                   toastMessage("Enter valid ISBN number", 2);
                                 }
-                            }
-                          ),
-                        )),
+                              }),
+                            )),
                       ],
                     ),
                   ],
@@ -343,18 +343,14 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
   _fetchBook(String newValue) async {
     //Kolla att ISBN finns
-    var isIsbnInCourses =
-    await CourseHandler.isIsbnInCourses(
-        newValue,
-        FirebaseFirestore.instance);
+    var isIsbnInCourses = await CourseHandler.isIsbnInCourses(
+        newValue, FirebaseFirestore.instance);
     if (isIsbnInCourses) {
       _isButtonEnabled = true;
-      Book book =
-      await BookHandler.getBook(newValue);
+      Book book = await BookHandler.getBook(newValue);
       setState(() {
         titleController.text = book.info.title;
-        authorController.text = book.info
-            .authors.toString();
+        authorController.text = book.info.authors.toString();
       });
     } else {
       _isButtonEnabled = false;

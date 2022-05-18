@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
 import 'package:fook/model/constants.dart';
+import 'package:fook/model/sale.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:fook/screens/widgets/fook_logo_appbar.dart';
+import 'package:fook/model/book.dart';
 
 class ChatDetailed extends StatefulWidget {
   final Map<String, dynamic> infoList;
@@ -15,11 +17,14 @@ class ChatDetailed extends StatefulWidget {
 
 class _ChatDetailedState extends State<ChatDetailed> {
   late String myId, userId;
+  late Sale sale;
   late TextEditingController messageController;
   Timestamp past = Timestamp.fromDate(DateTime(2019));
   late String chatId;
   late String photoUrl;
+  late bool subtitleExists;
   late fook.User otherUser, thisUser;
+  late Book book;
   final _scaffKey = GlobalKey<ScaffoldState>();
 
   //final ImagePicker _picker = ImagePicker();
@@ -30,14 +35,18 @@ class _ChatDetailedState extends State<ChatDetailed> {
     messageController = TextEditingController();
     userId = widget.infoList['userId'].toString();
     myId = FirebaseAuth.instance.currentUser!.uid;
-    chatId = ChatHandler.generateChatId(myId, userId);
+    sale = (widget.infoList['sale']);
+    chatId = ChatHandler.generateChatId(myId, userId, sale.saleID);
     photoUrl = widget.infoList['photoUrl'].toString();
+    book = widget.infoList['book'];
+    subtitleExists = widget.infoList['subtitleExists'];
     otherUser = fook.User.fromMap(
         (widget.infoList['otherUser'] as DocumentSnapshot).data()
             as Map<String, dynamic>);
     thisUser = fook.User.fromMap(
         (widget.infoList['thisUser'] as DocumentSnapshot).data()
             as Map<String, dynamic>);
+
     /*offlineStorage.getUserInfo().then(
       (val) {
         setState(
@@ -56,65 +65,178 @@ class _ChatDetailedState extends State<ChatDetailed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: FookAppBar(implyLeading: false,),
+      appBar: FookAppBar(
+        implyLeading: true,
+      ),
       backgroundColor: Theme.of(context).backgroundColor,
       key: _scaffKey,
       body: Column(
         children: [
-          AppBar(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            title: InkWell(
-              /*onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(),
-                ),
-              ),*/
-              splashColor: Theme.of(context).colorScheme.primary,
-              focusColor: Theme.of(context).colorScheme.primary,
-              highlightColor: Theme.of(context).colorScheme.primary,
-              hoverColor: Theme.of(context).colorScheme.primary,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Row(
-                  children: [
-                    Hero(
-                      tag: photoUrl,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.1,
-                        height: MediaQuery.of(context).size.width * 0.1,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              photoUrl,
-                            ),
-                          ),
+          Flexible(
+            flex: 15,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.15,
+              child: Container(
+                margin: const EdgeInsets.all(10.0),
+                height: MediaQuery.of(context).size.height * 0.08,
+                child: Flexible(
+                  flex: 50,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(2.0,
+                                          2.0), // shadow direction: bottom right
+                                    ),
+                                  ],
+                                ),
+                                child: Image.network(book
+                                    .info.imageLinks["smallThumbnail"]
+                                    .toString()),
+                              ),
+                              const SizedBox(height: 5),
+                              Flexible(
+                                child: Text(
+                                  subtitleExists
+                                      ? (book.info.title +
+                                          ':\n ' +
+                                          book.info.subtitle)
+                                      : (book.info.title),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  softWrap: false,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              )
+                            ]),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.02,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.43,
+                        child: Center(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                RichText(
+                                  text: TextSpan(children: <TextSpan>[
+                                    TextSpan(
+                                        text: "Seller: ",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontSize: 12)),
+                                    TextSpan(
+                                        text: (otherUser.name +
+                                            ' ' +
+                                            otherUser.lastName),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        )),
+                                  ]),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                RichText(
+                                  text: TextSpan(children: <TextSpan>[
+                                    TextSpan(
+                                        text: "Condition: ",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontSize: 12)),
+                                    TextSpan(
+                                        text: (sale.condition).toUpperCase(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        )),
+                                  ]),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                RichText(
+                                  text: TextSpan(children: <TextSpan>[
+                                    TextSpan(
+                                        text: "ISBN: ",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontSize: 12)),
+                                    TextSpan(
+                                        text: (sale.isbn).toUpperCase(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        )),
+                                  ]),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                RichText(
+                                  text: TextSpan(children: <TextSpan>[
+                                    TextSpan(
+                                        text: "Price: ",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontSize: 12)),
+                                    TextSpan(
+                                        text: (sale.price).toString(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        )),
+                                  ]),
+                                ),
+                              ]),
                         ),
                       ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                    Text(
-                      otherUser.name + " " + otherUser.lastName,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
           Flexible(
+            flex: 75,
             child: _chatBody(userId),
           ),
           const Divider(
             height: 1.0,
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.10,
-            child: _messageComposer(),
-          ),
+          Flexible(
+            flex: 10,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.10,
+              child: _messageComposer(),
+            ),
+          )
         ],
       ),
     );
@@ -146,8 +268,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                decoration:
-                    InputDecoration(fillColor: Colors.white, filled: true),
+                decoration: const InputDecoration(
+                    fillColor: Colors.white, filled: true),
                 controller: messageController,
                 /*decoration: const InputDecoration(
                 border: OutlineInputBorder(
@@ -198,6 +320,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                   await ChatHandler.sendMessage(
                       userId,
                       myId,
+                      sale.saleID,
                       true,
                       message,
                       thisUser.name,
@@ -209,8 +332,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
                 Icons.send,
                 color: Colors.white,
               ),
-              shape:
-                  CircleBorder(side: BorderSide(width: 1, color: Colors.white)),
+              shape: const CircleBorder(
+                  side: BorderSide(width: 1, color: Colors.white)),
             ),
           ),
         ],
@@ -220,54 +343,71 @@ class _ChatDetailedState extends State<ChatDetailed> {
 
   StreamBuilder<QuerySnapshot> _chatBody(String userId) {
     return StreamBuilder(
-      stream: ChatHandler.getChat(userId, myId, FirebaseFirestore.instance),
+      stream: ChatHandler.getChat(
+          userId, myId, sale.saleID, FirebaseFirestore.instance),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!.docs.isNotEmpty
-              ? ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  reverse: true,
-                  itemBuilder: (context, index) {
-                    DocumentSnapshot message = snapshot.data!.docs[index];
-                    if (snapshot.data!.docs.length == 1) {
-                      return Column(
-                        children: [
-                          _timeDivider(
-                              (message.data() as Map<String, dynamic>)['time']),
-                          _messageItem(message, context),
-                        ],
-                      );
-                    }
-                    if (index == 0) {
-                      past = (message.data() as Map<String, dynamic>)['time'];
-                      return _messageItem(message, context);
-                    }
-                    Timestamp toPass = past;
-                    if (index == snapshot.data!.docs.length - 1) {
-                      return Column(
-                        children: [
-                          _timeDivider(
-                              (message.data() as Map<String, dynamic>)['time']),
-                          _messageItem(message, context),
-                          if (!sameDay(toPass,
-                              (message.data() as Map<String, dynamic>)['time']))
-                            _timeDivider(toPass),
-                        ],
-                      );
-                    }
-                    past = (message.data() as Map<String, dynamic>)['time'];
-                    return sameDay(
-                            (message.data() as Map<String, dynamic>)['time'],
-                            toPass)
-                        ? _messageItem(message, context)
-                        : Column(
-                            children: [
-                              _messageItem(message, context),
+              ? Container(
+                  padding: const EdgeInsets.all(4),
+                  margin: const EdgeInsets.all(8),
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  decoration: const BoxDecoration(boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                    ),
+                    BoxShadow(
+                      color: Colors.white,
+                      spreadRadius: -2.0,
+                      blurRadius: 12.0,
+                    ),
+                  ], borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    reverse: true,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot message = snapshot.data!.docs[index];
+                      if (snapshot.data!.docs.length == 1) {
+                        return Column(
+                          children: [
+                            _timeDivider((message.data()
+                                as Map<String, dynamic>)['time']),
+                            _messageItem(message, context),
+                          ],
+                        );
+                      }
+                      if (index == 0) {
+                        past = (message.data() as Map<String, dynamic>)['time'];
+                        return _messageItem(message, context);
+                      }
+                      Timestamp toPass = past;
+                      if (index == snapshot.data!.docs.length - 1) {
+                        return Column(
+                          children: [
+                            _timeDivider((message.data()
+                                as Map<String, dynamic>)['time']),
+                            _messageItem(message, context),
+                            if (!sameDay(
+                                toPass,
+                                (message.data()
+                                    as Map<String, dynamic>)['time']))
                               _timeDivider(toPass),
-                            ],
-                          );
-                  },
-                )
+                          ],
+                        );
+                      }
+                      past = (message.data() as Map<String, dynamic>)['time'];
+                      return sameDay(
+                              (message.data() as Map<String, dynamic>)['time'],
+                              toPass)
+                          ? _messageItem(message, context)
+                          : Column(
+                              children: [
+                                _messageItem(message, context),
+                                _timeDivider(toPass),
+                              ],
+                            );
+                    },
+                  ))
               : const Center(child: Text("No messages yet!"));
         }
         return const Center(
@@ -305,11 +445,13 @@ class _ChatDetailedState extends State<ChatDetailed> {
           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
           margin: isMe
               ? const EdgeInsets.only(
+                  right: 10,
                   left: 80.0,
                   bottom: 8.0,
                   top: 8.0,
                 )
               : const EdgeInsets.only(
+                  left: 10,
                   right: 80.0,
                   bottom: 8.0,
                   top: 8.0,
@@ -328,9 +470,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
               Text(
                 (message.data() as Map<String, dynamic>)['message'].toString(),
                 style: TextStyle(
-                  color: isMe
-                      ? Theme.of(context).colorScheme.onSecondary
-                      : Theme.of(context).colorScheme.onPrimary,
+                  color: isMe ? Colors.white : Colors.white,
                   fontSize: 16.0,
                 ),
               )
@@ -338,16 +478,20 @@ class _ChatDetailedState extends State<ChatDetailed> {
           ),
           decoration: BoxDecoration(
             color: isMe
-                ? Colors.white
-                : Theme.of(context).colorScheme.secondaryContainer,
+                ? Theme.of(context).colorScheme.secondaryContainer
+                : const Color.fromRGBO(158, 158, 158, 1),
             borderRadius: isMe
                 ? const BorderRadius.only(
                     topLeft: Radius.circular(15.0),
                     bottomLeft: Radius.circular(15.0),
+                    bottomRight: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
                   )
                 : const BorderRadius.only(
-                    topRight: Radius.circular(15.0),
+                    topLeft: Radius.circular(15.0),
+                    bottomLeft: Radius.circular(15.0),
                     bottomRight: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
                   ),
           ),
         ),

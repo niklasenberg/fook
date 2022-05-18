@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fook/screens/chat/chats_page.dart';
-import 'package:fook/screens/home/home_page.dart';
-import 'package:fook/screens/profile_page.dart';
 
 class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
@@ -13,7 +10,7 @@ class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => Size.fromHeight(this.height);
+  Size get preferredSize => Size.fromHeight(height);
 
   @override
   Widget build(BuildContext context) {

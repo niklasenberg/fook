@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
   final firestore = FakeFirebaseFirestore();
-  
+
   group('Chat tests', () {
     setUp(() async {
       await firestore.collection('users').doc('1').set({
@@ -22,9 +22,8 @@ void main() {
       });
     });
 
-
     test('Get chat', () async {
-      dynamic chat = await ChatHandler.getChat('1', '2', firestore);
+      dynamic chat = await ChatHandler.getChat('1', '2', '3', firestore);
 
       StreamBuilder(
           stream: chat,
@@ -37,7 +36,7 @@ void main() {
     });
 
     test('Get chats', () async {
-      dynamic chat = await ChatHandler.getChat('1', '2', firestore);
+      dynamic chat = await ChatHandler.getChat('1', '2', '3', firestore);
 
       StreamBuilder(
           stream: chat,
@@ -50,21 +49,26 @@ void main() {
     });
 
     test('Generate chat ID', () async {
-      expect(ChatHandler.generateChatId('a', 'b'), 'a-b');
+      expect(ChatHandler.generateChatId('a', 'b', 'c'), 'a-b-c');
     });
 
     test('Check for existing chat', () async {
-      await ChatHandler.sendMessage('1', '2', true, 'hej', "anders", firestore);
-      expect(await ChatHandler.checkChatExists('1', '2', firestore), true);
+      await ChatHandler.sendMessage(
+          '1', '2', '3', true, 'hej', "anders", firestore);
+      expect(await ChatHandler.checkChatExists('1', '2', '3', firestore), true);
     });
 
     test('Send message', () async {
-      await ChatHandler.sendMessage('3', '4', true, 'hej', "anders", firestore);
+      await ChatHandler.sendMessage(
+          '3', '4', '5', true, 'hej', "anders", firestore);
 
-      QuerySnapshot query = await firestore.collection('chats').doc('3-4').collection('messages').get();
+      QuerySnapshot query = await firestore
+          .collection('chats')
+          .doc('3-4-5')
+          .collection('messages')
+          .get();
 
       expect(query.docs.length, 1);
-
     });
   });
 }

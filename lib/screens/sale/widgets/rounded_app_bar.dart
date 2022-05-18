@@ -9,7 +9,7 @@ class RoundedAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 
 
-  RoundedAppBar(this._text, this._color);
+  const RoundedAppBar(this._text, this._color);
 
   @override
   Widget build(BuildContext context){

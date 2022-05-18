@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/model/sale.dart';
-import 'package:fook/model/user.dart';
-
+import 'package:fook/model/user.dart' as fook;
+import 'package:fook/handlers/chat_handler.dart';
 import '../../handlers/user_handler.dart';
 import '../../model/book.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,7 +36,7 @@ class _SaleDescriptionState extends State<SaleDescription> {
                 Map<String, dynamic> infoList =
                     snapshot.data as Map<String, dynamic>;
                 Book book = infoList["book"] as Book;
-                User seller = infoList["seller"] as User;
+                fook.User seller = infoList["seller"] as fook.User;
                 return Column(
                   children: [
                     SizedBox(
@@ -47,11 +48,11 @@ class _SaleDescriptionState extends State<SaleDescription> {
                           elevation: 4,
                           child: Column(
                             children: [
-                              Padding(padding: EdgeInsets.all(4)),
+                              const Padding(padding: EdgeInsets.all(4)),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   RichText(
@@ -78,16 +79,16 @@ class _SaleDescriptionState extends State<SaleDescription> {
                               SaleCard(widget.sale, seller, book, context),
                               Column(children: [
                                 Row(children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
-                                        text: TextSpan(
+                                        text: const TextSpan(
                                             text: "Sellers description:",
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 16)),
                                       ),
@@ -95,12 +96,12 @@ class _SaleDescriptionState extends State<SaleDescription> {
                                   ),
                                 ]),
                                 Container(
-                                    padding: EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.all(8.0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: Colors.grey.shade300,
                                     ),
-                                    margin: EdgeInsets.all(10),
+                                    margin: const EdgeInsets.all(10),
                                     width: double.infinity,
                                     height: 100,
                                     child: Column(
@@ -110,7 +111,7 @@ class _SaleDescriptionState extends State<SaleDescription> {
                                             text: TextSpan(children: <TextSpan>[
                                               TextSpan(
                                                   text: widget.sale.description,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     color: Colors.black,
                                                   )),
                                             ]),
@@ -122,14 +123,23 @@ class _SaleDescriptionState extends State<SaleDescription> {
                             ],
                           )),
                     ),
-                    Padding(padding: EdgeInsets.fromLTRB(0, 30, 0, 0)),
+                    const Padding(padding: EdgeInsets.fromLTRB(0, 30, 0, 0)),
                     SizedBox(
                       height: 50,
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0)),
-                        onPressed: () {},
+                        onPressed: () {
+                          ChatHandler.sendMessage(
+                              widget.sale.userID,
+                              FirebaseAuth.instance.currentUser!.uid,
+                              widget.sale.saleID,
+                              true,
+                              'Tjena, finns varan',
+                              seller.name + " " + seller.lastName,
+                              FirebaseFirestore.instance);
+                        },
                         child: const Text('Send message to seller'),
                         textColor: Colors.white,
                         color: Theme.of(context).colorScheme.secondary,
@@ -139,7 +149,7 @@ class _SaleDescriptionState extends State<SaleDescription> {
                 );
               }
               return Container(
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   width: double.infinity,
                   height: double.infinity,
                   child: Center(
@@ -151,7 +161,7 @@ class _SaleDescriptionState extends State<SaleDescription> {
   }
 }
 
-Widget SaleCard(Sale sale, User seller, Book book, context) {
+Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
   Color background = Colors.grey.shade300;
   Color fill = Theme.of(context).backgroundColor;
   final List<Color> gradient = [
@@ -167,7 +177,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
     children: [
       Container(
           decoration: BoxDecoration(
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
                 offset: Offset(2.0, 2.0), // shadow direction: bottom right
@@ -181,18 +191,18 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
               begin: Alignment.topCenter,
             ),
           ),
-          margin: EdgeInsets.all(10),
+          margin: const EdgeInsets.all(10),
           width: double.infinity,
           height: 150,
           child: Stack(
             children: [
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey,
@@ -205,7 +215,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                     child: Image.network(
                         book.info.imageLinks["smallThumbnail"].toString()),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   // Texts
@@ -217,7 +227,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -240,7 +250,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -276,7 +286,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -303,7 +313,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -328,19 +338,20 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Container(
                               alignment: Alignment.bottomRight,
-                              padding: new EdgeInsets.fromLTRB(0, 0, 20, 0),
+                              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                               child: RichText(
                                 text: TextSpan(children: <TextSpan>[
                                   TextSpan(
                                       text: sale.price.toString() + ":-",
-                                      style: TextStyle(
-                                          color: Colors.red, fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
+                                      style: const TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
                                 ]),
                               ),
                             )
