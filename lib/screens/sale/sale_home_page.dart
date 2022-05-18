@@ -47,7 +47,7 @@ class _SaleHomePageState extends State<SaleHomePage> {
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SaleCreateNew(),
+                  builder: (context) => const SaleCreateNew(),
                 ),
               ),
             ))
@@ -108,7 +108,7 @@ class _SaleHomePageState extends State<SaleHomePage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SaleCreateNew(),
+                  builder: (context) => const SaleCreateNew(),
                 ),
               ), //lägg till ontap
             );

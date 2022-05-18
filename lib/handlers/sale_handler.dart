@@ -46,9 +46,9 @@ class SaleHandler {
       sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
     }
 
-    if(order == "Price"){
+    if (order == "Price") {
       sales.sort((a, b) => a.price.compareTo(b.price));
-    }else if (order == "Condition"){
+    } else if (order == "Condition") {
       sales.sort((a, b) => b.condition.compareTo(a.condition));
     }
     return sales;
@@ -65,14 +65,14 @@ class SaleHandler {
     List<Sale> sales = [];
     for (DocumentSnapshot a in query.docs) {
       Sale sale = Sale.fromMap(a.data() as Map<String, dynamic>);
-      if(course.getCurrentIsbns().contains(sale.isbn)){
+      if (course.getCurrentIsbns().contains(sale.isbn)) {
         sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
       }
     }
 
-    if(order == "Price"){
+    if (order == "Price") {
       sales.sort((a, b) => a.price.compareTo(b.price));
-    }else if (order == "Condition"){
+    } else if (order == "Condition") {
       sales.sort((a, b) => b.condition.compareTo(a.condition));
     }
     return sales;
@@ -105,6 +105,12 @@ class SaleHandler {
     await firestore.collection('sales').doc(sale.saleID).set(sale.toMap());
   }
 
-  //addsale
-
+  static Future<Sale> getSaleByID(
+      String saleID, FirebaseFirestore firestore) async {
+    QuerySnapshot query = await firestore
+        .collection('sales')
+        .where('saleID', isEqualTo: saleID)
+        .get();
+    return Sale.fromMap(query.docs[0].data() as Map<String, dynamic>);
+  }
 }

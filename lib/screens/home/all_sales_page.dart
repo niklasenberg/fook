@@ -65,7 +65,7 @@ class _AllSalesPageState extends State<AllSalesPage> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   widget.course.name,
-                  style: TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14),
                 ),
               ),
               preferredSize: const Size.fromHeight(1),
@@ -75,15 +75,15 @@ class _AllSalesPageState extends State<AllSalesPage> {
             children: [
               Container(
                   width: double.infinity,
-                  margin: EdgeInsets.fromLTRB(4, 0, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(4, 0, 0, 0),
                   child: Row(mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 4,
                     ),
                     DropdownButton<String>(
-                      hint: Text(
+                      hint: const Text(
                         'Sort by: ',
                         style: TextStyle(
                           color: Colors.black,
@@ -108,11 +108,11 @@ class _AllSalesPageState extends State<AllSalesPage> {
                         });
                       },
                     ),
-                    Container(
+                    SizedBox(
                         width: 200,
                         child: CheckboxListTile(
 
-                      title: Text("Show older",
+                      title: const Text("Show older",
                           textAlign: TextAlign.center),
                       value: showOlder,
                       onChanged: (newValue) {
@@ -130,10 +130,10 @@ class _AllSalesPageState extends State<AllSalesPage> {
                     ))
                   ])),
               Container(
-                padding: EdgeInsets.all(4),
-                margin: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(4),
+                margin: const EdgeInsets.all(8),
                 height: MediaQuery.of(context).size.height * 0.64,
-                decoration: BoxDecoration(boxShadow: [
+                decoration: const BoxDecoration(boxShadow: [
                   BoxShadow(
                     color: Colors.grey,
                   ),
@@ -156,7 +156,7 @@ class _AllSalesPageState extends State<AllSalesPage> {
                       if (snapshot.hasData) {
                         widget.sales = snapshot.data as List<Sale>;
                         if (widget.sales.isEmpty) {
-                          return Center(
+                          return const Center(
                             child: Text(
                                 "We are all out of books for this course! :("),
                           );
@@ -188,14 +188,14 @@ class _AllSalesPageState extends State<AllSalesPage> {
                                             BoxShadow(
                                               color: Theme.of(context)
                                                   .backgroundColor,
-                                              offset: Offset(2.0,
+                                              offset: const Offset(2.0,
                                                   2.0), // shadow direction: bottom right
                                             ),
                                           ],
                                           borderRadius:
                                               BorderRadius.circular(20),
                                         ),
-                                        margin: EdgeInsets.all(5),
+                                        margin: const EdgeInsets.all(5),
                                         width: double.infinity,
                                         height: 150,
                                         child: Center(
@@ -242,7 +242,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
   const List<double> stops = [0.0, fillStop, fillStop, 1.0];
   return Container(
       decoration: BoxDecoration(
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.grey,
             offset: Offset(2.0, 2.0), // shadow direction: bottom right
@@ -256,18 +256,18 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
           begin: Alignment.topCenter,
         ),
       ),
-      margin: EdgeInsets.all(5),
+      margin: const EdgeInsets.all(5),
       width: double.infinity,
       height: 150,
       child: Stack(
         children: [
           Row(
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey,
@@ -280,7 +280,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                 child: Image.network(
                     book.info.imageLinks["smallThumbnail"].toString()),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               // Texts
@@ -292,7 +292,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
@@ -315,7 +315,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
@@ -340,7 +340,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
@@ -363,7 +363,7 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
@@ -386,17 +386,17 @@ Widget SaleCard(Sale sale, User seller, Book book, context) {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Container(
                           alignment: Alignment.bottomRight,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                           child: RichText(
                             text: TextSpan(children: <TextSpan>[
                               TextSpan(
                                   text: sale.price.toString() + ":-",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.red,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold)),

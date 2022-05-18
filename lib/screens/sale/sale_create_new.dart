@@ -21,7 +21,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
     
         appBar: FookAppBar(implyLeading: true,),
         body: (SingleChildScrollView(
-           child: ConstrainedBox(constraints: BoxConstraints(),
+           child: ConstrainedBox(constraints: const BoxConstraints(),
           child: Column(children: [
             //Övergripande strukturen
     
@@ -47,7 +47,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
-                  border: Border.all(width: 1, color: Color.fromARGB(255, 223, 219, 219)),
+                  border: Border.all(width: 1, color: const Color.fromARGB(255, 223, 219, 219)),
 
                   boxShadow: const [
                     BoxShadow(
@@ -154,7 +154,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           height: 55,
                           margin: const EdgeInsets.only(bottom: 10),
 
-                          child: TextField(controller: titleController, decoration: InputDecoration(filled: true, fillColor: Colors.grey),
+                          child: TextField(controller: titleController, decoration: const InputDecoration(filled: true, fillColor: Colors.grey),
                             enabled: false,)
                         ),
 
@@ -171,7 +171,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           margin: const EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(7),
-                              color: Color.fromARGB(255, 226, 229, 231),
+                              color: const Color.fromARGB(255, 226, 229, 231),
                               boxShadow: const [
                                 BoxShadow(
                                   color: Colors.grey,
@@ -198,7 +198,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           margin: const EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(7),
-                              color: Color.fromARGB(255, 226, 229, 231),
+                              color: const Color.fromARGB(255, 226, 229, 231),
                               boxShadow: const [
                                 BoxShadow(
                                   color: Color.fromARGB(255, 121, 121, 121),
@@ -226,7 +226,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           margin: const EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(7),
-                              color: Color.fromARGB(255, 226, 229, 231),
+                              color: const Color.fromARGB(255, 226, 229, 231),
                               boxShadow: const [
                                 BoxShadow(
                                   color: Color.fromARGB(255, 121, 121, 121),
@@ -255,7 +255,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           margin: const EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(7),
-                              color: Color.fromARGB(255, 226, 229, 231),
+                              color: const Color.fromARGB(255, 226, 229, 231),
                               boxShadow: const [
                                 BoxShadow(
                                   color: Color.fromARGB(255, 121, 121, 121),

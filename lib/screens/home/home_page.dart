@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                           child: ListView.builder(
                               itemCount: courses.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Container(
+                                return SizedBox(
                                     height: 400,
                                     child: CourseCard(courses[index], context));
                               }),
@@ -190,7 +190,7 @@ Widget SaleCard(Sale sale, BuildContext context) {
   const double fillStop = (100 - fillPercent) / 100;
   const List<double> stops = [0.0, fillStop, fillStop, 1.0];
   return Container(
-      margin: EdgeInsets.all(2),
+      margin: const EdgeInsets.all(2),
       color: Theme.of(context).colorScheme.background,
       child: FutureBuilder(
           future: _getInfo(sale),
@@ -207,8 +207,8 @@ Widget SaleCard(Sale sale, BuildContext context) {
                           builder: (context) => SaleDescription(sale))),
                   child: Container(
                     decoration: BoxDecoration(
-                      boxShadow: [
-                        const BoxShadow(
+                      boxShadow: const [
+                        BoxShadow(
                           color: Colors.grey,
                           offset: Offset(
                               2.0, 2.0), // shadow direction: bottom right
@@ -232,7 +232,7 @@ Widget SaleCard(Sale sale, BuildContext context) {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             SizedBox(
                               height: 100,
                               width: 70,
@@ -327,8 +327,8 @@ Widget SaleCard(Sale sale, BuildContext context) {
             } else {
               return Container(
                   decoration: BoxDecoration(
-                    boxShadow: [
-                      const BoxShadow(
+                    boxShadow: const [
+                      BoxShadow(
                         color: Colors.grey,
                         offset:
                             Offset(2.0, 2.0), // shadow direction: bottom right

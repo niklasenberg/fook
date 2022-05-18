@@ -73,6 +73,7 @@ class Sale {
     return saleID;
   }
 
+  @override
   bool operator ==(Object other) {
     // Long calculation involving a, b, c, d etc.
 
@@ -93,4 +94,8 @@ class Sale {
         " " +
         saleID;
   }
+
+
+
+
 }

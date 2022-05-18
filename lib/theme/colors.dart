@@ -18,7 +18,6 @@ class CustomColors {
         1,
       );
     }
-    ;
     return MaterialColor(color.value, swatch);
   }
 }
