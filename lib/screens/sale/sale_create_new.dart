@@ -1,15 +1,12 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:string_validator/string_validator.dart';
-import 'package:test/expect.dart';
 import '../../handlers/course_handler.dart';
 import '../../handlers/sale_handler.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import '../../model/book.dart';
 import '../../model/sale.dart';
@@ -37,7 +34,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: FookAppBar(
           implyLeading: true,
         ),
@@ -122,25 +119,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                     toastMessage(
                                         "ISBN should only contain numbers", 1);
                                   } else {
-                                    //Kolla att ISBN finns
-                                    var isIsbnInCourses =
-                                        await CourseHandler.isIsbnInCourses(
-                                            newValue,
-                                            FirebaseFirestore.instance);
-                                    if (isIsbnInCourses) {
-                                      setState(() async {
-                                        Book book =
-                                            await BookHandler.getBook(newValue);
-
-                                        titleController.text = book.info.title;
-                                        authorController.text = book.info
-                                            .authors[0]; //behöver alla authors
-                                      });
-                                    } else {
-                                      toastMessage(
-                                          "ISBN don't match with any book in DSV's courses, therefor it can't be put up for sale in Fook.",
-                                          2);
-                                    }
+                                    _fetchBook(newValue);
                                   }
 
                                   /* setState(() async{
@@ -205,7 +184,19 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                               color: Theme.of(context).colorScheme.secondary,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15.0)),
-                              onPressed: () {},
+                              onPressed: () async {
+                                String barcode = await FlutterBarcodeScanner.scanBarcode(
+                                    "#ff6666",
+                                    "Cancel",
+                                    false,
+                                    ScanMode.DEFAULT);
+                                if(barcode != "-1"){
+                                  setState(() {
+                                    isbnController.text = barcode;
+                                  });
+                                  _fetchBook(barcode);
+                                }
+                              },
                               child: const Icon(
                                 Icons.qr_code_scanner_rounded,
                                 color: Colors.white,
@@ -377,6 +368,27 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  _fetchBook(String newValue) async {
+    //Kolla att ISBN finns
+    var isIsbnInCourses =
+    await CourseHandler.isIsbnInCourses(
+        newValue,
+        FirebaseFirestore.instance);
+    if (isIsbnInCourses) {
+      Book book =
+      await BookHandler.getBook(newValue);
+      setState(() {
+        titleController.text = book.info.title;
+        authorController.text = book.info
+            .authors[0]; //behöver alla authors
+      });
+    } else {
+      toastMessage(
+          "ISBN don't match with any book in DSV's courses, therefor it can't be put up for sale in Fook.",
+          2);
+    }
   }
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
