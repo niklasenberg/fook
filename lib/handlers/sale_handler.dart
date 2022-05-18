@@ -22,7 +22,8 @@ class SaleHandler {
     return sales;
   }
 
-  static Future<Sale> getSaleByID(String saleID, FirebaseFirestore firestore) async {
+  static Future<Sale> getSaleByID(
+      String saleID, FirebaseFirestore firestore) async {
     QuerySnapshot query = await firestore
         .collection('sales')
         .where('saleID', isEqualTo: saleID)
@@ -43,17 +44,18 @@ class SaleHandler {
       sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
     }
 
-    if(order == "Price"){
+    if (order == "Price") {
       sales.sort((a, b) => a.price.compareTo(b.price));
-    }else if (order == "Condition"){
+    } else if (order == "Condition") {
       sales.sort((a, b) => b.condition.compareTo(a.condition));
     }
     return sales;
   }
 
-  static Future<List<Sale>> getSalesForBook(Book book,
-      String order, FirebaseFirestore firestore) async {
-    Set<String> isbns = await BookHandler.getBookEditions((book.info.title + " " + book.info.subtitle).trim());
+  static Future<List<Sale>> getSalesForBook(
+      Book book, String order, FirebaseFirestore firestore) async {
+    Set<String> isbns = await BookHandler.getBookEditions(
+        (book.info.title + " " + book.info.subtitle).trim());
 
     List<Sale> sales = [];
     for (String isbn in isbns) {
@@ -86,7 +88,7 @@ class SaleHandler {
           .get();
 
       for (DocumentSnapshot a in query.docs) {
-        if(course.getCurrentIsbns().contains(isbn.identifier)){
+        if (course.getCurrentIsbns().contains(isbn.identifier)) {
           sales.add(Sale.fromMap(a.data() as Map<String, dynamic>));
         }
       }
@@ -144,7 +146,6 @@ class SaleHandler {
     return sales;
   }
 
-
   static Future<List<String>> getCoursesForIsbn(
       String isbn, FirebaseFirestore firestore) async {
     QuerySnapshot query = await firestore
@@ -170,5 +171,4 @@ class SaleHandler {
   static void addSale(FirebaseFirestore firestore, Sale sale) async {
     await firestore.collection('sales').doc(sale.saleID).set(sale.toMap());
   }
-
 }

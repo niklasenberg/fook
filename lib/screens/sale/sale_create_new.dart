@@ -7,7 +7,6 @@ import 'package:string_validator/string_validator.dart';
 import '../../handlers/course_handler.dart';
 import '../../handlers/sale_handler.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-
 import '../../model/book.dart';
 import '../../model/sale.dart';
 import '../widgets/fook_logo_appbar.dart';
@@ -25,7 +24,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
 
-  final items = ["Bad", "OK", "Good", "Like new"];
+  final items = ["1/5", "2/5", "3/5", "4/5", "5/5"];
   String? value;
 
   TextEditingController priceController = TextEditingController();
@@ -121,36 +120,6 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                   } else {
                                     _fetchBook(newValue);
                                   }
-
-                                  /* setState(() async{
-
-
-                                    setState(() async {
-                                      /* Sale sale = await SaleHandler.getSaleId(
-                                          FirebaseFirestore.instance);*/
-
-                                      List<Sale> sale =
-                                          await SaleHandler.getSalesForUser(
-                                              FirebaseAuth
-                                                  .instance.currentUser!.uid,
-                                              FirebaseFirestore.instance);
-
-                                      for (Sale s in sale) {
-                                        if (s.getPrice() != 0) {
-                                          priceController.text =
-                                              s.getPrice().toString();
-                                        }
-                                      }
-
-                                      /*  priceController.text =
-                                          sale.getPrice().toString();*/
-                                    });
-                                  
-
-                                HÄMTA OCH SETTA pris, condition, kommentar                                      
-                                
-                                  Sale sale = await SaleHandler.getSaleId(firestore)
-                                });*/
                                 },
                                 decoration: const InputDecoration(
                                   labelText: 'xxxxxxxxxx',
@@ -253,9 +222,6 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           height: 55,
                           margin: const EdgeInsets.only(bottom: 10),
                         ),
-
-                        //Välj skick-ruta:
-                        //const Text("Author:", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
                         const Align(
                           alignment: Alignment.bottomLeft,
                           child: Text(

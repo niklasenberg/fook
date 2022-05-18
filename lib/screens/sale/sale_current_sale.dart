@@ -1,37 +1,22 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:string_validator/string_validator.dart';
-import 'package:test/expect.dart';
-import '../../handlers/course_handler.dart';
 import '../../handlers/sale_handler.dart';
-
 import '../../model/book.dart';
 import '../../model/sale.dart';
 import '../widgets/fook_logo_appbar.dart';
-import 'package:fook/handlers/book_handler.dart';
 
 class SaleCurrentSale extends StatefulWidget {
   //const SaleCurrentSale({Key? key}) : super(key: key);
-  String thisisbn;
-  late String title;
-  late String authors;
-  late int price;
-  late String condition;
-  late String comment;
+  late Book thisbook;
+  Sale thissale;
+
   SaleCurrentSale({
     Key? key,
-    required this.thisisbn,
-    required this.title,
-    required this.authors,
-    required this.price,
-    required this.condition,
-    required this.comment,
+    required this.thisbook,
+    required this.thissale,
   }) : super(key: key);
 
   @override
@@ -43,7 +28,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
 
-  final items = ["Bad", "OK", "Good", "Like new"];
+  final items = ["1/5", "2/5", "3/5", "4/5", "5/5"];
   String? value;
 
   TextEditingController priceController = TextEditingController();
@@ -51,8 +36,17 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
   TextEditingController commentController = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    priceController.text = widget.thissale.getPrice().toString();
+    commentController.text = widget.thissale.description;
+    conditionController.text = widget.thissale.condition;
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: FookAppBar(
           implyLeading: true,
         ),
@@ -101,7 +95,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             children: [
                               const Text("ISBN:", textAlign: TextAlign.left),
                               TextFormField(
-                                initialValue: widget.thisisbn,
+                                initialValue: widget.thissale.getIsbn(),
                                 //controller: isbnController,
                                 enableInteractiveSelection: false,
                                 focusNode: new AlwaysDisabledFocusNode(),
@@ -154,7 +148,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             height: 55,
                             margin: const EdgeInsets.only(bottom: 10),
                             child: TextFormField(
-                              initialValue: widget.title,
+                              initialValue: widget.thisbook.info.title,
                               //controller: titleController,
                               decoration: const InputDecoration(
                                   filled: true,
@@ -174,7 +168,8 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
 
                         Container(
                           child: TextFormField(
-                            initialValue: widget.authors,
+                            initialValue:
+                                widget.thisbook.info.authors.toString(),
                             //controller: authorController,
                             decoration: const InputDecoration(
                                 filled: true,
@@ -209,14 +204,15 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
                                     //Kolla vald condition och se till att den fortfarande kan ändras
-                                    value: value,
+                                    value: conditionController.text,
                                     iconSize: 36,
                                     icon: const Icon(Icons.arrow_drop_down,
                                         color: Colors.black),
                                     isExpanded: true,
                                     items: items.map(buildMenuItem).toList(),
-                                    onChanged: (value) =>
-                                        setState(() => this.value = value)),
+                                    onChanged: (value) => setState(() =>
+                                        conditionController.text =
+                                            value.toString())),
                               )),
                         ),
 
@@ -232,11 +228,11 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
 
                         Align(
                           alignment: Alignment.bottomLeft,
-                          child: TextFormField(
+                          child: TextField(
                             //pricecontroller ska kunna ändra
                             keyboardType: TextInputType.number,
-                            initialValue: widget.price.toString(),
-                            //controller: priceController,
+                            // initialValue: widget.price.toString(),
+                            controller: priceController,
                             //kan ej ha controller och initialvalue
                             decoration: const InputDecoration(
                                 filled: false, fillColor: Colors.white),
@@ -260,9 +256,8 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
 
                         Align(
                           alignment: Alignment.bottomLeft,
-                          child: TextFormField(
-                            //controller: commentController,
-                            initialValue: widget.comment,
+                          child: TextField(
+                            controller: commentController,
                             decoration: const InputDecoration(
                                 filled: false, fillColor: Colors.white),
                             enabled: true,

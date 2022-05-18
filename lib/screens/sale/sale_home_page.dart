@@ -109,13 +109,8 @@ class _SaleHomePageState extends State<SaleHomePage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => SaleCurrentSale(
-                    thisisbn: sale.getIsbn(),
-                    title: book.info.title,
-                    authors: book.info.authors.toString(),
-                    price: sale.getPrice(),
-                    condition: sale.condition,
-                    //måste komma åt description i firestore
-                    comment: "",
+                    thisbook: book,
+                    thissale: sale,
                   ),
                 ),
               ),
