@@ -22,6 +22,19 @@ class SaleHandler {
     return sales;
   }
 
+  static Stream<List<Sale>> getSaleStream(
+      String userId, FirebaseFirestore firestore) {
+    var query = firestore
+        .collection('sales')
+        .where('userID', isEqualTo: userId);
+
+    var stream = query.snapshots();
+
+    return stream.map((event) => event.docs
+        .map<Sale>((e) => Sale.fromMap(e.data()))
+        .toList());
+  }
+
   static Future<Sale> getSaleByID(
       String saleID, FirebaseFirestore firestore) async {
     QuerySnapshot query = await firestore

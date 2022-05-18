@@ -13,7 +13,7 @@ import '../widgets/fook_logo_appbar.dart';
 import 'package:fook/handlers/book_handler.dart';
 
 class SaleCreateNew extends StatefulWidget {
-  const SaleCreateNew({Key? key}) : super(key: key);
+  SaleCreateNew({Key? key}) : super(key: key);
 
   @override
   State<SaleCreateNew> createState() => _SaleCreateNewState();
@@ -23,13 +23,12 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
   TextEditingController isbnController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
-
-  final items = ["1/5", "2/5", "3/5", "4/5", "5/5"];
-  String? value;
-
   TextEditingController priceController = TextEditingController();
   TextEditingController conditionController = TextEditingController();
   TextEditingController commentController = TextEditingController();
+  final items = ["1/5", "2/5", "3/5", "4/5", "5/5"];
+  bool _isButtonEnabled = false;
+  String? value;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -305,15 +304,21 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: ElevatedButton.icon(
                             label: const Text('Publish'),
                             icon: const Icon(Icons.publish),
-                            onPressed: (() => createSale(
-                                  isbnController.text,
-                                  commentController.text,
-                                  conditionController.text,
-                                  int.parse(priceController.text),
-                                  context,
-                                )),
+                            onPressed: (() {
+                                if(_isButtonEnabled){
+                                  createSale(
+                                    isbnController.text,
+                                    commentController.text,
+                                    conditionController.text,
+                                    int.parse(priceController.text),
+                                    context,
+                                  );
+                                }else{
+                                  toastMessage("Enter valid ISBN number", 2);
+                                }
+                            }
                           ),
-                        ),
+                        )),
                       ],
                     ),
                   ],
@@ -343,16 +348,18 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         newValue,
         FirebaseFirestore.instance);
     if (isIsbnInCourses) {
+      _isButtonEnabled = true;
       Book book =
       await BookHandler.getBook(newValue);
       setState(() {
         titleController.text = book.info.title;
         authorController.text = book.info
-            .authors[0]; //behöver alla authors
+            .authors.toString();
       });
     } else {
+      _isButtonEnabled = false;
       toastMessage(
-          "ISBN don't match with any book in DSV's courses, therefor it can't be put up for sale in Fook.",
+          "ISBN don't match with any book in DSV's courses, therefore it can't be put up for sale in Fook.",
           2);
     }
   }

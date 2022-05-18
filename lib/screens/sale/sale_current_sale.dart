@@ -272,10 +272,13 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             style: ElevatedButton.styleFrom(
                               primary: Colors.red,
                             ),
-                            onPressed: (() =>
-                                removeSale(widget.thissale.saleID, context)),
+                            onPressed: (() {removeSale(widget.thissale.saleID, context);
+                            Navigator.pop(context);
+                            }
+
                             //deletehandler
                           ),
+                        ),
                         ),
 
                         Align(
@@ -286,13 +289,15 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             style: ElevatedButton.styleFrom(
                               primary: Colors.yellow,
                             ),
-                            onPressed: (() => updateSale(
+                            onPressed: () { updateSale(
                                   commentController.text,
                                   conditionController.text,
                                   int.parse(priceController.text),
                                   context,
                                   widget.thissale.saleID,
-                                )),
+                                );
+                            Navigator.pop(context);
+                            }
                             //updatehandler
                           ),
                         ),
@@ -344,9 +349,6 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
       saleID,
     );
     toastMessage('Updated', 1);
-    Navigator.pop(context);
-    //setState(() {});
-    //Måste hämta nya objektet
     return true;
   }
 
@@ -354,7 +356,6 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
   Future<bool> removeSale(String saleID, BuildContext context) async {
     SaleHandler.removeSale(FirebaseFirestore.instance, saleID);
     toastMessage('Removed', 1);
-    Navigator.pop(context);
     //setState(() {});
     //Måste hämta nya objektet
     return true;

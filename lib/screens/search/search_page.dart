@@ -39,8 +39,8 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-        resizeToAvoidBottomInset: true,
-        body: Column(
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(child: Column(
           children: [
             Container(
                 padding: EdgeInsets.all(4),
@@ -94,7 +94,7 @@ class _SearchPageState extends State<SearchPage> {
                 },
               ),)
           ],
-        ));
+        )));
   }
 }
 

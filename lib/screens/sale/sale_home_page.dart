@@ -16,8 +16,10 @@ class SaleHomePage extends StatefulWidget {
 }
 
 class _SaleHomePageState extends State<SaleHomePage> {
+
   @override
   Widget build(BuildContext context) => Scaffold(
+    resizeToAvoidBottomInset: true,
       appBar: AppBar(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
@@ -26,7 +28,7 @@ class _SaleHomePageState extends State<SaleHomePage> {
           title: const Text("MY SALES", style: TextStyle(color: Colors.orange)),
           centerTitle: true,
           backgroundColor: Colors.white),
-      body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      body: SingleChildScrollView(child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         SizedBox(
             height: 300,
             width: 300,
@@ -43,21 +45,22 @@ class _SaleHomePageState extends State<SaleHomePage> {
             alignment: Alignment.center,
             padding: const EdgeInsets.all(32),
             child: ElevatedButton.icon(
-              icon: const Text('Create new'),
-              label: const Icon(Icons.add_business),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SaleCreateNew(),
-                ),
-              ),
-            ))
-      ]));
+                icon: const Text('Create new'),
+                label: const Icon(Icons.add_business),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SaleCreateNew(),
+                    ),
+                  );
+                }))
+      ])));
 
   Widget buildA(BuildContext context) {
-    return FutureBuilder(
-        future: SaleHandler.getSalesForUser(
-            FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
+    return StreamBuilder(
+        stream: SaleHandler.getSaleStream(FirebaseAuth.instance.currentUser!.uid,
+            FirebaseFirestore.instance),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<Sale> sales = snapshot.data as List<Sale>;
@@ -105,15 +108,16 @@ class _SaleHomePageState extends State<SaleHomePage> {
                   ':- SEK'),
               trailing: Text('Condition: ' + sale.condition),
               dense: true,
-              onTap: () => Navigator.push(
+              onTap: () { Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => SaleCurrentSale(
                     thisbook: book,
                     thissale: sale,
-                  ),
+                  )
                 ),
-              ),
+              );
+              }
             );
           }
           return Center(
