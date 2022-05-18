@@ -16,10 +16,11 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class AlgoliaApplication{
+class AlgoliaApplication {
   static final Algolia algolia = Algolia.init(
     applicationId: '3KLN6AUQBU', //ApplicationID
-    apiKey: '8a242909fc9a59d15c27ad46bafb9c5c', //search-only api key in flutter code
+    apiKey:
+        '8a242909fc9a59d15c27ad46bafb9c5c', //search-only api key in flutter code
   );
 }
 
@@ -34,19 +35,20 @@ class _SearchPageState extends State<SearchPage> {
     return results;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).backgroundColor,
         resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(child: Column(
+        body: SingleChildScrollView(
+            child: Column(
           children: [
             Container(
                 padding: EdgeInsets.all(4),
                 margin: EdgeInsets.all(4),
                 child: TextFormField(
-                  onFieldSubmitted: (val) { //TODO: Change to onChanged for Realtime search
+                  onFieldSubmitted: (val) {
+                    //TODO: Change to onChanged for Realtime search
                     setState(() {
                       _searchTerm = val;
                     });
@@ -57,7 +59,7 @@ class _SearchPageState extends State<SearchPage> {
                 )),
             Container(
               margin: EdgeInsets.all(4),
-              height: MediaQuery.of(context).size.height * 0.63,
+              height: MediaQuery.of(context).size.height * 0.65,
               decoration: BoxDecoration(boxShadow: [
                 BoxShadow(
                   color: Colors.grey,
@@ -68,11 +70,12 @@ class _SearchPageState extends State<SearchPage> {
                   blurRadius: 12.0,
                 ),
               ], borderRadius: BorderRadius.all(Radius.circular(8))),
-    child: StreamBuilder<List<AlgoliaObjectSnapshot>>(
+              child: StreamBuilder<List<AlgoliaObjectSnapshot>>(
                 stream: Stream.fromFuture(_operation(_searchTerm)),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || _searchTerm.isEmpty)
-                    return Center(child: Text(
+                    return Center(
+                        child: Text(
                       "Enter your query.",
                       style: TextStyle(color: Colors.black),
                     ));
@@ -85,14 +88,18 @@ class _SearchPageState extends State<SearchPage> {
                         if (snapshot.hasError)
                           return new Text('Error: ${snapshot.error}');
                         else if (searchHit.isNotEmpty) {
-                          return ListView.builder(itemCount: searchHit.length, itemBuilder: (context, index) => _getBooks(searchHit[index].data["shortCode"], context));
+                          return ListView.builder(
+                              itemCount: searchHit.length,
+                              itemBuilder: (context, index) => _getBooks(
+                                  searchHit[index].data["shortCode"], context));
                         } else {
                           return Center(child: Text("No hits. :("));
                         }
                     }
                   }
                 },
-              ),)
+              ),
+            )
           ],
         )));
   }
@@ -100,36 +107,37 @@ class _SearchPageState extends State<SearchPage> {
 
 _getBooks(String shortCode, BuildContext context) {
   return FutureBuilder(
-      future: _getCurrentBooks(shortCode), builder: (context, snapshot) {
-    if (snapshot.connectionState != ConnectionState.done) {
-      return Container(
-        width: double.infinity,
-        height: 150,
-        child: Center(
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(
-                  Theme.of(context).colorScheme.primary,
-                ))),
-      );
-    }
-    else if (snapshot.hasData){
-      List<Book> books = snapshot.data as List<Book>;
-      return ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: books.length,
-          itemBuilder: (context, index) => BookCard(shortCode, books[index], context));
-    }
-    return Container(
-      width: double.infinity,
-      height: 150,
-      child: Center(
-          child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(
-                Theme.of(context).colorScheme.primary,
-              ))),
-    );
-  });
+      future: _getCurrentBooks(shortCode),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Container(
+            width: double.infinity,
+            height: 150,
+            child: Center(
+                child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(
+              Theme.of(context).colorScheme.primary,
+            ))),
+          );
+        } else if (snapshot.hasData) {
+          List<Book> books = snapshot.data as List<Book>;
+          return ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: books.length,
+              itemBuilder: (context, index) =>
+                  BookCard(shortCode, books[index], context));
+        }
+        return Container(
+          width: double.infinity,
+          height: 150,
+          child: Center(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(
+            Theme.of(context).colorScheme.primary,
+          ))),
+        );
+      });
 }
 
 Widget BookCard(String shortCode, Book book, context) {
@@ -144,129 +152,131 @@ Widget BookCard(String shortCode, Book book, context) {
   const double fillPercent = 50; // fills 56.23% for container from bottom
   const double fillStop = (100 - fillPercent) / 100;
   const List<double> stops = [0.0, fillStop, fillStop, 1.0];
-  return GestureDetector(onTap: () =>
-      Navigator.push(
+  return GestureDetector(
+      onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => BookDescription(book, shortCode))),
       child: Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            offset: Offset(2.0, 2.0), // shadow direction: bottom right
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(2.0, 2.0), // shadow direction: bottom right
+              ),
+            ],
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+              colors: gradient,
+              stops: stops,
+              end: Alignment.bottomCenter,
+              begin: Alignment.topCenter,
+            ),
           ),
-        ],
-        borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          colors: gradient,
-          stops: stops,
-          end: Alignment.bottomCenter,
-          begin: Alignment.topCenter,
-        ),
-      ),
-      margin: EdgeInsets.all(5),
-      width: double.infinity,
-      height: 150,
-      child: Stack(
-        children: [
-          Row(
+          margin: EdgeInsets.all(5),
+          width: double.infinity,
+          height: 150,
+          child: Stack(
             children: [
-              SizedBox(
-                width: 20,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset:
-                      Offset(2.0, 2.0), // shadow direction: bottom right
-                    ),
-                  ],
-                ),
-                height: 130,
-                child: Image.network(
-                    book.info.imageLinks["smallThumbnail"].toString()),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              // Texts
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    // UEC607 & Digital communication text
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Flexible(
-                              child: RichText(
-                                text: TextSpan(children: <TextSpan>[
-                                  TextSpan(
-                                      text: (book.info.title +
-                                          ": " +
-                                          book.info.subtitle)
-                                          .toUpperCase(),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      )),
-                                ]),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Flexible(
-                              child: RichText(
-                                text: TextSpan(children: <TextSpan>[
-                                  const TextSpan(
-                                      text: "Course: ",
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 12)),
-                                  TextSpan(
-                                      text: shortCode,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      )),
-                                ]),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
+              Row(
+                children: [
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(
+                              2.0, 2.0), // shadow direction: bottom right
                         ),
                       ],
                     ),
-                  ],
-                ),
+                    height: 130,
+                    child: Image.network(
+                        book.info.imageLinks["smallThumbnail"].toString()),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  // Texts
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        // UEC607 & Digital communication text
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(children: <TextSpan>[
+                                      TextSpan(
+                                          text: (book.info.title +
+                                                  ": " +
+                                                  book.info.subtitle)
+                                              .toUpperCase(),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black,
+                                          )),
+                                    ]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(children: <TextSpan>[
+                                      const TextSpan(
+                                          text: "Course: ",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12)),
+                                      TextSpan(
+                                          text: shortCode,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          )),
+                                    ]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
-      )));
+          )));
 }
 
 Future<List<Book>> _getCurrentBooks(String shortCode) async {
-  Course course = await CourseHandler.getCourse(shortCode, FirebaseFirestore.instance);
+  Course course =
+      await CourseHandler.getCourse(shortCode, FirebaseFirestore.instance);
   List<Book> books = [];
-  for (String isbn in course.getCurrentIsbns()){
+  for (String isbn in course.getCurrentIsbns()) {
     books.add(await BookHandler.getBook(isbn));
   }
   return books;
