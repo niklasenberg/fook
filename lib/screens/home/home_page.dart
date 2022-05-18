@@ -6,11 +6,8 @@ import 'package:fook/model/course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/user.dart' as fook;
-import 'package:fook/handlers/sale_handler.dart';
-import 'package:fook/model/sale.dart';
 import 'package:fook/model/book.dart';
-import 'package:fook/screens/home/all_sales_page.dart';
-import 'package:fook/screens/home/sale_description_page.dart';
+import 'package:fook/screens/widgets/book_description_page.dart';
 import '../../handlers/user_handler.dart';
 import '../../model/book.dart';
 
@@ -81,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                               itemCount: courses.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return SizedBox(
-                                    height: 400,
+                                    height: 300,
                                     child: CourseCard(courses[index], context));
                               }),
                         );
@@ -123,7 +120,7 @@ Widget CourseCard(Course course, BuildContext context) {
             style: TextStyle(color: Theme.of(context).primaryColor),
           ),
           subtitle: Text(course.name),
-          trailing: MaterialButton(
+          /*trailing: MaterialButton(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0)),
             onPressed: () {
@@ -135,32 +132,31 @@ Widget CourseCard(Course course, BuildContext context) {
             child: const Text('Show all'),
             textColor: Theme.of(context).colorScheme.background,
             color: Theme.of(context).colorScheme.secondary,
-          ),
+          ),*/
         ),
-        SizedBox(height: 300.0, child: SaleCarousel(course, context)),
+        SizedBox(height: 200.0, child: BookCarousel(course, context)),
       ],
     ),
   );
 }
 
-Widget SaleCarousel(Course course, BuildContext context) {
+Widget BookCarousel(Course course, BuildContext context) {
   return FutureBuilder(
-      future: _getSales(course),
+      future: _getBooks(course),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<Sale> sales = snapshot.data as List<Sale>;
-          if (sales.isEmpty) {
+          List<Book> books = snapshot.data as List<Book>;
+          if (books.isEmpty) {
             return const Center(
-              child: Text("No current literature available.\n"
-                  "Try pressing the \"Show all\" button"),
+              child: Text("No literature listed for this course. \n"
+                  "Maybe you should tell your teacher!"),
             );
           } else {
-            //TODO: Ska vi ha listview eller Carousel?
             return ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: sales.length,
+                itemCount: books.length,
                 itemBuilder: (BuildContext context, int index) =>
-                    SaleCard(sales[index], context));
+                    BookCard(course.shortCode, books[index], context));
             /*return CarouselSlider(
             options: CarouselOptions(enableInfiniteScroll: true),
     items: sales.map((sale) => SaleCard(sale, context)).toList(),
@@ -176,9 +172,9 @@ Widget SaleCarousel(Course course, BuildContext context) {
       });
 }
 
-Widget SaleCard(Sale sale, BuildContext context) {
+Widget BookCard(String shortCode, Book book, BuildContext context) {
   Color background = Colors.grey.shade300;
-  Color fill = Theme.of(context).backgroundColor;
+  Color fill = Colors.white;
   final List<Color> gradient = [
     background,
     background,
@@ -190,187 +186,90 @@ Widget SaleCard(Sale sale, BuildContext context) {
   const double fillStop = (100 - fillPercent) / 100;
   const List<double> stops = [0.0, fillStop, fillStop, 1.0];
   return Container(
-      margin: const EdgeInsets.all(2),
+      margin: EdgeInsets.all(2),
       color: Theme.of(context).colorScheme.background,
-      child: FutureBuilder(
-          future: _getInfo(sale),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              Map<String, dynamic> infoList =
-                  snapshot.data as Map<String, dynamic>;
-              Book book = infoList["book"] as Book;
-              fook.User seller = infoList["seller"] as fook.User;
-              return InkWell(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SaleDescription(sale))),
+      child: InkWell(
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BookDescription(book, shortCode))),
+          child: Container(
+            height: 40,
+            width: 150,
+            decoration: BoxDecoration(
+              boxShadow: [
+                const BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                ),
+              ],
+              borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(
+                colors: gradient,
+                stops: stops,
+                end: Alignment.bottomCenter,
+                begin: Alignment.topCenter,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 10),
+                SizedBox(
+                  height: 100,
+                  width: 70,
                   child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: const [
+                    decoration: const BoxDecoration(
+                      boxShadow: [
                         BoxShadow(
                           color: Colors.grey,
                           offset: Offset(
                               2.0, 2.0), // shadow direction: bottom right
                         ),
                       ],
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        colors: gradient,
-                        stops: stops,
-                        end: Alignment.bottomCenter,
-                        begin: Alignment.topCenter,
-                      ),
                     ),
-                    height: 100,
-                    width: 150,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              height: 100,
-                              width: 70,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(2.0,
-                                          2.0), // shadow direction: bottom right
-                                    ),
-                                  ],
-                                ),
-                                height: 50,
-                                child: Image.network(book
-                                    .info.imageLinks["smallThumbnail"]
-                                    .toString()),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Flexible(
-                                  child: Text(
-                                    (book.info.title +
-                                            ": " +
-                                            book.info.subtitle)
-                                        .toUpperCase(),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Flexible(
-                                  child: RichText(
-                                    text: TextSpan(children: <TextSpan>[
-                                      const TextSpan(
-                                          text: "Condition: ",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12)),
-                                      TextSpan(
-                                          text: sale.condition,
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontSize: 12)),
-                                    ]),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Flexible(
-                                  child: RichText(
-                                    text: TextSpan(children: <TextSpan>[
-                                      const TextSpan(
-                                          text: "Seller: ",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12)),
-                                      TextSpan(
-                                          text: seller.name +
-                                              " " +
-                                              seller.lastName,
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontSize: 12)),
-                                    ]),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                    height: 50,
+                    child: Image.network(
+                        book.info.imageLinks["smallThumbnail"].toString()),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          (book.info.title + ": " + book.info.subtitle)
+                              .toUpperCase(),
+                          overflow: TextOverflow.fade,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
                         ),
-                      ],
-                    ),
-                  ));
-            } else {
-              return Container(
-                  decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset:
-                            Offset(2.0, 2.0), // shadow direction: bottom right
                       ),
                     ],
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      colors: gradient,
-                      stops: stops,
-                      end: Alignment.bottomCenter,
-                      begin: Alignment.topCenter,
-                    ),
                   ),
-                  height: 100,
-                  width: 150,
-                  child: Center(
-                      child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(
-                    Theme.of(context).colorScheme.primary,
-                  ))));
-            }
-          }));
+                )
+              ],
+            ),
+          )));
+}
+
+Future<List<Book>> _getBooks(Course course) async {
+  List<Book> result = [];
+  for (String isbn in course.getCurrentIsbns()) {
+    result.add(await BookHandler.getBook(isbn));
+  }
+  return result;
 }
 
 Future<List<Course>> _update() async {
   return await CourseHandler.updateUserCourses(
       FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
-}
-
-Future<List<Sale>> _getSales(Course course) async {
-  List<Sale> result = [];
-  for (String isbn in course.getCurrentIsbns()) {
-    result.addAll(
-        await SaleHandler.getSalesForISBN(isbn, FirebaseFirestore.instance));
-  }
-  return result;
-}
-
-_getInfo(Sale sale) async {
-  Map<String, dynamic> infoList = {};
-  infoList["book"] = await BookHandler.getBook(sale.isbn);
-  infoList["seller"] =
-      await UserHandler.getUser(sale.userID, FirebaseFirestore.instance);
-  return infoList;
 }

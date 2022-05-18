@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fook/screens/chat/chats_page.dart';
 import 'package:fook/screens/home/home_page.dart';
 import 'package:fook/screens/profile_page.dart';
+import 'package:fook/screens/search/search_page.dart';
 import 'package:fook/screens/widgets/fook_logo_appbar.dart';
 import 'package:fook/screens/sale/sale_home_page.dart';
 import 'package:fluttericon/elusive_icons.dart';
@@ -23,6 +24,7 @@ class _NavPageState extends State<NavPage>  {
 
   static const List<Widget> _pages = <Widget>[
     Center(child: HomePage()),
+    Center(child: SearchPage()),
     Center(child: SaleHomePage()),
     Center(child: ChatsPage()),
     Center(child: ProfilePage()),
@@ -58,6 +60,11 @@ class _NavPageState extends State<NavPage>  {
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
+              backgroundColor: Colors.white,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Search',
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(

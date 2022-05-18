@@ -6,6 +6,7 @@ import 'package:fook/model/sale.dart';
 import 'package:fook/model/book.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/screens/sale/sale_create_new.dart';
+import 'package:fook/screens/sale/sale_current_sale.dart';
 
 class SaleHomePage extends StatefulWidget {
   const SaleHomePage({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class SaleHomePage extends StatefulWidget {
 class _SaleHomePageState extends State<SaleHomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
@@ -25,37 +27,41 @@ class _SaleHomePageState extends State<SaleHomePage> {
           title: const Text("MY SALES", style: TextStyle(color: Colors.orange)),
           centerTitle: true,
           backgroundColor: Colors.white),
-      body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        SizedBox(
-            height: 300,
-            width: 300,
-            child: LimitedBox(
-              maxHeight: 160,
-              maxWidth: 300,
-              child: Container(
-                  color: Colors.grey,
+      body: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+            SizedBox(
+                height: 300,
+                width: 300,
+                child: LimitedBox(
+                  maxHeight: 160,
+                  maxWidth: 300,
                   child: Container(
-                    child: buildA(context),
-                  )),
-            )),
-        Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(32),
-            child: ElevatedButton.icon(
-              icon: const Text('Create new'),
-              label: const Icon(Icons.add_business),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SaleCreateNew(),
-                ),
-              ),
-            ))
-      ]));
+                      color: Colors.grey,
+                      child: Container(
+                        child: buildA(context),
+                      )),
+                )),
+            Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(32),
+                child: ElevatedButton.icon(
+                    icon: const Text('Create new'),
+                    label: const Icon(Icons.add_business),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SaleCreateNew(),
+                        ),
+                      );
+                    }))
+          ])));
 
   Widget buildA(BuildContext context) {
-    return FutureBuilder(
-        future: SaleHandler.getSalesForUser(
+    return StreamBuilder(
+        stream: SaleHandler.getSaleStream(
             FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -88,30 +94,32 @@ class _SaleHomePageState extends State<SaleHomePage> {
             Book book = snapshot.data as Book;
             String a = book.info.imageLinks['smallThumbnail'].toString();
             return ListTile(
-              leading: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: 60,
-                  maxWidth: 60,
+                leading: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: 60,
+                    maxWidth: 60,
+                  ),
+                  child: Image.network(a),
                 ),
-                child: Image.network(a),
-              ),
-
-              title: Text('Title: ' + book.info.title),
-              subtitle: Text('ISBN: ' +
-                  sale.getIsbn() +
-                  '\n' +
-                  'Price: ' +
-                  sale.getPrice().toString() +
-                  ':- SEK'),
-              dense: true,
-
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SaleCreateNew(),
-                ),
-              ), //lägg till ontap
-            );
+                title: Text('Title: ' + book.info.title),
+                subtitle: Text('ISBN: ' +
+                    sale.getIsbn() +
+                    '\n' +
+                    'Price: ' +
+                    sale.getPrice().toString() +
+                    ':- SEK'),
+                trailing: Text('Condition: ' + sale.condition),
+                dense: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SaleCurrentSale(
+                              thisbook: book,
+                              thissale: sale,
+                            )),
+                  );
+                });
           }
           return Center(
             child: CircularProgressIndicator(
@@ -121,9 +129,5 @@ class _SaleHomePageState extends State<SaleHomePage> {
             ),
           );
         });
-  }
-
-  _doSomething() {
-    //Placeholder
   }
 }

@@ -3,32 +3,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:string_validator/string_validator.dart';
-import '../../handlers/course_handler.dart';
 import '../../handlers/sale_handler.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import '../../model/book.dart';
 import '../../model/sale.dart';
 import '../widgets/fook_logo_appbar.dart';
-import 'package:fook/handlers/book_handler.dart';
 
-class SaleCreateNew extends StatefulWidget {
-  SaleCreateNew({Key? key}) : super(key: key);
+class SaleCurrentSale extends StatefulWidget {
+  //const SaleCurrentSale({Key? key}) : super(key: key);
+  late Book thisbook;
+  Sale thissale;
+
+  SaleCurrentSale({
+    Key? key,
+    required this.thisbook,
+    required this.thissale,
+  }) : super(key: key);
 
   @override
-  State<SaleCreateNew> createState() => _SaleCreateNewState();
+  State<SaleCurrentSale> createState() => _SaleCurrentSale();
 }
 
-class _SaleCreateNewState extends State<SaleCreateNew> {
+class _SaleCurrentSale extends State<SaleCurrentSale> {
   TextEditingController isbnController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
+
+  final items = ["1/5", "2/5", "3/5", "4/5", "5/5"];
+  String? value;
+
   TextEditingController priceController = TextEditingController();
   TextEditingController conditionController = TextEditingController();
   TextEditingController commentController = TextEditingController();
-  final items = ["1/5", "2/5", "3/5", "4/5", "5/5"];
-  bool _isButtonEnabled = false;
-  String? value;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    priceController.text = widget.thissale.getPrice().toString();
+    commentController.text = widget.thissale.description;
+    conditionController.text = widget.thissale.condition;
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -40,19 +54,16 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
             child: ConstrainedBox(
           constraints: const BoxConstraints(),
           child: Column(children: [
-            //Övergripande strukturen
-
             AppBar(
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(20),
                         bottomRight: Radius.circular(20))),
                 title: const Text(
-                  "CREATE SALE",
+                  "EDIT SALE",
                   style: TextStyle(color: Colors.orange),
                 ),
                 backgroundColor: Color.fromARGB(255, 255, 255, 255)),
-
             Container(
                 //Nedersta rektangeln (För att kunna färgfylla, skugga osv)
                 padding: const EdgeInsets.all(15),
@@ -74,13 +85,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   ],
                 ),
                 child: Column(
-                  //Nedersta rektangeln, fyller ut containern den är i men strukturerar så att allt är vertikalt
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
                   children: [
                     Row(
-                      //Här ska isbn och skanna streckkod vara. BEhövs förmodligen två columns
-
                       children: [
                         Expanded(
                           child: Column(
@@ -88,53 +95,13 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                             children: [
                               const Text("ISBN:", textAlign: TextAlign.left),
                               TextFormField(
-                                controller: isbnController,
-                                //Sätter max inmatning av karaktärer till 13
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(13),
-                                ],
-                                onFieldSubmitted: (String newValue) async {
-                                  isbnController.text = newValue;
-                                  if ((newValue.length != 10 &&
-                                          newValue.length != 13) &&
-                                      isNumeric(newValue)) {
-                                    // ex. 5677
-                                    toastMessage(
-                                        "ISBN should contain 10 or 13 characters",
-                                        1);
-                                  } else if ((newValue.length != 10 &&
-                                          newValue.length != 13) &&
-                                      !isNumeric(newValue)) {
-                                    //ex. hjkhk
-                                    toastMessage(
-                                        "ISBN should contain 10 or 13 characters",
-                                        1);
-                                    toastMessage(
-                                        "ISBN should only contain numbers", 1);
-                                  } else if ((newValue.length == 10 ||
-                                          newValue.length == 13) &&
-                                      !isNumeric(newValue)) {
-                                    toastMessage(
-                                        "ISBN should only contain numbers", 1);
-                                  } else {
-                                    _fetchBook(newValue);
-                                  }
-                                },
+                                initialValue: widget.thissale.getIsbn(),
+                                //controller: isbnController,
+                                enableInteractiveSelection: false,
+                                focusNode: new AlwaysDisabledFocusNode(),
                                 decoration: const InputDecoration(
-                                  labelText: 'xxxxxxxxxx',
-                                  fillColor: Color.fromARGB(255, 255, 255, 255),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color.fromARGB(255, 10, 10, 10),
-                                        width: 1),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color:
-                                              Color.fromARGB(255, 10, 10, 10),
-                                          width: 2),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
+                                  filled: true,
+                                  fillColor: Color.fromARGB(255, 228, 227, 227),
                                 ),
                               )
                             ],
@@ -149,23 +116,10 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                               height: 50,
                               textColor:
                                   Theme.of(context).colorScheme.onSecondary,
-                              color: Theme.of(context).colorScheme.secondary,
+                              color: const Color.fromARGB(255, 228, 227, 227),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15.0)),
-                              onPressed: () async {
-                                String barcode =
-                                    await FlutterBarcodeScanner.scanBarcode(
-                                        "#ff6666",
-                                        "Cancel",
-                                        false,
-                                        ScanMode.DEFAULT);
-                                if (barcode != "-1") {
-                                  setState(() {
-                                    isbnController.text = barcode;
-                                  });
-                                  _fetchBook(barcode);
-                                }
-                              },
+                              onPressed: () {},
                               child: const Icon(
                                 Icons.qr_code_scanner_rounded,
                                 color: Colors.white,
@@ -193,8 +147,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         Container(
                             height: 55,
                             margin: const EdgeInsets.only(bottom: 10),
-                            child: TextField(
-                              controller: titleController,
+                            child: TextFormField(
+                              initialValue: widget.thisbook.info.title,
+                              //controller: titleController,
                               decoration: const InputDecoration(
                                   filled: true,
                                   fillColor:
@@ -212,8 +167,10 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         ),
 
                         Container(
-                          child: TextField(
-                            controller: authorController,
+                          child: TextFormField(
+                            initialValue:
+                                widget.thisbook.info.authors.toString(),
+                            //controller: authorController,
                             decoration: const InputDecoration(
                                 filled: true,
                                 fillColor: Color.fromARGB(255, 228, 227, 227)),
@@ -222,6 +179,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           height: 55,
                           margin: const EdgeInsets.only(bottom: 10),
                         ),
+
+                        //Välj skick-ruta:
+                        //const Text("Author:", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
                         const Align(
                           alignment: Alignment.bottomLeft,
                           child: Text(
@@ -243,14 +203,16 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                       color: Colors.black, width: 1)),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
-                                    value: value,
+                                    //Kolla vald condition och se till att den fortfarande kan ändras
+                                    value: conditionController.text,
                                     iconSize: 36,
                                     icon: const Icon(Icons.arrow_drop_down,
                                         color: Colors.black),
                                     isExpanded: true,
                                     items: items.map(buildMenuItem).toList(),
-                                    onChanged: (value) =>
-                                        setState(() => this.value = value)),
+                                    onChanged: (value) => setState(() =>
+                                        conditionController.text =
+                                            value.toString())),
                               )),
                         ),
 
@@ -269,7 +231,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: TextField(
                             //pricecontroller ska kunna ändra
                             keyboardType: TextInputType.number,
+                            // initialValue: widget.price.toString(),
                             controller: priceController,
+                            //kan ej ha controller och initialvalue
                             decoration: const InputDecoration(
                                 filled: false, fillColor: Colors.white),
                             enabled: true,
@@ -292,7 +256,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
 
                         Align(
                           alignment: Alignment.bottomLeft,
-                          child: TextFormField(
+                          child: TextField(
                             controller: commentController,
                             decoration: const InputDecoration(
                                 filled: false, fillColor: Colors.white),
@@ -301,24 +265,42 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         ),
 
                         Align(
-                            alignment: Alignment.bottomLeft,
-                            child: ElevatedButton.icon(
-                              label: const Text('Publish'),
-                              icon: const Icon(Icons.publish),
-                              onPressed: (() {
-                                if (_isButtonEnabled) {
-                                  createSale(
-                                    isbnController.text,
-                                    commentController.text,
-                                    conditionController.text,
-                                    int.parse(priceController.text),
-                                    context,
-                                  );
-                                } else {
-                                  toastMessage("Enter valid ISBN number", 2);
-                                }
-                              }),
-                            )),
+                          alignment: Alignment.bottomLeft,
+                          child: ElevatedButton.icon(
+                            label: const Text('Delete'),
+                            icon: const Icon(Icons.delete),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.red,
+                            ),
+                            onPressed: (() {removeSale(widget.thissale.saleID, context);
+                            Navigator.pop(context);
+                            }
+
+                            //deletehandler
+                          ),
+                        ),
+                        ),
+
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: ElevatedButton.icon(
+                            label: const Text('Update'),
+                            icon: const Icon(Icons.update),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.yellow,
+                            ),
+                            onPressed: () { updateSale(
+                                  commentController.text,
+                                  conditionController.text,
+                                  int.parse(priceController.text),
+                                  context,
+                                  widget.thissale.saleID,
+                                );
+                            Navigator.pop(context);
+                            }
+                            //updatehandler
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -341,25 +323,6 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         fontSize: 16.0);
   }
 
-  _fetchBook(String newValue) async {
-    //Kolla att ISBN finns
-    var isIsbnInCourses = await CourseHandler.isIsbnInCourses(
-        newValue, FirebaseFirestore.instance);
-    if (isIsbnInCourses) {
-      _isButtonEnabled = true;
-      Book book = await BookHandler.getBook(newValue);
-      setState(() {
-        titleController.text = book.info.title;
-        authorController.text = book.info.authors.toString();
-      });
-    } else {
-      _isButtonEnabled = false;
-      toastMessage(
-          "ISBN don't match with any book in DSV's courses, therefore it can't be put up for sale in Fook.",
-          2);
-    }
-  }
-
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
       value: item,
       child: Text(
@@ -367,24 +330,39 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ));
 
-  Future<bool> createSale(String isbn, String description, String condition,
-      int price, BuildContext context) async {
-    SaleHandler.addSale(
+  //update Sale handler
+
+  //gör som createsale o anropa updatesale och removesale från salehandler
+
+  Future<bool> updateSale(
+    String description,
+    String condition,
+    int price,
+    BuildContext context,
+    String saleID,
+  ) async {
+    SaleHandler.updateSale(
       FirebaseFirestore.instance,
-      Sale(
-        isbn: isbn,
-        userID: FirebaseAuth.instance.currentUser!.uid,
-        price: price,
-        description: description,
-        condition: value.toString(),
-        saleID: (await SaleHandler.getSaleId(FirebaseFirestore.instance))
-            .toString(),
-        courses: await SaleHandler.getCoursesForIsbn(
-            isbn, FirebaseFirestore.instance),
-      ),
+      description,
+      condition,
+      price,
+      saleID,
     );
-    toastMessage('Published', 1);
-    Navigator.pop(context);
+    toastMessage('Updated', 1);
     return true;
   }
+
+//Hämta om saleobjekten för homepage
+  Future<bool> removeSale(String saleID, BuildContext context) async {
+    SaleHandler.removeSale(FirebaseFirestore.instance, saleID);
+    toastMessage('Removed', 1);
+    //setState(() {});
+    //Måste hämta nya objektet
+    return true;
+  }
+}
+
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }

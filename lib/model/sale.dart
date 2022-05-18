@@ -41,7 +41,7 @@ class Sale {
       'condition': condition,
       'price': price,
       'saleID': saleID,
-      'description':description,
+      'description': description,
     };
   }
 
@@ -69,6 +69,11 @@ class Sale {
     return price;
   }
 
+/*
+  set newprice(int inputprice) {
+    newprice = inputprice;
+  }
+*/
   String getSaleID() {
     return saleID;
   }

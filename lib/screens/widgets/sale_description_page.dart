@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/book_handler.dart';
+import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/model/sale.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:fook/handlers/chat_handler.dart';
@@ -8,7 +9,8 @@ import '../../handlers/user_handler.dart';
 import '../../model/book.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../widgets/fook_logo_appbar.dart';
+import '../../model/course.dart';
+import 'fook_logo_appbar.dart';
 
 class SaleDescription extends StatefulWidget {
   final Sale sale;
@@ -232,7 +234,7 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Flexible(
-                                  child: RichText(
+                                  child: RichText(overflow: TextOverflow.ellipsis,
                                     text: TextSpan(children: <TextSpan>[
                                       TextSpan(
                                           text: (book.info.title +
@@ -255,22 +257,32 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Flexible(
-                                  child: RichText(
-                                    text: TextSpan(children: <TextSpan>[
-                                      const TextSpan(
-                                          text: "ISBN: ",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12)),
-                                      TextSpan(
-                                          text: sale.isbn,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          )),
-                                    ]),
-                                  ),
+                                  child: FutureBuilder(future: _isCurrent(sale.isbn, sale.courses),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      bool current = snapshot.data as bool;
+                                      return RichText(
+                                        text: TextSpan(children: <TextSpan>[
+                                          const TextSpan(
+                                              text: "ISBN: ",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12)),
+                                          TextSpan(
+                                              text: current
+                                                  ? sale.isbn
+                                                  : sale.isbn +
+                                                  " OBS! Äldre upplaga",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: current ? Colors.black : Colors.red,
+                                              )),
+                                        ]),
+                                      );
+                                    } return Container();
+                                  }
+                                  )
                                 ),
                               ],
                             ),
@@ -354,6 +366,16 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
           )),
     ],
   );
+}
+
+Future<bool> _isCurrent(String isbn, List<String> courses) async {
+  for (String shortCode in courses){
+    Course course = await CourseHandler.getCourse(shortCode, FirebaseFirestore.instance);
+    if(course.getCurrentIsbns().contains(isbn)){
+      return true;
+    }
+  }
+  return false;
 }
 
 _getInfo(Sale sale) async {

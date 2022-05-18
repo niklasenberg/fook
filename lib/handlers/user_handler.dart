@@ -32,17 +32,4 @@ class UserHandler {
   }
 
   static void updateUsername(String username) async {}
-
-  static Future<List<Object>> getInfo(
-      String uId, FirebaseFirestore firestore) async {
-    List<Course> courses =
-        await CourseHandler.updateUserCourses(uId, firestore);
-    List<Object> result = [];
-
-    result.add(await UserHandler.getUser(uId, firestore));
-    result.add(await UserHandler.getPhotoUrl(uId, firestore));
-    result.add(courses);
-
-    return result;
-  }
 }

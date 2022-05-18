@@ -18,7 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
         body: FutureBuilder(
-      future: UserHandler.getInfo(
+      future: _getInfo(
           FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -79,4 +79,12 @@ class _ProfilePageState extends State<ProfilePage> {
       },
         ));
   }
+}
+
+Future<List<Object>> _getInfo(String uId, FirebaseFirestore firestore) async {
+  List<Object> result = [];
+  result.add(await UserHandler.getUser(uId, firestore));
+  result.add(await UserHandler.getPhotoUrl(uId, firestore));
+
+  return result;
 }
