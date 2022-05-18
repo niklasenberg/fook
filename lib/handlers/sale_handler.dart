@@ -171,4 +171,19 @@ class SaleHandler {
   static void addSale(FirebaseFirestore firestore, Sale sale) async {
     await firestore.collection('sales').doc(sale.saleID).set(sale.toMap());
   }
+
+  //updateSale
+  static void updateSale(FirebaseFirestore firestore, String description,
+      String condition, int price, String saleID) async {
+    await firestore.collection('sales').doc(saleID).update({
+      'description': description,
+      'condition': condition,
+      'price': price,
+    });
+  }
+
+  //removeSale
+  static void removeSale(FirebaseFirestore firestore, String saleID) async {
+    await firestore.collection('sales').doc(saleID).delete();
+  }
 }

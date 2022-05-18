@@ -272,7 +272,8 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             style: ElevatedButton.styleFrom(
                               primary: Colors.red,
                             ),
-                            onPressed: (() => _doSomething()),
+                            onPressed: (() =>
+                                removeSale(widget.thissale.saleID, context)),
                             //deletehandler
                           ),
                         ),
@@ -285,7 +286,13 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             style: ElevatedButton.styleFrom(
                               primary: Colors.yellow,
                             ),
-                            onPressed: (() => _doSomething()),
+                            onPressed: (() => updateSale(
+                                  commentController.text,
+                                  conditionController.text,
+                                  int.parse(priceController.text),
+                                  context,
+                                  widget.thissale.saleID,
+                                )),
                             //updatehandler
                           ),
                         ),
@@ -320,30 +327,37 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
 
   //update Sale handler
 
-  //remove sale handler
-  Future<bool> createSale(String isbn, String description, String condition,
-      int price, BuildContext context) async {
-    SaleHandler.addSale(
+  //gör som createsale o anropa updatesale och removesale från salehandler
+
+  Future<bool> updateSale(
+    String description,
+    String condition,
+    int price,
+    BuildContext context,
+    String saleID,
+  ) async {
+    SaleHandler.updateSale(
       FirebaseFirestore.instance,
-      Sale(
-        isbn: isbn,
-        userID: FirebaseAuth.instance.currentUser!.uid,
-        price: price,
-        description: description,
-        condition: value.toString(),
-        saleID: (await SaleHandler.getSaleId(FirebaseFirestore.instance))
-            .toString(),
-        courses: await SaleHandler.getCoursesForIsbn(
-            isbn, FirebaseFirestore.instance),
-      ),
+      description,
+      condition,
+      price,
+      saleID,
     );
-    toastMessage('Published', 1);
+    toastMessage('Updated', 1);
     Navigator.pop(context);
+    //setState(() {});
+    //Måste hämta nya objektet
     return true;
   }
 
-  _doSomething() {
-    //Placeholder
+//Hämta om saleobjekten för homepage
+  Future<bool> removeSale(String saleID, BuildContext context) async {
+    SaleHandler.removeSale(FirebaseFirestore.instance, saleID);
+    toastMessage('Removed', 1);
+    Navigator.pop(context);
+    //setState(() {});
+    //Måste hämta nya objektet
+    return true;
   }
 }
 
