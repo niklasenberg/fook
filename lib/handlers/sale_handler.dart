@@ -192,7 +192,7 @@ class SaleHandler {
       'description': description,
       'condition': condition,
       'price': price,
-    });
+      'publishedDate': Timestamp.now()});
   }
 
   //removeSale
