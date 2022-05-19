@@ -19,7 +19,7 @@ class _SaleHomePageState extends State<SaleHomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
+      appBar: AppBar(automaticallyImplyLeading: false,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),

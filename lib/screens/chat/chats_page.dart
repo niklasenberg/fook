@@ -89,8 +89,6 @@ class _ChatPageState extends State<ChatsPage> {
                                 margin: const EdgeInsets.all(10.0),
                                 height:
                                     MediaQuery.of(context).size.height * 0.08,
-                                child: Flexible(
-                                  flex: 50,
                                   child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -165,7 +163,7 @@ class _ChatPageState extends State<ChatsPage> {
                                                   text: TextSpan(children: <
                                                       TextSpan>[
                                                     TextSpan(
-                                                        text: "Seller: ",
+                                                        text: sale.userID == myId ? "Buyer: " : "Seller: ",
                                                         style: TextStyle(
                                                             color: Theme.of(
                                                                     context)
@@ -267,7 +265,6 @@ class _ChatPageState extends State<ChatsPage> {
                                       ),
                                     ],
                                   ),
-                                ),
                               ),
                             ),
                           ));

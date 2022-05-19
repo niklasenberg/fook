@@ -54,7 +54,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
             child: ConstrainedBox(
           constraints: const BoxConstraints(),
           child: Column(children: [
-            AppBar(
+            AppBar(automaticallyImplyLeading: false,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(20),

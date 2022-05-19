@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.hasData) {
             fook.User thisUser = snapshot.data as fook.User;
             return Scaffold(
-              appBar: AppBar(
+              appBar: AppBar(automaticallyImplyLeading: false,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(20),

@@ -72,17 +72,10 @@ class _ChatDetailedState extends State<ChatDetailed> {
       key: _scaffKey,
       body: Column(
         children: [
-          Flexible(
-            flex: 15,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.15,
-              child: Container(
-                margin: const EdgeInsets.all(10.0),
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: Flexible(
-                  flex: 50,
-                  child: Row(
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.20,
+            child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -92,6 +85,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
+                                margin: EdgeInsets.all(4),
                                 height: 50,
                                 decoration: const BoxDecoration(
                                   boxShadow: [
@@ -142,7 +136,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                                 RichText(
                                   text: TextSpan(children: <TextSpan>[
                                     TextSpan(
-                                        text: "Seller: ",
+                                        text: sale.userID == myId ? "Buyer: " : "Seller: ",
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -220,9 +214,6 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     ],
                   ),
                 ),
-              ),
-            ),
-          ),
           Flexible(
             flex: 75,
             child: _chatBody(userId),
@@ -230,13 +221,10 @@ class _ChatDetailedState extends State<ChatDetailed> {
           const Divider(
             height: 1.0,
           ),
-          Flexible(
-            flex: 10,
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.10,
-              child: _messageComposer(),
-            ),
-          )
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.10,
+            child: _messageComposer(),
+          ),
         ],
       ),
     );

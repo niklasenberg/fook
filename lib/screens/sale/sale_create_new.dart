@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttericon/elusive_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:string_validator/string_validator.dart';
 import '../../handlers/course_handler.dart';
@@ -42,7 +43,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
           child: Column(children: [
             //Övergripande strukturen
 
-            AppBar(
+            AppBar(automaticallyImplyLeading: false,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(20),
@@ -143,7 +144,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                         Expanded(
                           child: Column(/*Skanna streckkod och ruta*/
                               children: [
-                            const Text("Scan QR-code:",
+                            const Text("Scan barcode:",
                                 textAlign: TextAlign.center),
                             MaterialButton(
                               height: 50,
@@ -167,7 +168,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                 }
                               },
                               child: const Icon(
-                                Icons.qr_code_scanner_rounded,
+                                Elusive.barcode,
                                 color: Colors.white,
                                 size: 30,
                               ),

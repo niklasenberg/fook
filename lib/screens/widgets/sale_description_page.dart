@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/model/sale.dart';
@@ -131,14 +132,20 @@ class _SaleDescriptionState extends State<SaleDescription> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0)),
                         onPressed: () {
-                          ChatHandler.sendMessage(
-                              widget.sale.userID,
-                              FirebaseAuth.instance.currentUser!.uid,
-                              widget.sale.saleID,
-                              true,
-                              'Tjena, finns varan',
-                              seller.name + " " + seller.lastName,
-                              FirebaseFirestore.instance);
+                          String myId = FirebaseAuth.instance.currentUser!.uid;
+                          if(myId != widget.sale.userID){
+                            ChatHandler.sendMessage(
+                                widget.sale.userID,
+                                myId,
+                                widget.sale.saleID,
+                                true,
+                                'Tjena, finns varan',
+                                seller.name + " " + seller.lastName,
+                                FirebaseFirestore.instance);
+                            toastMessage("Message sent, check your chats!", 2);
+                          }else{
+                            toastMessage("This is your book!", 2);
+                          }
                         },
                         child: const Text('Send message to seller'),
                         textColor: Colors.white,
@@ -366,6 +373,20 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
           )),
     ],
   );
+}
+
+toastMessage(
+    String toastMessage,
+    int sec,
+    ) {
+  Fluttertoast.showToast(
+      msg: toastMessage,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: sec,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0);
 }
 
 Future<bool> _isCurrent(String isbn, List<String> courses) async {
