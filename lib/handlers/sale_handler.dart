@@ -180,7 +180,9 @@ class SaleHandler {
 
   //addsale
   static void addSale(FirebaseFirestore firestore, Sale sale) async {
-    await firestore.collection('sales').doc(sale.saleID).set(sale.toMap());
+    Map<String, dynamic> map = sale.toMap();
+    map["publishedDate"] = Timestamp.now();
+    await firestore.collection('sales').doc(sale.saleID).set(map);
   }
 
   //updateSale
@@ -190,7 +192,7 @@ class SaleHandler {
       'description': description,
       'condition': condition,
       'price': price,
-    });
+      'publishedDate': Timestamp.now()});
   }
 
   //removeSale
