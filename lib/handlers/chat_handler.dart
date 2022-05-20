@@ -39,6 +39,15 @@ class ChatHandler {
     return doc.exists;
   }
 
+  static Future<void> deleteChat(String chatId, FirebaseFirestore firebase) async {
+    QuerySnapshot querySnapshot = await firebase.collection('chats').doc(chatId).collection('messages').get();
+    for (var message in querySnapshot.docs) {
+      await message.reference.delete();
+    }
+    firebase.collection('chats').doc(chatId).collection('messages');
+    return firebase.collection('chats').doc(chatId).delete();
+  }
+
   static sendMessage(String to, String from, String saleId, bool isText,
       String msg, String senderName, FirebaseFirestore firestore) async {
     bool existsOrNot = await checkChatExists(to, from, saleId, firestore);
