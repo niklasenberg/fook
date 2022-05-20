@@ -368,8 +368,11 @@ Future<void> _deleteDialog(BuildContext context, String saleId,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          backgroundColor: Theme.of(context).backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32.0)),
+            side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 3),
+          ),
           contentPadding: EdgeInsets.only(top: 10.0),
           content: Container(
             width: MediaQuery.of(context).size.width * 0.5,
