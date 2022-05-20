@@ -26,12 +26,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: UserHandler.getUser(
+    return StreamBuilder(
+        stream: UserHandler.getUserStream(
             FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            fook.User thisUser = snapshot.data as fook.User;
+            fook.User thisUser = fook.User.fromMap(((snapshot.data) as DocumentSnapshot).data() as Map<String, dynamic>);
             return Scaffold(
               appBar: AppBar(automaticallyImplyLeading: false,
                 shape: const RoundedRectangleBorder(
