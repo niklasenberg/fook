@@ -382,13 +382,13 @@ Future<void> _deleteDialog(BuildContext context, String saleId,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                SizedBox(height: MediaQuery.of(context).size.height * 0.015,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
                       "Delete chat?",
-                      style: TextStyle(fontSize: 24.0),
                     ),
                   ],
                 ),
