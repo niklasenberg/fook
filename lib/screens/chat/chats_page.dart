@@ -63,18 +63,17 @@ class _ChatPageState extends State<ChatsPage> {
                     ? members.elementAt(1)
                     : members.elementAt(0);
                 return FutureBuilder(
-                  future: _getInfo(userId, saleId),
+                  future: _getInfo(userId, saleId),   
                   builder: (context, _snapshot) {
                     if (_snapshot.hasData) {
                       Map<String, dynamic> infoMap =
                           (_snapshot.data as Map<String, dynamic>);
-                      infoMap['userId'] = userId;
                       DocumentSnapshot docSnapUser =
                           infoMap['otherUser'] as DocumentSnapshot;
-                      fook.User otherUser = fook.User.fromMap(
+                          fook.User otherUser = fook.User.fromMap(
                           docSnapUser.data() as Map<String, dynamic>);
-                      Sale sale = infoMap['sale'];
-                      Book book = infoMap['book'];
+                          Sale sale = infoMap['sale'];
+                          Book book = infoMap['book'];
 
                       return SizedBox(
                           height: 175,
@@ -318,6 +317,7 @@ _getInfo(String userId, String saleId) async {
   result['book'] = await BookHandler.getBook((result['sale'] as Sale).isbn);
   result['subtitleExists'] =
       subtitleExists((result['book'] as Book).info.subtitle);
+      result['userId'] = userId;
   return result;
 }
 

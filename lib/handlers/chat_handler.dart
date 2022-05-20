@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatHandler {
+  
   static getChat(
       String userId, String myId, saleId, FirebaseFirestore firestore) {
     String chatId = generateChatId(userId, myId, saleId);

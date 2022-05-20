@@ -10,7 +10,8 @@ import 'package:fook/model/book.dart';
 
 class ChatDetailed extends StatefulWidget {
   final Map<String, dynamic> infoList;
-  const ChatDetailed(this.infoList, {Key? key}) : super(key: key);
+  bool isChatEmpty = false;
+  ChatDetailed(this.infoList, {Key? key}) : super(key: key);
   @override
   _ChatDetailedState createState() => _ChatDetailedState();
 }
@@ -47,20 +48,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
         (widget.infoList['thisUser'] as DocumentSnapshot).data()
             as Map<String, dynamic>);
 
-    /*offlineStorage.getUserInfo().then(
-      (val) {
-        setState(
-          () {
-            Map<dynamic, dynamic> user = val;
-            userId = widget.userData['uid'].toString();
-            myId = user['uid'].toString();
-            chatId = ChatHandler.generateChatId(myId, userId);
-            userData = widget.userData;
-          },
-        );
-      },
-    );*/
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -223,15 +212,25 @@ class _ChatDetailedState extends State<ChatDetailed> {
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.10,
-            child: _messageComposer(),
+            child:FutureBuilder(future: _isChatEmpty(), builder: (context, snapshot){
+              if(snapshot.hasData){
+                widget.isChatEmpty = snapshot.data as bool;
+                if(widget.isChatEmpty){
+                  messageController = TextEditingController(text: "Is the book still available?");
+                  return _messageComposer("Is the book still available?");
+                }
+              }
+              return _messageComposer("");
+            },)
           ),
         ],
       ),
     );
   }
 
-  Widget _messageComposer() {
+  Widget _messageComposer(String message) {
     return Container(
+      
       decoration: const BoxDecoration(
         image: DecorationImage(
             image: AssetImage('lib/assets/Fook_back_sm.png'), fit: BoxFit.fill),
@@ -255,7 +254,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
           Flexible(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
+              child: TextFormField(
                 decoration: const InputDecoration(
                     fillColor: Colors.white, filled: true),
                 controller: messageController,
@@ -335,6 +334,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
           userId, myId, sale.saleID, FirebaseFirestore.instance),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          
           return snapshot.data!.docs.isNotEmpty
               ? Container(
                   padding: const EdgeInsets.all(4),
@@ -420,6 +420,20 @@ class _ChatDetailedState extends State<ChatDetailed> {
     if (pastTime.year < presentTime.year) return false;
     if (pastTime.month < presentTime.month) return false;
     return pastTime.day == presentTime.day;
+  }
+
+   _isChatEmpty()async{ 
+      var query = await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .get();
+
+        if(query.docs.isEmpty){
+          return true;
+        }else{
+          return false;
+        } 
   }
 
   _messageItem(DocumentSnapshot message, BuildContext context) {
