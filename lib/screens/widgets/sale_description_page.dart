@@ -6,6 +6,8 @@ import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/model/sale.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:fook/handlers/chat_handler.dart';
+import 'package:fook/screens/chat/chat_detailed_page.dart';
+import '../../handlers/sale_handler.dart';
 import '../../handlers/user_handler.dart';
 import '../../model/book.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -131,18 +133,31 @@ class _SaleDescriptionState extends State<SaleDescription> {
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0)),
-                        onPressed: () {
+                        onPressed: () async {
                           String myId = FirebaseAuth.instance.currentUser!.uid;
-                          if(myId != widget.sale.userID){
-                            ChatHandler.sendMessage(
-                                widget.sale.userID,
-                                myId,
-                                widget.sale.saleID,
-                                true,
-                                'Tjena, finns varan',
-                                seller.name + " " + seller.lastName,
-                                FirebaseFirestore.instance);
-                            toastMessage("Message sent, check your chats!", 2);
+                          if(myId != widget.sale.userID){//Dorra    Om man själv inte är ägare till annonsen
+                            
+                            if(await ChatHandler.checkChatExists(myId, widget.sale.userID, widget.sale.saleID, FirebaseFirestore.instance) == true){
+                              //Hämta chatID, Hoppa till chatten, khalas
+                              String chatID = ChatHandler.generateChatId(myId, widget.sale.userID, widget.sale.saleID);//Behöver man ens denna?
+                              Map<String, dynamic> infoMap = await _getChatInfo(widget.sale.userID, widget.sale.saleID);
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatDetailed(infoMap),
+                                ),
+                              );}
+                              else{
+                              //Generera nytt chatID och chatt, förifyll medd, khalas
+                              ChatHandler.generateChatId(myId, widget.sale.userID, widget.sale.saleID);
+                              Map<String, dynamic> infoMap = await _getChatInfo(widget.sale.userID, widget.sale.saleID);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatDetailed(infoMap),
+                                ),
+                              );
+                            }
                           }else{
                             toastMessage("This is your book!", 2);
                           }
@@ -374,6 +389,34 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
     ],
   );
 }
+
+_getChatInfo(String userId, String saleId) async {
+  Map<String, dynamic> result = {};
+  result['otherUser'] =
+      await UserHandler.getUserSnapshot(userId, FirebaseFirestore.instance);        //userID = andra anv
+  result['photoUrl'] =
+      await UserHandler.getPhotoUrl(userId, FirebaseFirestore.instance);
+  result['thisUser'] = await UserHandler.getUserSnapshot(
+      FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
+  result['sale'] =
+      await SaleHandler.getSaleByID(saleId, FirebaseFirestore.instance);
+  result['book'] = await BookHandler.getBook((result['sale'] as Sale).isbn);
+  result['subtitleExists'] =
+      subtitleExists((result['book'] as Book).info.subtitle);
+      result['userId'] = userId;
+  return result;
+}
+
+bool subtitleExists(String subtitle) {
+  if (subtitle != '') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+
 
 toastMessage(
     String toastMessage,
