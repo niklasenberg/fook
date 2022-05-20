@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/book_handler.dart';
@@ -19,6 +21,7 @@ class ChatsPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatsPage> {
   late String myId;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -87,6 +90,8 @@ class _ChatPageState extends State<ChatsPage> {
                             child: InkWell(
                               splashColor:
                                   Theme.of(context).colorScheme.primary,
+                              onLongPress: () => _deleteDialog(
+                                  context, sale.saleID, userId, myId),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -340,4 +345,127 @@ Widget _timeDivider(Timestamp time) {
       (t.month + 1).toString() +
       '/' +
       t.year.toString());
+}
+
+/*Future<void> _deleteDialog(BuildContext context, fook.User otherUser) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(0.32)),
+
+        ),
+      );
+    },
+  );
+}*/
+
+Future<void> _deleteDialog(BuildContext context, String saleId,
+    String otherUserId, String myId) async {
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          contentPadding: EdgeInsets.only(top: 10.0),
+          content: Container(
+            width: MediaQuery.of(context).size.width * 0.5,
+            height: MediaQuery.of(context).size.height * 0.15,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      "Delete chat?",
+                      style: TextStyle(fontSize: 24.0),
+                    ),
+                  ],
+                ),
+                /* Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      "By doing so the chat is removed for" + otherUser.name,
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),*/
+                SizedBox(
+                  height: 5.0,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(
+                                color: Colors.black,
+                                width: MediaQuery.of(context).size.width * 0.3,
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: Text('Yes'),
+                        onPressed: () {
+                          ChatHandler.deleteChat(
+                              ChatHandler.generateChatId(
+                                  myId, otherUserId, saleId),
+                              FirebaseFirestore.instance);
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(
+                                color: Colors.black,
+                                width: MediaQuery.of(context).size.width * 0.3,
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: Text('No'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      });
 }
