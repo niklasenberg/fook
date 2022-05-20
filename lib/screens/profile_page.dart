@@ -52,7 +52,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           }
                           return CircleAvatar(
                             radius: 40,
-                            backgroundImage: NetworkImage(snapshot.data as String),
                           );
                         },
                       ),

@@ -68,6 +68,10 @@ class SaleHandler {
     Set<String> isbns = await BookHandler.getBookEditions(
         (book.info.title + " " + book.info.subtitle).trim());
 
+    for(IndustryIdentifier isbn in book.info.industryIdentifiers){
+      isbns.add(isbn.identifier);
+    }
+
     List<Sale> sales = [];
     for (String isbn in isbns) {
       QuerySnapshot query = await firestore
