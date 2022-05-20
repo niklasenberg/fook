@@ -13,6 +13,10 @@ class UserHandler {
     return User.fromMap(document.data() as Map<String, dynamic>);
   }
 
+  static Stream<DocumentSnapshot> getUserStream(String userId, FirebaseFirestore firestore){
+    return firestore.collection('users').doc(userId).snapshots();
+  }
+
   static getUserSnapshot(String uId, FirebaseFirestore firestore) async {
     return await firestore.collection('users').doc(uId).get();
   }
@@ -31,5 +35,8 @@ class UserHandler {
         .getDownloadURL();
   }
 
-  static void updateUsername(String username) async {}
+  static Future<bool> updateUsername(String uid, String name, String lastName, FirebaseFirestore firestore) async {
+    firestore.collection("users").doc(uid).update({"name": name, "lastName": lastName});
+    return true;
+  }
 }
