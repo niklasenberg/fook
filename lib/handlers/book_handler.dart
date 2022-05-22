@@ -43,6 +43,11 @@ class BookHandler {
     return (books[0]);
   }
 
+  static String getIsbn(Book book){
+    return book.info.industryIdentifiers.first.toString();
+
+  }
+
   static Future<List<Book>> getBookObjects(String name) async {
     List<Book> books = await queryBooks(
       name,

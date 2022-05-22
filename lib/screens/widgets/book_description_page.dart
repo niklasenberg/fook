@@ -25,6 +25,7 @@ class _BookDescriptionState extends State<BookDescription> {
   late Future _future;
   late bool showOlder;
   late String order;
+  late String isbn = widget.key.toString();
 
   @override
   void initState() {
@@ -195,11 +196,17 @@ class _BookDescriptionState extends State<BookDescription> {
                     if (snapshot.hasData) {
                       widget.sales = snapshot.data as List<Sale>;
                       if (widget.sales.isEmpty) {
+
+                        String isbnIdentifier = widget.book.info.industryIdentifiers.first.toString();
+                        //Removes everything before and including ':'
+                        String isbn =  isbnIdentifier.substring(8);
+                        String titleAndSubtitle = (widget.book.info.title +"-" +widget.book.info.subtitle).replaceAll(' ', '-').toLowerCase().replaceAll("'", "");
+
                         return Center(
                           child: ElevatedButton(
-                            child: const Text('Check Campusbokhandeln'),
+                            child:   Text('Check Campusbokhandeln' + "    " + 'https://campusbokhandeln.se/b/' + isbn + "/" + titleAndSubtitle),
                             onPressed: () {
-                              const url = 'https://campusbokhandeln.se/';
+                              var url = 'https://campusbokhandeln.se/b/' + isbn + "/" + titleAndSubtitle  ;
                               launchUrl(url);
                             },
                           ),
