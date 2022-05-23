@@ -66,30 +66,37 @@ class CourseHandler {
       Map<String, Set<String>> result = {};
       for (var number in isbnList) {
         if(number.isNotEmpty){
-          names.add(await BookHandler.getBookName(number));
+          String name = await BookHandler.getBookName(number);
+          if (name.isNotEmpty){
+            names.add(name);
+          } else{
+            names.add("noname");
+          }
         }
       }
 
-      //Use these names to get other book versions
-      Set<String> numbers = {};
-      int index = 0;
-      for (var name in names) {
-        result[name] = {};
-        result[name]!.add(isbnList.elementAt(index));
-        result[name]!.addAll(await BookHandler.getBookEditions(name));
-        numbers.addAll(result[name]!);
-        index++;
+      if(names.isNotEmpty){
+        //Use these names to get other book versions
+        Set<String> numbers = {};
+        int index = 0;
+        for (var name in names) {
+          result[name] = {};
+          result[name]!.add(isbnList.elementAt(index));
+          result[name]!.addAll(await BookHandler.getBookEditions(name));
+          numbers.addAll(result[name]!);
+          index++;
+        }
+
+        //Update course object
+        course.setLiterature(result);
+        course.setIsbnNumbers(numbers);
+
+        //Update database
+        await firestore
+            .collection('courses')
+            .doc(await getCourseDocumentID(course.shortCode, firestore))
+            .update(course.toMap());
       }
-
-      //Update course object
-      course.setLiterature(result);
-      course.setIsbnNumbers(numbers);
-
-      //Update database
-      await firestore
-          .collection('courses')
-          .doc(await getCourseDocumentID(course.shortCode, firestore))
-          .update(course.toMap());
     }
 
     return courses;

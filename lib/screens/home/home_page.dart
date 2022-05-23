@@ -264,7 +264,12 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
 Future<List<Book>> _getBooks(Course course) async {
   List<Book> result = [];
   for (String isbn in course.getCurrentIsbns()) {
-    result.add(await BookHandler.getBook(isbn));
+    List<Book> books = await BookHandler.getBooks(isbn);
+
+    if(books.isNotEmpty){
+      result.add(books[0]);
+    }
+
   }
   return result;
 }
