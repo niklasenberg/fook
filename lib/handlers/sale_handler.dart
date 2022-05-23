@@ -199,7 +199,7 @@ class SaleHandler {
       'publishedDate': Timestamp.now()});
   }
 
-  //removeSale
+  //removeSale for all usersxxx
   static void removeSale(FirebaseFirestore firestore, String saleID) async {
     await firestore.collection('sales').doc(saleID).delete();
   }
