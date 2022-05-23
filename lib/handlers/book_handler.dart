@@ -28,7 +28,11 @@ class BookHandler {
       orderBy: OrderBy.relevance,
     );
 
-    return (books[0].info.title + " " + books[0].info.subtitle).trim();
+    if(books.isNotEmpty){
+      return (books[0].info.title + " " + books[0].info.subtitle).trim();
+    }else{
+      return "Unknown name";
+    }
   }
 
   static Future<Book> getBook(String isbn) async {
@@ -40,10 +44,36 @@ class BookHandler {
       orderBy: OrderBy.relevance,
     );
 
-    return (books[0]);
+    return books[0];
+  }
+
+  static Future<List<Book>> getBooks(String isbn) async {
+    final List<Book> books = await queryBooks(
+      isbn,
+      queryType: QueryType.isbn,
+      maxResults: 1,
+      printType: PrintType.books,
+      orderBy: OrderBy.relevance,
+    );
+
+    List<Book> result = [];
+    if(books.isNotEmpty){
+      result.add(books[0]);
+    }
+
+    return result;
+  }
+
+  static String getIsbn(Book book){
+    return book.info.industryIdentifiers.first.toString();
+
   }
 
   static Future<List<Book>> getBookObjects(String name) async {
+    if(name == "Unknown"){
+      return [];
+    }
+
     List<Book> books = await queryBooks(
       name,
       maxResults: 10,

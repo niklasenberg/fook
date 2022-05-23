@@ -277,7 +277,10 @@ Future<List<Book>> _getCurrentBooks(String shortCode) async {
       await CourseHandler.getCourse(shortCode, FirebaseFirestore.instance);
   List<Book> books = [];
   for (String isbn in course.getCurrentIsbns()) {
-    books.add(await BookHandler.getBook(isbn));
+    List<Book> result = await BookHandler.getBooks(isbn);
+    if(result.isNotEmpty){
+      books.add(result[0]);
+    }
   }
   return books;
 }

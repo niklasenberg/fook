@@ -71,6 +71,10 @@ class SaleHandler {
     Set<String> isbns = await BookHandler.getBookEditions(
         (book.info.title + " " + book.info.subtitle).trim());
 
+    for(IndustryIdentifier isbn in book.info.industryIdentifiers){
+      isbns.add(isbn.identifier);
+    }
+
     List<Sale> sales = [];
     for (String isbn in isbns) {
       QuerySnapshot query = await firestore
@@ -198,7 +202,7 @@ class SaleHandler {
       'publishedDate': Timestamp.now()});
   }
 
-  //removeSale
+  //removeSale for all usersxxx
   static void removeSale(FirebaseFirestore firestore, String saleID) async {
     await firestore.collection('sales').doc(saleID).delete();
   }

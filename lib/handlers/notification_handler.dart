@@ -26,7 +26,7 @@ class NotificationHandler {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print(message.notification!.body);
       Fluttertoast.showToast(
-          msg: 'Message received!',
+          msg: message.notification!.title!,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 2,

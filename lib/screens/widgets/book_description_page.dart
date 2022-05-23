@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fook/screens/widgets/sale_description_page.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../handlers/book_handler.dart';
 import '../../handlers/sale_handler.dart';
 import '../../handlers/user_handler.dart';
@@ -24,6 +25,7 @@ class _BookDescriptionState extends State<BookDescription> {
   late Future _future;
   late bool showOlder;
   late String order;
+  late String isbn = widget.key.toString();
 
   @override
   void initState() {
@@ -48,105 +50,123 @@ class _BookDescriptionState extends State<BookDescription> {
                 Container(
                   alignment: Alignment.centerLeft,
                   height: MediaQuery.of(context).size.height * 0.23,
-                  width: MediaQuery.of(context).size.width/2,
+                  width: MediaQuery.of(context).size.width / 2,
                   child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(height: 10),
-                          SizedBox(
-                            height: 100,
-                            width: 70,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(2.0,
-                                        2.0), // shadow direction: bottom right
-                                  ),
-                                ],
-                              ),
-                              height: 50,
-                              child: Image.network(widget
-                                  .book.info.imageLinks["smallThumbnail"]
-                                  .toString()),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Flexible(child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Flexible(
-                                child: Text(
-                                  (widget.book.info.title +
-                                      ": " +
-                                      widget.book.info.subtitle)
-                                      .toUpperCase(),
-                                  overflow: TextOverflow.fade,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                  ),
-                                ),
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      SizedBox(
+                        height: 100,
+                        width: 70,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(
+                                    2.0, 2.0), // shadow direction: bottom right
                               ),
                             ],
-                          ),)
-                        ],
-                      ),
-                ),
-                Container(height: MediaQuery.of(context).size.height * 0.23,
-                  width: MediaQuery.of(context).size.width/2, child: Column( children: [
-                    SizedBox(height: 30),
-                      DropdownButton<String>(
-                        hint: Text(
-                          'Sort by: ',
-                          style: TextStyle(
-                            color: Colors.black,
                           ),
+                          height: 50,
+                          child: Image.network(widget
+                              .book.info.imageLinks["smallThumbnail"]
+                              .toString()),
                         ),
-                        items: <String>['Price', 'Condition'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            order = newValue!;
-                            if(showOlder){
-                              _future = SaleHandler.getSalesForBook(
-                                  widget.book, order, FirebaseFirestore.instance);
-                            }else{
-                              _future = SaleHandler.getCurrentSalesForBook(
-                                  widget.book, widget.shortCode, order, FirebaseFirestore.instance);
-                            }
-                          });
-                        },
                       ),
-                      SizedBox(height: 10,),
-                      CheckboxListTile(
-                        title: Text("Show older",
-                            textAlign: TextAlign.center),
-                        value: showOlder,
-                        onChanged: (newValue) {
-                          setState(() {
-                            showOlder = newValue!;
-                            if(showOlder){
-                              _future = SaleHandler.getSalesForBook(
-                                  widget.book, order, FirebaseFirestore.instance);
-                            }else{
-                              _future = SaleHandler.getCurrentSalesForBook(
-                                  widget.book, widget.shortCode, order, FirebaseFirestore.instance);
-                            }
-                          });
-                        }, //  <-- leading Checkbox
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Flexible(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Flexible(
+                              child: Text(
+                                (widget.book.info.title +
+                                        ": " +
+                                        widget.book.info.subtitle)
+                                    .toUpperCase(),
+                                overflow: TextOverflow.fade,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
-
-                    ],))
+                    ],
+                  ),
+                ),
+                Container(
+                    height: MediaQuery.of(context).size.height * 0.23,
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 30),
+                        DropdownButton<String>(
+                          hint: Text(
+                            'Sort by: ',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          items: <String>['Price', 'Condition']
+                              .map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              order = newValue!;
+                              if (showOlder) {
+                                _future = SaleHandler.getSalesForBook(
+                                    widget.book,
+                                    order,
+                                    FirebaseFirestore.instance);
+                              } else {
+                                _future = SaleHandler.getCurrentSalesForBook(
+                                    widget.book,
+                                    widget.shortCode,
+                                    order,
+                                    FirebaseFirestore.instance);
+                              }
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CheckboxListTile(
+                          title:
+                              Text("Show older", textAlign: TextAlign.center),
+                          value: showOlder,
+                          onChanged: (newValue) {
+                            setState(() {
+                              showOlder = newValue!;
+                              if (showOlder) {
+                                _future = SaleHandler.getSalesForBook(
+                                    widget.book,
+                                    order,
+                                    FirebaseFirestore.instance);
+                              } else {
+                                _future = SaleHandler.getCurrentSalesForBook(
+                                    widget.book,
+                                    widget.shortCode,
+                                    order,
+                                    FirebaseFirestore.instance);
+                              }
+                            });
+                          }, //  <-- leading Checkbox
+                        )
+                      ],
+                    ))
               ],
             ),
             Container(
@@ -176,10 +196,25 @@ class _BookDescriptionState extends State<BookDescription> {
                     if (snapshot.hasData) {
                       widget.sales = snapshot.data as List<Sale>;
                       if (widget.sales.isEmpty) {
+
+                        String isbnIdentifier = widget.book.info.industryIdentifiers.first.toString();
+                        //Removes everything before and including ':'
+                        String isbn =  isbnIdentifier.substring(8);
+                        String titleAndSubtitle = (widget.book.info.title +"-" +widget.book.info.subtitle).replaceAll(' ', '-').toLowerCase().replaceAll("'", "").replaceAll(",", "").replaceAll("&", "");
+
                         return Center(
-                          child: Text(
-                              "No sales published for this book! :("),
+                          child: ElevatedButton(
+                            child:   Text('Check Campusbokhandeln' + "    " + 'https://campusbokhandeln.se/b/' + isbn + "/" + titleAndSubtitle),
+                            onPressed: () {
+                              var url = 'https://campusbokhandeln.se/b/' + isbn + "/" + titleAndSubtitle  ;
+                              launchUrl(url);
+                            },
+                          ),
                         );
+                        // Här ska campusbokhandeln komma in
+                        /*return Center(
+                          child: Text("No sales published for this book! :("),
+                        );*/
                       }
                       return ListView.builder(
                           itemCount: widget.sales.length,
@@ -236,6 +271,14 @@ class _BookDescriptionState extends State<BookDescription> {
             )
           ],
         ));
+  }
+}
+
+launchUrl(String url) async {
+  if (await canLaunchUrlString(url)) {
+    await launchUrlString(url);
+  } else {
+    throw ('Could not launch $url + :(');
   }
 }
 
