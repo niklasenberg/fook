@@ -200,7 +200,7 @@ class _BookDescriptionState extends State<BookDescription> {
                         String isbnIdentifier = widget.book.info.industryIdentifiers.first.toString();
                         //Removes everything before and including ':'
                         String isbn =  isbnIdentifier.substring(8);
-                        String titleAndSubtitle = (widget.book.info.title +"-" +widget.book.info.subtitle).replaceAll(' ', '-').toLowerCase().replaceAll("'", "");
+                        String titleAndSubtitle = (widget.book.info.title +"-" +widget.book.info.subtitle).replaceAll(' ', '-').toLowerCase().replaceAll("'", "").replaceAll(",", "").replaceAll("&", "");
 
                         return Center(
                           child: ElevatedButton(
