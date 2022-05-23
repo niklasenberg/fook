@@ -57,6 +57,7 @@ class _ChatPageState extends State<ChatsPage> {
             return ListView.builder(
               itemCount: docs.length,
               itemBuilder: (context, index) {
+                String chatId = docs[index].id;
                 List<dynamic> members =
                     (docs[index].data() as Map<String, dynamic>)['members'];
                 String userId;
@@ -65,18 +66,39 @@ class _ChatPageState extends State<ChatsPage> {
                 userId = members.elementAt(0) == myId
                     ? members.elementAt(1)
                     : members.elementAt(0);
+
                 return FutureBuilder(
-                  future: _getInfo(userId, saleId),   
+                  future: _getInfo(userId, saleId),
                   builder: (context, _snapshot) {
                     if (_snapshot.hasData) {
                       Map<String, dynamic> infoMap =
                           (_snapshot.data as Map<String, dynamic>);
                       DocumentSnapshot docSnapUser =
                           infoMap['otherUser'] as DocumentSnapshot;
-                          fook.User otherUser = fook.User.fromMap(
+                      fook.User otherUser = fook.User.fromMap(
                           docSnapUser.data() as Map<String, dynamic>);
-                          Sale sale = infoMap['sale'];
-                          Book book = infoMap['book'];
+                      Sale sale = infoMap['sale'];
+                      Book book = infoMap['book'];
+                      if(sale.description == 'removed'){
+
+                      }
+                      if(sale.isbn == '0'){
+                        return Card(
+                          margin: const EdgeInsets.all(8.0),
+                          elevation: 8.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.all(10.0),
+                            height: MediaQuery.of(context).size.height * 0.08,
+                            child: Center(
+                              child: Text(
+                                'The book has been removed' ),
+                            ),
+                          ),
+                        );
+                      }
 
                       return SizedBox(
                           height: 175,
@@ -322,7 +344,7 @@ _getInfo(String userId, String saleId) async {
   result['book'] = await BookHandler.getBook((result['sale'] as Sale).isbn);
   result['subtitleExists'] =
       subtitleExists((result['book'] as Book).info.subtitle);
-      result['userId'] = userId;
+  result['userId'] = userId;
   return result;
 }
 
@@ -347,21 +369,6 @@ Widget _timeDivider(Timestamp time) {
       t.year.toString());
 }
 
-/*Future<void> _deleteDialog(BuildContext context, fook.User otherUser) async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false, // user must tap button!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(0.32)),
-
-        ),
-      );
-    },
-  );
-}*/
-
 Future<void> _deleteDialog(BuildContext context, String saleId,
     String otherUserId, String myId) async {
   return showDialog(
@@ -371,7 +378,8 @@ Future<void> _deleteDialog(BuildContext context, String saleId,
           backgroundColor: Theme.of(context).backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(32.0)),
-            side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 3),
+            side: BorderSide(
+                color: Theme.of(context).colorScheme.primary, width: 3),
           ),
           contentPadding: EdgeInsets.only(top: 10.0),
           content: Container(
@@ -382,7 +390,9 @@ Future<void> _deleteDialog(BuildContext context, String saleId,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                SizedBox(height: MediaQuery.of(context).size.height * 0.015,),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.015,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.min,

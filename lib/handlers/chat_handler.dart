@@ -146,4 +146,9 @@ class ChatHandler {
     StorageReference pathReference = sRef.child(imagePath);
     return await pathReference.getDownloadURL();
   }*/
+
+static String getOldSaleId(String chatId){
+  List<String> result = chatId.split('-');
+  return result[2];
+}
 }

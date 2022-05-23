@@ -39,8 +39,11 @@ class SaleHandler {
         .collection('sales')
         .where('saleID', isEqualTo: saleID)
         .get();
-
-    return Sale.fromMap(query.docs[0].data() as Map<String, dynamic>);
+    if(query.docs.isNotEmpty) {
+      return Sale.fromMap(query.docs[0].data() as Map<String, dynamic>);
+    } else {
+      return Sale(isbn: '0', userID: 'userID', courses: [], condition: '1/5', price: 0, saleID: 'saleID', description: 'removed');
+    }
   }
 
   //get sales for isbn
