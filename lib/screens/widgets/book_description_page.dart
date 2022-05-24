@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fook/screens/widgets/sale_description_page.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../handlers/book_handler.dart';
 import '../../handlers/sale_handler.dart';
@@ -9,6 +8,8 @@ import '../../model/book.dart';
 import '../../model/sale.dart';
 import 'fook_logo_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+//hej jag heter niklas
 
 class BookDescription extends StatefulWidget {
   final Book book;

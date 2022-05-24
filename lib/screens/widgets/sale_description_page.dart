@@ -11,7 +11,6 @@ import '../../handlers/sale_handler.dart';
 import '../../handlers/user_handler.dart';
 import '../../model/book.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../model/course.dart';
 import 'fook_logo_appbar.dart';
 
