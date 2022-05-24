@@ -194,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           child: Text('Save'),
                           onPressed: () async {
-                            if(nameController.text.isNotEmpty && lastnameController.text.isNotEmpty){
+                            if(nameController.text.isNotEmpty){
                               UserHandler.updateUsername(FirebaseAuth.instance.currentUser!.uid, nameController.text, lastnameController.text, FirebaseFirestore.instance);
                               Navigator.pop(context);
                             }else{
