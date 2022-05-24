@@ -14,7 +14,7 @@ class NavPage extends StatefulWidget {
   _NavPageState createState() => _NavPageState();
 }
 
-class _NavPageState extends State<NavPage>  {
+class _NavPageState extends State<NavPage> {
   int _selectedIndex = 0;
 
   @override
@@ -39,21 +39,40 @@ class _NavPageState extends State<NavPage>  {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: FookAppBar(implyLeading: false,),
+      appBar: FookAppBar(
+        implyLeading: false,
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
       ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('lib/assets/Fook_back_sm.png'),
-              fit: BoxFit.fill),
-        ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                spreadRadius: 0.5,
+                blurRadius: 1.5,
+              ),
+            ],
+            gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Color(0xffeae6e6),
+            Color(0xfffafafa),
+            Color(0xfffaf4f4),
+            Color(0xffe5e3e3)
+          ],
+        )
+            // image: DecorationImage(
+            //     image: AssetImage('lib/assets/Fook_back_sm.png'),
+            //fit: BoxFit.fill),
+            ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.white,
+          selectedItemColor: Theme.of(context).primaryColor,
+          unselectedItemColor: Colors.black,
           backgroundColor: Colors.transparent,
           elevation: 0,
           items: const <BottomNavigationBarItem>[

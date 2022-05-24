@@ -79,6 +79,7 @@ flutter:
   - lib/assets/Fook_back_sm.png
   - lib/assets/s_logo_o.png
   - lib/assets/placeholderthumbnail.png
+  - lib/assets/logo_sv.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
