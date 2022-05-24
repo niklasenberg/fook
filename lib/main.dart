@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
   MaterialColor fookOrange =
       CustomColors.createMaterialColor(const Color(0xFFFE8A13));
 
+  MaterialColor fookRed =
+      CustomColors.createMaterialColor(const Color(0xFFFE5608));
+
   final Future<FirebaseApp> _initialization = Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -31,8 +34,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primaryColor: fookOrange,
           primarySwatch: fookOrange,
+          highlightColor: fookRed,
           splashColor: CustomColors.createMaterialColor(const Color(0xFFE5E5E5)),
-          backgroundColor: CustomColors.createMaterialColor(const Color(0xFFE5E5E5)),
+          backgroundColor: CustomColors.createMaterialColor(const Color(0xFFFFFFFF)),
           cardColor: CustomColors.createMaterialColor(const Color(0xFFE5E5E5)),
           fontFamily: 'Roboto',
           inputDecorationTheme: const InputDecorationTheme(

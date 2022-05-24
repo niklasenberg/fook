@@ -27,13 +27,31 @@ class _ProfilePageState extends State<ProfilePage> {
           return Center(
             child: SizedBox(
               height: MediaQuery.of(context).size.width * 0.8,
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Card(
-                margin: const EdgeInsets.all(8.0),
-                elevation: 8.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color(0xffeae6e6),
+                      Color(0xfffafafa),
+                      Color(0xfffaf4f4),
+                      Color(0xffe5e3e3)
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0.5, 0.5),
+                      blurRadius: 1,
+                    ),
+                  ],
                 ),
+                margin: const EdgeInsets.all(8.0),
+
+
+
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -57,33 +75,37 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       Text(
                         user.name + " " + user.lastName,
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,
                       ),
+
                       MaterialButton(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)
-                        ),
-                        onPressed: () => FirebaseAuth.instance.signOut().then(
-                            (value) => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()))),
-                        child: const Text('Signout'),
-                        textColor: Theme.of(context).colorScheme.onSecondary,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0)
+                            borderRadius: BorderRadius.circular(5.0)
                         ),
                         onPressed: () {
                           updateBox(context, user);
                           },
-                        child: const Text('Update'),
-                        textColor: Theme.of(context).colorScheme.onSecondary,
+                        child: const Text('Change Display Name'),
+                        textColor: Colors.white,
                         color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)
+                        ),
+                        onPressed: () => FirebaseAuth.instance.signOut().then(
+                                (value) => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()))),
+                        child: const Text('Signout'),
+                        textColor: Colors.white,
+                        color: Theme.of(context).highlightColor,
                       ),
                     ],
                   ),
@@ -110,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
       return AlertDialog(
         backgroundColor: Theme.of(context).backgroundColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
           side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 3),
         ),
         contentPadding: EdgeInsets.only(top: 10.0),
@@ -128,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    "Update user information:",
+                    "Update Screen Name",
                   ),
                 ],
               ),
@@ -145,22 +167,25 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(width: MediaQuery.of(context).size.width * 0.4,child:TextField(controller: nameController,),),
+                  Container(width: MediaQuery.of(context).size.width * 0.6,child:TextField(controller: nameController,),),
                   SizedBox(
-                    height: 5.0,
+                    height: 15.0,
                   ),
-                  Container(width: MediaQuery.of(context).size.width * 0.4,child:TextField(controller: lastnameController,),),
+                  Container(width: MediaQuery.of(context).size.width * 0.6,child:TextField(controller: lastnameController,),),
+                  SizedBox(
+                    height: 25.0,
+                  ),
                   Row(mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.2,
+                        width: MediaQuery.of(context).size.width * 0.25,
                         child: ElevatedButton(
-                          style: ButtonStyle(
+                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
                             shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
+                                borderRadius: BorderRadius.circular(5.0),
                                 side: BorderSide(
                                   color: Colors.black,
                                   width: MediaQuery.of(context).size.width * 0.3,
@@ -178,13 +203,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: MediaQuery.of(context).size.width * 0.05,
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.2,
+                        width: MediaQuery.of(context).size.width * 0.25,
                         child: ElevatedButton(
                           style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
                             shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
+                                borderRadius: BorderRadius.circular(5.0),
                                 side: BorderSide(
                                   color: Colors.black,
                                   width: MediaQuery.of(context).size.width * 0.3,
