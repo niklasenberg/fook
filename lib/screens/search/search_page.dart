@@ -85,28 +85,29 @@ class _SearchPageState extends State<SearchPage> {
             Container(
               margin: const EdgeInsets.all(4),
               height: MediaQuery.of(context).size.height - 250,
-              decoration: BoxDecoration(image: DecorationImage(opacity: 0.1, scale: 8, image: AssetImage("lib/assets/s_logo_o.png",)),
+              decoration: BoxDecoration(image: DecorationImage(opacity: 0.1, scale: 4, image: AssetImage("lib/assets/s_logo_o.png",)),
                   boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                ),
-                BoxShadow(
-                  color: Colors.white,
-                  spreadRadius: -2.0,
-                  blurRadius: 12.0,
-                ),
-              ], borderRadius: BorderRadius.all(Radius.circular(8))),
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0.5, 0.5),
+                      blurRadius: 1,
+                    ),
+                  ], borderRadius: BorderRadius.all(Radius.circular(8)),
+                gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Color(0xffeae6e6),
+                  Color(0xfffafafa),
+                  Color(0xfffaf4f4),
+                  Color(0xffe5e3e3)
+                ],
+              ),),
               child: StreamBuilder<List<AlgoliaObjectSnapshot>>(
                 stream: Stream.fromFuture(_operation(_searchController.text)),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || _searchController.text.isEmpty) {
-                    return Center(
-                        /*child: Image.asset(
-                            "lib/assets/s_logo_o.png",
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            color: Colors.white.withOpacity(0.5),
-                            colorBlendMode: BlendMode.modulate)*/);
+                    return Center();
                   } else {
                     List<AlgoliaObjectSnapshot> searchHit = snapshot.data!;
                     switch (snapshot.connectionState) {
@@ -169,7 +170,7 @@ _getBooks(String shortCode, BuildContext context) {
 }
 
 Widget BookCard(String shortCode, Book book, context) {
-  Color background = Colors.grey.shade300;
+  Color background = Colors.white;
   Color fill = Colors.white;
   final List<Color> gradient = [
     background,
@@ -190,10 +191,12 @@ Widget BookCard(String shortCode, Book book, context) {
             boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
-                offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                offset: Offset(1.0, 1.0), // shadow direction: bottom right
+                blurRadius: 2,
+                spreadRadius: 0.5,
               ),
             ],
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(5),
             gradient: LinearGradient(
               colors: gradient,
               stops: stops,

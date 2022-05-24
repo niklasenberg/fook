@@ -183,8 +183,8 @@ class _SaleDescriptionState extends State<SaleDescription> {
 }
 
 Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
-  Color background = Colors.grey.shade300;
-  Color fill = Theme.of(context).backgroundColor;
+  Color background = Theme.of(context).backgroundColor;
+  Color fill = Colors.white;
   final List<Color> gradient = [
     background,
     background,
@@ -201,15 +201,16 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
             boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
-                offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                offset: Offset(1.0, 1.0), // shadow direction: bottom right
+                blurRadius: 2,
+                spreadRadius: 0.5,
               ),
             ],
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(5),
             gradient: LinearGradient(
-              colors: gradient,
-              stops: stops,
-              end: Alignment.bottomCenter,
-              begin: Alignment.topCenter,
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: gradient
             ),
           ),
           margin: const EdgeInsets.all(10),
@@ -223,18 +224,10 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
                     width: 20,
                   ),
                   Container(
-                    decoration: const BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(
-                              2.0, 2.0), // shadow direction: bottom right
-                        ),
-                      ],
-                    ),
                     height: 130,
-                    child: Image.network(
-                        book.info.imageLinks["smallThumbnail"].toString()),
+                    child: book.info.imageLinks["smallThumbnail"] != null ? Image.network(
+  book.info.imageLinks["smallThumbnail"].toString()) : Image.asset(
+  "lib/assets/placeholderthumbnail.png"),
                   ),
                   const SizedBox(
                     width: 10,

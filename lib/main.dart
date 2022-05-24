@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           primaryColor: fookOrange,
           primarySwatch: fookOrange,
           splashColor: CustomColors.createMaterialColor(const Color(0xFFE5E5E5)),
-          backgroundColor: CustomColors.createMaterialColor(const Color(0xFFE5E5E5)),
+          backgroundColor: Colors.white,//CustomColors.createMaterialColor(const Color(0xFFE5E5E5)),
           cardColor: CustomColors.createMaterialColor(const Color(0xFFE5E5E5)),
           fontFamily: 'Roboto',
           inputDecorationTheme: const InputDecorationTheme(

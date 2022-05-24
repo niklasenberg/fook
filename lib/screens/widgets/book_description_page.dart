@@ -9,8 +9,6 @@ import '../../model/sale.dart';
 import 'fook_logo_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//hej jag heter niklas
-
 class BookDescription extends StatefulWidget {
   final Book book;
   final String shortCode;
@@ -61,19 +59,13 @@ class _BookDescriptionState extends State<BookDescription> {
                         height: 100,
                         width: 70,
                         child: Container(
-                          decoration: const BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey,
-                                offset: Offset(
-                                    2.0, 2.0), // shadow direction: bottom right
-                              ),
-                            ],
-                          ),
                           height: 50,
-                          child: Image.network(widget
-                              .book.info.imageLinks["smallThumbnail"]
-                              .toString()),
+                          child: widget.book.info.imageLinks["smallThumbnail"] != null ? Image.network(
+                              widget.book.info.imageLinks["smallThumbnail"].toString()) : Image.asset(
+                            "lib/assets/placeholderthumbnail.png",
+                            width: 70,
+                            height: 3,
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -84,11 +76,11 @@ class _BookDescriptionState extends State<BookDescription> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Flexible(
-                              child: Text(
+                              child: Text(widget.book.info.subtitle.isNotEmpty ?
                                 (widget.book.info.title +
                                         ": " +
                                         widget.book.info.subtitle)
-                                    .toUpperCase(),
+                                    .toUpperCase() : widget.book.info.title.toUpperCase(),
                                 overflow: TextOverflow.fade,
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
@@ -146,7 +138,7 @@ class _BookDescriptionState extends State<BookDescription> {
                         ),
                         CheckboxListTile(
                           title:
-                              Text("Show older", textAlign: TextAlign.center),
+                              Text("Include older editions", textAlign: TextAlign.center),
                           value: showOlder,
                           onChanged: (newValue) {
                             setState(() {
@@ -173,17 +165,25 @@ class _BookDescriptionState extends State<BookDescription> {
             Container(
               padding: EdgeInsets.all(4),
               margin: EdgeInsets.all(8),
-              height: MediaQuery.of(context).size.height * 0.58,
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                ),
-                BoxShadow(
-                  color: Colors.white,
-                  spreadRadius: -2.0,
-                  blurRadius: 12.0,
-                ),
-              ], borderRadius: BorderRadius.all(Radius.circular(8))),
+              height: MediaQuery.of(context).size.height - 310,
+              decoration: BoxDecoration(image: DecorationImage(opacity: 0.1, scale: 4, image: AssetImage("lib/assets/s_logo_o.png",)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.5, 0.5),
+                    blurRadius: 1,
+                  ),
+                ], borderRadius: BorderRadius.all(Radius.circular(8)),
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color(0xffeae6e6),
+                    Color(0xfffafafa),
+                    Color(0xfffaf4f4),
+                    Color(0xffe5e3e3)
+                  ],
+                ),),
               child: FutureBuilder(
                   future: _future,
                   builder: (context, snapshot) {
