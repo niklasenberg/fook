@@ -27,7 +27,23 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
   TextEditingController priceController = TextEditingController();
   TextEditingController conditionController = TextEditingController();
   TextEditingController commentController = TextEditingController();
-  final items = ["1/5", "2/5", "3/5", "4/5", "5/5"];
+
+  /*6. As new
+5.Fine
+4.Very good
+3. Good
+2. Fair
+1.poor
+
+*/
+  final items = [
+    "1. Poor",
+    "2. Fair",
+    "3. Good",
+    "4. Very good",
+    "5. Fine",
+    "6. As new"
+  ];
   bool _isButtonEnabled = false;
   String? value;
 
@@ -43,7 +59,8 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
           child: Column(children: [
             //Övergripande strukturen
 
-            AppBar(automaticallyImplyLeading: false,
+            AppBar(
+                automaticallyImplyLeading: false,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(20),
