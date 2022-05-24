@@ -204,7 +204,7 @@ class _BookDescriptionState extends State<BookDescription> {
 
                         return Center(
                           child: ElevatedButton(
-                            child:   Text('Check Campusbokhandeln' + "    " + 'https://campusbokhandeln.se/b/' + isbn + "/" + titleAndSubtitle),
+                            child:   const Text('Check Campusbokhandeln'),
                             onPressed: () {
                               var url = 'https://campusbokhandeln.se/b/' + isbn + "/" + titleAndSubtitle  ;
                               launchUrl(url);
