@@ -29,7 +29,14 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
 
-  final items = ["1/5", "2/5", "3/5", "4/5", "5/5"];
+  final items = [
+    "1. Poor",
+    "2. Fair",
+    "3. Good",
+    "4. Very good",
+    "5. Fine",
+    "6. As new"
+  ];
   String? value;
 
   TextEditingController priceController = TextEditingController();
@@ -55,7 +62,8 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
             child: ConstrainedBox(
           constraints: const BoxConstraints(),
           child: Column(children: [
-            AppBar(automaticallyImplyLeading: false,
+            AppBar(
+                automaticallyImplyLeading: false,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(20),
@@ -273,34 +281,36 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             style: ElevatedButton.styleFrom(
                               primary: Colors.red,
                             ),
-                            onPressed: (() {removeSale(widget.thissale.saleID, context);
-                            Navigator.pop(context);
+                            onPressed: (() {
+                              removeSale(widget.thissale.saleID, context);
+                              Navigator.pop(context);
                             }
 
-                            //deletehandler
+                                //deletehandler
+                                ),
                           ),
-                        ),
                         ),
 
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: ElevatedButton.icon(
-                            label: const Text('Update'),
-                            icon: const Icon(Icons.update),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.yellow,
-                            ),
-                            onPressed: () { updateSale(
+                              label: const Text('Update'),
+                              icon: const Icon(Icons.update),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.yellow,
+                              ),
+                              onPressed: () {
+                                updateSale(
                                   commentController.text,
                                   conditionController.text,
                                   int.parse(priceController.text),
                                   context,
                                   widget.thissale.saleID,
                                 );
-                            Navigator.pop(context);
-                            }
-                            //updatehandler
-                          ),
+                                Navigator.pop(context);
+                              }
+                              //updatehandler
+                              ),
                         ),
                       ],
                     ),
