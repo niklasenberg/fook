@@ -206,4 +206,11 @@ class SaleHandler {
   static void removeSale(FirebaseFirestore firestore, String saleID) async {
     await firestore.collection('sales').doc(saleID).delete();
   }
+  static bool isSaleRemoved(Sale sale){
+
+    if(sale.isbn == 0){
+      return true;
+    }
+    return false;
+  }
 }

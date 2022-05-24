@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
+import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/model/constants.dart';
 import 'package:fook/model/sale.dart';
 import 'package:fook/model/user.dart' as fook;
@@ -11,7 +12,9 @@ import 'package:fook/model/book.dart';
 class ChatDetailed extends StatefulWidget {
   final Map<String, dynamic> infoList;
   bool isChatEmpty = false;
+
   ChatDetailed(this.infoList, {Key? key}) : super(key: key);
+
   @override
   _ChatDetailedState createState() => _ChatDetailedState();
 }
@@ -24,6 +27,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
   late String chatId;
   late String photoUrl;
   late bool subtitleExists;
+  late String sellerId;
+  late String saleISBN;
   late fook.User otherUser, thisUser;
   late Book book;
   final _scaffKey = GlobalKey<ScaffoldState>();
@@ -37,22 +42,29 @@ class _ChatDetailedState extends State<ChatDetailed> {
     userId = widget.infoList['userId'].toString();
     myId = FirebaseAuth.instance.currentUser!.uid;
     sale = (widget.infoList['sale']);
-    chatId = ChatHandler.generateChatId(myId, userId, sale.saleID);
+    chatId = widget.infoList['chatId'].toString();
     photoUrl = widget.infoList['photoUrl'].toString();
     book = widget.infoList['book'];
     subtitleExists = widget.infoList['subtitleExists'];
+    sellerId = widget.infoList['sellerId'];
+    saleISBN = widget.infoList['saleISBN'];
+
     otherUser = fook.User.fromMap(
         (widget.infoList['otherUser'] as DocumentSnapshot).data()
             as Map<String, dynamic>);
     thisUser = fook.User.fromMap(
         (widget.infoList['thisUser'] as DocumentSnapshot).data()
             as Map<String, dynamic>);
-
   }
-  
 
   @override
   Widget build(BuildContext context) {
+    SizedBox bookBox;
+    if (sale.isbn != '0') {
+      bookBox = bookDisplay(context);
+    } else {
+      bookBox = isNoBookDisplay(context);
+    }
     return Scaffold(
       appBar: FookAppBar(
         implyLeading: true,
@@ -61,148 +73,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
       key: _scaffKey,
       body: Column(
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.20,
-            child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.all(4),
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(2.0,
-                                          2.0), // shadow direction: bottom right
-                                    ),
-                                  ],
-                                ),
-                                child: Image.network(book
-                                    .info.imageLinks["smallThumbnail"]
-                                    .toString()),
-                              ),
-                              const SizedBox(height: 5),
-                              Flexible(
-                                child: Text(
-                                  subtitleExists
-                                      ? (book.info.title +
-                                          ':\n ' +
-                                          book.info.subtitle)
-                                      : (book.info.title),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  softWrap: false,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              )
-                            ]),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.02,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.43,
-                        child: Center(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                RichText(
-                                  text: TextSpan(children: <TextSpan>[
-                                    TextSpan(
-                                        text: sale.userID == myId ? "Buyer: " : "Seller: ",
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontSize: 12)),
-                                    TextSpan(
-                                        text: (otherUser.name +
-                                            ' ' +
-                                            otherUser.lastName),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                        )),
-                                  ]),
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                RichText(
-                                  text: TextSpan(children: <TextSpan>[
-                                    TextSpan(
-                                        text: "Condition: ",
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontSize: 12)),
-                                    TextSpan(
-                                        text: (sale.condition).toUpperCase(),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                        )),
-                                  ]),
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                RichText(
-                                  text: TextSpan(children: <TextSpan>[
-                                    TextSpan(
-                                        text: "ISBN: ",
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontSize: 12)),
-                                    TextSpan(
-                                        text: (sale.isbn).toUpperCase(),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                        )),
-                                  ]),
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                RichText(
-                                  text: TextSpan(children: <TextSpan>[
-                                    TextSpan(
-                                        text: "Price: ",
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontSize: 12)),
-                                    TextSpan(
-                                        text: (sale.price).toString(),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                        )),
-                                  ]),
-                                ),
-                              ]),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          bookBox,
           Flexible(
             flex: 75,
             child: _chatBody(userId),
@@ -211,18 +82,21 @@ class _ChatDetailedState extends State<ChatDetailed> {
             height: 1.0,
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.10,
-            child:FutureBuilder(future: _isChatEmpty(), builder: (context, snapshot){
-              if(snapshot.hasData){
-                widget.isChatEmpty = snapshot.data as bool;
-                if(widget.isChatEmpty){
-                  messageController = TextEditingController(text: "Is the book still available?");
-                  return _messageComposer("Is the book still available?");
-                }
-              }
-              return _messageComposer("");
-            },)
-          ),
+              height: MediaQuery.of(context).size.height * 0.10,
+              child: FutureBuilder(
+                future: _isChatEmpty(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    widget.isChatEmpty = snapshot.data as bool;
+                    if (widget.isChatEmpty) {
+                      messageController = TextEditingController(
+                          text: "Is the book still available?");
+                      return _messageComposer("Is the book still available?");
+                    }
+                  }
+                  return _messageComposer("");
+                },
+              )),
         ],
       ),
     );
@@ -230,7 +104,6 @@ class _ChatDetailedState extends State<ChatDetailed> {
 
   Widget _messageComposer(String message) {
     return Container(
-      
       decoration: const BoxDecoration(
         image: DecorationImage(
             image: AssetImage('lib/assets/Fook_back_sm.png'), fit: BoxFit.fill),
@@ -311,6 +184,8 @@ class _ChatDetailedState extends State<ChatDetailed> {
                       true,
                       message,
                       thisUser.name,
+                      sale.userID,
+                      sale.isbn,
                       FirebaseFirestore
                           .instance); //Path? Behövs bara om man ska skicka bilder
                 }
@@ -328,13 +203,283 @@ class _ChatDetailedState extends State<ChatDetailed> {
     );
   }
 
+  isNoBookDisplay(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: MediaQuery.of(context).size.height * 0.20,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(4),
+                    height: 50,
+                    decoration: const BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(
+                              2.0, 2.0), // shadow direction: bottom right
+                        ),
+                      ],
+                    ),
+                    child: Image.network(
+                        book.info.imageLinks["smallThumbnail"].toString()),
+                  ),
+                  const SizedBox(height: 5),
+                  Flexible(
+                    child: Text(
+                      subtitleExists
+                          ? (book.info.title + ':\n ' + book.info.subtitle)
+                          : (book.info.title),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      softWrap: false,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+                ]),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.02,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.43,
+            child: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                            text: sellerId == myId ? "Buyer: " : "Seller: ",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12)),
+                        TextSpan(
+                            text: (otherUser.name + ' ' + otherUser.lastName),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            )),
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                            text: "Condition: ",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12)),
+                        const TextSpan(
+                            text: ('Not available'),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            )),
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                            text: "ISBN: ",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12)),
+                        TextSpan(
+                            text: (saleISBN).toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            )),
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                            text: "Price: ",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12)),
+                        TextSpan(
+                            text: ('Not available'),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            )),
+                      ]),
+                    ),
+                  ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bookDisplay(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: MediaQuery.of(context).size.height * 0.20,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(4),
+                    height: 50,
+                    decoration: const BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(
+                              2.0, 2.0), // shadow direction: bottom right
+                        ),
+                      ],
+                    ),
+                    child: Image.network(
+                        book.info.imageLinks["smallThumbnail"].toString()),
+                  ),
+                  const SizedBox(height: 5),
+                  Flexible(
+                    child: Text(
+                      subtitleExists
+                          ? (book.info.title + ':\n ' + book.info.subtitle)
+                          : (book.info.title),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      softWrap: false,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+                ]),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.02,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.43,
+            child: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                            text: sale.userID == myId ? "Buyer: " : "Seller: ",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12)),
+                        TextSpan(
+                            text: (otherUser.name + ' ' + otherUser.lastName),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            )),
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                            text: "Condition: ",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12)),
+                        TextSpan(
+                            text: (sale.condition).toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            )),
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                            text: "ISBN: ",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12)),
+                        TextSpan(
+                            text: (sale.isbn).toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            )),
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                            text: "Price: ",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12)),
+                        TextSpan(
+                            text: (sale.price).toString(),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            )),
+                      ]),
+                    ),
+                  ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   StreamBuilder<QuerySnapshot> _chatBody(String userId) {
     return StreamBuilder(
-      stream: ChatHandler.getChat(
-          userId, myId, sale.saleID, FirebaseFirestore.instance),
+      stream: ChatHandler.getChat(chatId, FirebaseFirestore.instance),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          
           return snapshot.data!.docs.isNotEmpty
               ? Container(
                   padding: const EdgeInsets.all(4),
@@ -422,18 +567,18 @@ class _ChatDetailedState extends State<ChatDetailed> {
     return pastTime.day == presentTime.day;
   }
 
-   _isChatEmpty()async{ 
-      var query = await FirebaseFirestore.instance
+  _isChatEmpty() async {
+    var query = await FirebaseFirestore.instance
         .collection('chats')
         .doc(chatId)
         .collection('messages')
         .get();
 
-        if(query.docs.isEmpty){
-          return true;
-        }else{
-          return false;
-        } 
+    if (query.docs.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   _messageItem(DocumentSnapshot message, BuildContext context) {
@@ -581,7 +726,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
     );*/
   }
 
-  /*Widget _buildPopUpImagePicker(context) {
+/*Widget _buildPopUpImagePicker(context) {
     PickedFile _imageFile;
     StorageUploadTask _taskUpload;
     bool uploadBool = false;
@@ -748,4 +893,5 @@ class _ChatDetailedState extends State<ChatDetailed> {
       ),
     );
   }*/
+
 }

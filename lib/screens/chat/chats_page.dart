@@ -57,7 +57,7 @@ class _ChatPageState extends State<ChatsPage> {
             return ListView.builder(
               itemCount: docs.length,
               itemBuilder: (context, index) {
-                String chatId = docs[index].id;
+                String chatId = (docs[index].data() as Map<String, dynamic>)['chatId'];
                 List<dynamic> members =
                     (docs[index].data() as Map<String, dynamic>)['members'];
                 String userId;
@@ -68,7 +68,7 @@ class _ChatPageState extends State<ChatsPage> {
                     : members.elementAt(0);
 
                 return FutureBuilder(
-                  future: _getInfo(userId, saleId),
+                  future: _getInfo(userId, saleId, chatId, members),
                   builder: (context, _snapshot) {
                     if (_snapshot.hasData) {
                       Map<String, dynamic> infoMap =
@@ -78,30 +78,48 @@ class _ChatPageState extends State<ChatsPage> {
                       fook.User otherUser = fook.User.fromMap(
                           docSnapUser.data() as Map<String, dynamic>);
                       Sale sale = infoMap['sale'];
-                      Book book = infoMap['book'];
-                      if(sale.description == 'removed'){
 
+
+                      if (sale.isbn == '0') {
+                        return SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.25,
+                            child: Card(
+                              margin: const EdgeInsets.all(8.0),
+                              elevation: 8.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.all(10.0),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.08,
+                                child: Center(
+                                  child: InkWell(
+                                    splashColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    onLongPress: () => _deleteDialog(
+                                        context, chatId),
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ChatDetailed(infoMap),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'The book has been removed',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ));
                       }
-                      if(sale.isbn == '0'){
-                        return Card(
-                          margin: const EdgeInsets.all(8.0),
-                          elevation: 8.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: Container(
-                            margin: const EdgeInsets.all(10.0),
-                            height: MediaQuery.of(context).size.height * 0.08,
-                            child: Center(
-                              child: Text(
-                                'The book has been removed' ),
-                            ),
-                          ),
-                        );
-                      }
+
+                      Book book = infoMap['book'];
 
                       return SizedBox(
-                          height: 175,
+                          height: MediaQuery.of(context).size.height * 0.25,
                           child: Card(
                             margin: const EdgeInsets.all(8.0),
                             elevation: 8.0,
@@ -111,8 +129,8 @@ class _ChatPageState extends State<ChatsPage> {
                             child: InkWell(
                               splashColor:
                                   Theme.of(context).colorScheme.primary,
-                              onLongPress: () => _deleteDialog(
-                                  context, sale.saleID, userId, myId),
+                              onLongPress: () =>
+                                  _deleteDialog(context, chatId),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -331,7 +349,7 @@ class _ChatPageState extends State<ChatsPage> {
   }
 }
 
-_getInfo(String userId, String saleId) async {
+_getInfo(String userId, String saleId, String chatId, List<dynamic> members) async {
   Map<String, dynamic> result = {};
   result['otherUser'] =
       await UserHandler.getUserSnapshot(userId, FirebaseFirestore.instance);
@@ -341,10 +359,27 @@ _getInfo(String userId, String saleId) async {
       FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
   result['sale'] =
       await SaleHandler.getSaleByID(saleId, FirebaseFirestore.instance);
-  result['book'] = await BookHandler.getBook((result['sale'] as Sale).isbn);
+  result['userId'] = userId;
+  result['chatId'] = chatId;
+
+  DocumentSnapshot documentSnapshotChat =
+      await FirebaseFirestore.instance.collection('chats').doc(chatId).get();
+  result['saleISBN'] = ((documentSnapshotChat.data()
+      as Map<String, dynamic>)['saleISBN'] as String);
+  result['sellerId'] = ((documentSnapshotChat.data()
+      as Map<String, dynamic>)['sellerId'] as String);
+  result['saleId'] = ((documentSnapshotChat.data()
+  as Map<String, dynamic>)['saleId'] as String);
+
+  if ((result['sale'] as Sale).isbn != "0") {
+    result['book'] = await BookHandler.getBook((result['sale'] as Sale).isbn);
+  } else {
+
+    result['book'] = await BookHandler.getBook((result['saleISBN'] as String));
+  }
+
   result['subtitleExists'] =
       subtitleExists((result['book'] as Book).info.subtitle);
-  result['userId'] = userId;
   return result;
 }
 
@@ -369,8 +404,7 @@ Widget _timeDivider(Timestamp time) {
       t.year.toString());
 }
 
-Future<void> _deleteDialog(BuildContext context, String saleId,
-    String otherUserId, String myId) async {
+Future<void> _deleteDialog(BuildContext context, chatId) async {
   return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -443,9 +477,7 @@ Future<void> _deleteDialog(BuildContext context, String saleId,
                         child: Text('Yes'),
                         onPressed: () {
                           ChatHandler.deleteChat(
-                              ChatHandler.generateChatId(
-                                  myId, otherUserId, saleId),
-                              FirebaseFirestore.instance);
+                              chatId, FirebaseFirestore.instance);
                           Navigator.pop(context);
                         },
                       ),
