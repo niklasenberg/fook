@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/painting.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/handlers/course_handler.dart';
 import 'package:fook/model/course.dart';
@@ -33,16 +35,18 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.hasData) {
             fook.User thisUser = snapshot.data as fook.User;
             return Scaffold(
-              appBar: AppBar(automaticallyImplyLeading: false,
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20))),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
+                elevation: 1.5,
                 centerTitle: false,
                 title: RichText(
                   text: TextSpan(children: <TextSpan>[
                     TextSpan(
-                        text: "Welcome ",
+                        text: "WELCOME ",
                         style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontSize: 20)),
@@ -78,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                               itemCount: courses.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return SizedBox(
-                                    height: 300,
+                                    height: 310,
                                     child: CourseCard(courses[index], context));
                               }),
                         );
@@ -98,10 +102,12 @@ class _HomePageState extends State<HomePage> {
             );
           } else {
             return Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(
-              Theme.of(context).colorScheme.primary,
-            )));
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(
+                  Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            );
           }
         });
   }
@@ -109,17 +115,26 @@ class _HomePageState extends State<HomePage> {
 
 Widget CourseCard(Course course, BuildContext context) {
   return Card(
-    elevation: 4.0,
+    color: Colors.white,
+    elevation: 0.0,
+    margin: EdgeInsets.zero,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ListTile(
+          tileColor: Colors.white,
           title: Text(
             course.shortCode,
-            style: TextStyle(color: Theme.of(context).primaryColor),
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontSize: 20,
+            ),
           ),
-          subtitle: Text(course.name),
+          subtitle: Text(course.name,
+              style: TextStyle(
+                color: Colors.black,
+              )),
           /*trailing: MaterialButton(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0)),
@@ -134,7 +149,36 @@ Widget CourseCard(Course course, BuildContext context) {
             color: Theme.of(context).colorScheme.secondary,
           ),*/
         ),
-        SizedBox(height: 200.0, child: BookCarousel(course, context)),
+
+        // SizedBox(height: 200.0, child: BookCarousel(course, context)),
+        Container(
+          alignment: Alignment.center,
+          height: 210,
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(0.5, 0.5),
+                  blurRadius: 1,
+                ),
+              ],
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Color(0xffeae6e6),
+                  Color(0xfffafafa),
+                  Color(0xfffaf4f4),
+                  Color(0xffe5e3e3)
+                ],
+              ),
+              image: DecorationImage(
+                image: AssetImage('lib/assets/logo_sv.png'),
+                fit: BoxFit.fitHeight,
+              )),
+          child: SizedBox(height: 200, child: BookCarousel(course, context)),
+        )
       ],
     ),
   );
@@ -173,7 +217,7 @@ Widget BookCarousel(Course course, BuildContext context) {
 }
 
 Widget BookCard(String shortCode, Book book, BuildContext context) {
-  Color background = Colors.grey.shade300;
+  Color background = Colors.white;
   Color fill = Colors.white;
   final List<Color> gradient = [
     background,
@@ -181,13 +225,13 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
     fill,
     fill,
   ];
-
   const double fillPercent = 50; // fills 56.23% for container from bottom
   const double fillStop = (100 - fillPercent) / 100;
   const List<double> stops = [0.0, fillStop, fillStop, 1.0];
   return Container(
-      margin: EdgeInsets.all(2),
-      color: Theme.of(context).colorScheme.background,
+      padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
+      // margin: EdgeInsets.all(7),
+      // color: Theme.of(context).colorScheme.background,
       child: InkWell(
           onTap: () => Navigator.push(
               context,
@@ -197,13 +241,15 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
             height: 40,
             width: 150,
             decoration: BoxDecoration(
-              boxShadow: [
-                const BoxShadow(
+              boxShadow: const [
+                BoxShadow(
                   color: Colors.grey,
-                  offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                  offset: Offset(1.0, 1.0), // shadow direction: bottom right
+                  blurRadius: 2,
+                  spreadRadius: 0.5,
                 ),
               ],
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(5),
               gradient: LinearGradient(
                 colors: gradient,
                 stops: stops,
@@ -221,14 +267,16 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                   width: 70,
                   child: Container(
                     decoration: const BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(
-                              2.0, 2.0), // shadow direction: bottom right
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.grey,
+                        //     offset: Offset(
+                        //         0.5, 0.5),
+                        //     blurRadius: 1,
+                        //     // shadow direction: bottom right
+                        //   ),
+                        // ],
                         ),
-                      ],
-                    ),
                     height: 50,
                     child: Image.network(
                         book.info.imageLinks["smallThumbnail"].toString()),
@@ -243,8 +291,7 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                     children: <Widget>[
                       Flexible(
                         child: Text(
-                          (book.info.title + ": " + book.info.subtitle)
-                              .toUpperCase(),
+                          (book.info.subtitle.isNotEmpty ? (book.info.title + ": " + book.info.subtitle) : book.info.title),
                           overflow: TextOverflow.fade,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
