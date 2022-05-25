@@ -85,9 +85,9 @@ class _ChatDetailedState extends State<ChatDetailed> {
                                     ),
                                   ],
                                 ),
-                                child: Image.network(book
-                                    .info.imageLinks["smallThumbnail"]
-                                    .toString()),
+                                child: book.info.imageLinks["smallThumbnail"] != null ? Image.network(
+                                    book.info.imageLinks["smallThumbnail"].toString()) : Image.asset(
+                                  "lib/assets/placeholderthumbnail.png"),
                               ),
                               const SizedBox(height: 5),
                               Flexible(

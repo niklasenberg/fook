@@ -173,9 +173,8 @@ Widget CourseCard(Course course, BuildContext context) {
                   Color(0xffe5e3e3)
                 ],
               ),
-              image: DecorationImage(
-                image: AssetImage('lib/assets/logo_sv.png'),
-                fit: BoxFit.fitHeight,
+              image: DecorationImage(opacity: 0.1, scale: 4,
+                image: AssetImage('lib/assets/s_logo_o.png'),
               )),
           child: SizedBox(height: 200, child: BookCarousel(course, context)),
         )
@@ -266,20 +265,10 @@ Widget BookCard(String shortCode, Book book, BuildContext context) {
                   height: 100,
                   width: 70,
                   child: Container(
-                    decoration: const BoxDecoration(
-                        // boxShadow: [
-                        //   BoxShadow(
-                        //     color: Colors.grey,
-                        //     offset: Offset(
-                        //         0.5, 0.5),
-                        //     blurRadius: 1,
-                        //     // shadow direction: bottom right
-                        //   ),
-                        // ],
-                        ),
                     height: 50,
-                    child: Image.network(
-                        book.info.imageLinks["smallThumbnail"].toString()),
+                    child: book.info.imageLinks["smallThumbnail"] != null ? Image.network(
+                        book.info.imageLinks["smallThumbnail"].toString()) : Image.asset(
+                      "lib/assets/placeholderthumbnail.png"),
                   ),
                 ),
                 const SizedBox(
