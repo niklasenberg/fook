@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                     TextSpan(
                         text: "WELCOME ",
                         style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).highlightColor,
                             fontSize: 20)),
                     TextSpan(
                         text: thisUser.name,
@@ -127,7 +127,7 @@ Widget CourseCard(Course course, BuildContext context) {
           title: Text(
             course.shortCode,
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).highlightColor,
               fontSize: 20,
             ),
           ),
