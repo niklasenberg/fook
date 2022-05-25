@@ -29,7 +29,14 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
   TextEditingController titleController = TextEditingController();
   TextEditingController authorController = TextEditingController();
 
-  final items = ["1/5", "2/5", "3/5", "4/5", "5/5"];
+  final items = [
+    "1. Poor",
+    "2. Fair",
+    "3. Good",
+    "4. Very good",
+    "5. Fine",
+    "6. As new"
+  ];
   String? value;
 
   TextEditingController priceController = TextEditingController();
@@ -55,7 +62,8 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
             child: ConstrainedBox(
           constraints: const BoxConstraints(),
           child: Column(children: [
-            AppBar(automaticallyImplyLeading: false,
+            AppBar(
+                automaticallyImplyLeading: false,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(20),
@@ -94,7 +102,10 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           child: Column(
                             /*ISBN och ruta*/
                             children: [
-                              const Text("ISBN:", textAlign: TextAlign.left),
+                              const Text("ISBN:",
+                                  textAlign: TextAlign.left,
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w600)),
                               TextFormField(
                                 initialValue: widget.thissale.getIsbn(),
                                 //controller: isbnController,
@@ -112,7 +123,8 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           child: Column(/*Skanna streckkod och ruta*/
                               children: [
                             const Text("Scan barcode:",
-                                textAlign: TextAlign.center),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.w600)),
                             MaterialButton(
                               height: 50,
                               textColor:
@@ -141,7 +153,9 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Title',
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
 
@@ -163,7 +177,9 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Author',
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
 
@@ -180,15 +196,13 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           height: 55,
                           margin: const EdgeInsets.only(bottom: 10),
                         ),
-
-                        //Välj skick-ruta:
-                        //const Text("Author:", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
                         const Align(
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Condition',
                             style: TextStyle(
-                                color: Color.fromARGB(255, 12, 12, 12)),
+                                color: Color.fromARGB(255, 10, 10, 10),
+                                fontWeight: FontWeight.w400),
                           ),
                         ),
 
@@ -204,7 +218,6 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                                       color: Colors.black, width: 1)),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
-                                    //Kolla vald condition och se till att den fortfarande kan ändras
                                     value: conditionController.text,
                                     iconSize: 36,
                                     icon: const Icon(Icons.arrow_drop_down,
@@ -223,7 +236,8 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           child: Text(
                             'Your price',
                             style: TextStyle(
-                                color: Color.fromARGB(255, 10, 10, 10)),
+                                color: Color.fromARGB(255, 10, 10, 10),
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
 
@@ -250,8 +264,9 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Comments',
-                            style:
-                                TextStyle(color: Color.fromARGB(255, 8, 8, 8)),
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 10, 10, 10),
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
 
@@ -265,43 +280,49 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           ),
                         ),
 
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: ElevatedButton.icon(
-                            label: const Text('Delete'),
-                            icon: const Icon(Icons.delete),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.red,
+                        Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: ElevatedButton.icon(
+                                label: const Text('Delete'),
+                                icon: const Icon(Icons.delete),
+                                style: ElevatedButton.styleFrom(
+                                  onPrimary: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                onPressed: (() {
+                                  removeSale(widget.thissale.saleID, context);
+                                  Navigator.pop(context);
+                                }),
+                              ),
                             ),
-                            onPressed: (() {removeSale(widget.thissale.saleID, context);
-                            Navigator.pop(context);
-                            }
-
-                            //deletehandler
-                          ),
-                        ),
-                        ),
-
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: ElevatedButton.icon(
-                            label: const Text('Update'),
-                            icon: const Icon(Icons.update),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.yellow,
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: ElevatedButton.icon(
+                                  label: const Text('Update'),
+                                  icon: const Icon(Icons.update),
+                                  style: ElevatedButton.styleFrom(
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    updateSale(
+                                      commentController.text,
+                                      conditionController.text,
+                                      int.parse(priceController.text),
+                                      context,
+                                      widget.thissale.saleID,
+                                    );
+                                    Navigator.pop(context);
+                                  }),
                             ),
-                            onPressed: () { updateSale(
-                                  commentController.text,
-                                  conditionController.text,
-                                  int.parse(priceController.text),
-                                  context,
-                                  widget.thissale.saleID,
-                                );
-                            Navigator.pop(context);
-                            }
-                            //updatehandler
-                          ),
-                        ),
+                          ],
+                        )
                       ],
                     ),
                   ],
@@ -319,9 +340,9 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: sec,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.orange,
         textColor: Colors.white,
-        fontSize: 16.0);
+        fontSize: 26.0);
   }
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
@@ -330,10 +351,6 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
         item,
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ));
-
-  //update Sale handler
-
-  //gör som createsale o anropa updatesale och removesale från salehandler
 
   Future<bool> updateSale(
     String description,
