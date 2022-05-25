@@ -57,7 +57,8 @@ class _ChatPageState extends State<ChatsPage> {
             return ListView.builder(
               itemCount: docs.length,
               itemBuilder: (context, index) {
-                String chatId = (docs[index].data() as Map<String, dynamic>)['chatId'];
+                String chatId =
+                    (docs[index].data() as Map<String, dynamic>)['chatId'];
                 List<dynamic> members =
                     (docs[index].data() as Map<String, dynamic>)['members'];
                 String userId;
@@ -66,6 +67,8 @@ class _ChatPageState extends State<ChatsPage> {
                 userId = members.elementAt(0) == myId
                     ? members.elementAt(1)
                     : members.elementAt(0);
+                String isbn =
+                    (docs[index].data() as Map<String, dynamic>)['saleISBN'];
 
                 return FutureBuilder(
                   future: _getInfo(userId, saleId, chatId, members),
@@ -78,7 +81,9 @@ class _ChatPageState extends State<ChatsPage> {
                       fook.User otherUser = fook.User.fromMap(
                           docSnapUser.data() as Map<String, dynamic>);
                       Sale sale = infoMap['sale'];
-
+                      Book book = infoMap['book'];
+                      String sellerId = infoMap['sellerId'];
+                      String saleISBN = infoMap['saleISBN'];
 
                       if (sale.isbn == '0') {
                         return SizedBox(
@@ -89,34 +94,196 @@ class _ChatPageState extends State<ChatsPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
-                              child: Container(
-                                margin: const EdgeInsets.all(10.0),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Center(
-                                  child: InkWell(
-                                    splashColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    onLongPress: () => _deleteDialog(
-                                        context, chatId),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChatDetailed(infoMap),
+                              child: InkWell(
+                                splashColor:
+                                    Theme.of(context).colorScheme.primary,
+                                onLongPress: () =>
+                                    _deleteDialog(context, chatId),
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatDetailed(infoMap),
+                                  ),
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.all(10.0),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.08,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Flexible(
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: 100,
+                                                decoration: const BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey,
+                                                      offset: Offset(2.0,
+                                                          2.0), // shadow direction: bottom right
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Image.network(book
+                                                    .info
+                                                    .imageLinks[
+                                                        "smallThumbnail"]
+                                                    .toString()),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Flexible(
+                                                child: Text(
+                                                  subtitleExists(
+                                                          book.info.subtitle)
+                                                      ? (book.info.title +
+                                                          ':\n ' +
+                                                          book.info.subtitle)
+                                                      : (book.info.title),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                  softWrap: false,
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              )
+                                            ]),
                                       ),
-                                    ),
-                                    child: Text(
-                                      'The book has been removed',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.02,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.43,
+                                        child: Center(
+                                          child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(children: <
+                                                      TextSpan>[
+                                                    TextSpan(
+                                                        text: sellerId == myId
+                                                            ? "Buyer: "
+                                                            : "Seller: ",
+                                                        style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                            fontSize: 16)),
+                                                    TextSpan(
+                                                        text: (otherUser.name +
+                                                            ' ' +
+                                                            otherUser.lastName),
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black,
+                                                        )),
+                                                  ]),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(children: <
+                                                      TextSpan>[
+                                                    TextSpan(
+                                                        text: "Condition: ",
+                                                        style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                            fontSize: 16)),
+                                                    TextSpan(
+                                                        text: ('Not available'),
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black,
+                                                        )),
+                                                  ]),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(children: <
+                                                      TextSpan>[
+                                                    TextSpan(
+                                                        text: "ISBN: ",
+                                                        style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                            fontSize: 16)),
+                                                    TextSpan(
+                                                        text: (saleISBN),
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black,
+                                                        )),
+                                                  ]),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(children: <
+                                                      TextSpan>[
+                                                    TextSpan(
+                                                        text: "Price: ",
+                                                        style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                            fontSize: 16)),
+                                                    TextSpan(
+                                                        text: ('Not available'),
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black,
+                                                        )),
+                                                  ]),
+                                                ),
+                                              ]),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.17,
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: _timeDivider(
+                                              (docs[index].data() as Map<String,
+                                                  dynamic>)['lastActive']),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ));
                       }
-
-                      Book book = infoMap['book'];
 
                       return SizedBox(
                           height: MediaQuery.of(context).size.height * 0.25,
@@ -129,8 +296,7 @@ class _ChatPageState extends State<ChatsPage> {
                             child: InkWell(
                               splashColor:
                                   Theme.of(context).colorScheme.primary,
-                              onLongPress: () =>
-                                  _deleteDialog(context, chatId),
+                              onLongPress: () => _deleteDialog(context, chatId),
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -349,7 +515,8 @@ class _ChatPageState extends State<ChatsPage> {
   }
 }
 
-_getInfo(String userId, String saleId, String chatId, List<dynamic> members) async {
+_getInfo(
+    String userId, String saleId, String chatId, List<dynamic> members) async {
   Map<String, dynamic> result = {};
   result['otherUser'] =
       await UserHandler.getUserSnapshot(userId, FirebaseFirestore.instance);
@@ -369,12 +536,11 @@ _getInfo(String userId, String saleId, String chatId, List<dynamic> members) asy
   result['sellerId'] = ((documentSnapshotChat.data()
       as Map<String, dynamic>)['sellerId'] as String);
   result['saleId'] = ((documentSnapshotChat.data()
-  as Map<String, dynamic>)['saleId'] as String);
+      as Map<String, dynamic>)['saleId'] as String);
 
   if ((result['sale'] as Sale).isbn != "0") {
     result['book'] = await BookHandler.getBook((result['sale'] as Sale).isbn);
   } else {
-
     result['book'] = await BookHandler.getBook((result['saleISBN'] as String));
   }
 
