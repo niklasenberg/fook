@@ -73,7 +73,9 @@ class _ChatDetailedState extends State<ChatDetailed> {
       key: _scaffKey,
       body: Column(
         children: [
+
           bookBox,
+
           Flexible(
             flex: 75,
             child: _chatBody(userId),

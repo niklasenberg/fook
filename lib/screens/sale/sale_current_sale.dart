@@ -245,7 +245,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           alignment: Alignment.bottomLeft,
                           child: TextField(
                             //pricecontroller ska kunna ändra
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.number, textInputAction: TextInputAction.done,
                             // initialValue: widget.price.toString(),
                             controller: priceController,
                             //kan ej ha controller och initialvalue

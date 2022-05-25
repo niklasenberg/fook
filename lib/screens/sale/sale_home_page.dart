@@ -150,49 +150,4 @@ class _SaleHomePageState extends State<SaleHomePage> {
     result['book'] = await BookHandler.getBook(sale.getIsbn());
     return result;
   }
-
-  /* Widget SaleCard(Sale sale, BuildContext context) {
-    return FutureBuilder(
-        future: BookHandler.getBook(sale.getIsbn()),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Book book = snapshot.data as Book;
-            String a = book.info.imageLinks['smallThumbnail'].toString();
-            return ListTile(
-                leading: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 60,
-                    maxWidth: 60,
-                  ),
-                  child: Image.network(a),
-                ),
-                title: Text('Title: ' + book.info.title),
-                subtitle: Text('ISBN: ' +
-                    sale.getIsbn() +
-                    '\n' +
-                    'Price: ' +
-                    sale.getPrice().toString() +
-                    ':- SEK'),
-                trailing: Text('Condition: ' + sale.condition),
-                dense: true,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SaleCurrentSale(
-                              thisbook: book,
-                              thissale: sale,
-                            )),
-                  );
-                });
-          }
-          return Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(
-                Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          );
-        });
-  }*/
 }

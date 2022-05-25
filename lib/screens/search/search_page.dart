@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:algolia/algolia.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/handlers/course_handler.dart';
-
 import '../../model/book.dart';
 import '../../model/course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../widgets/book_description_page.dart';
 
 class SearchPage extends StatefulWidget {
@@ -17,7 +15,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class AlgoliaApplication {
-  static final Algolia algolia = Algolia.init(
+  static const Algolia algolia = Algolia.init(
     applicationId: '3KLN6AUQBU', //ApplicationID
     apiKey:
         '8a242909fc9a59d15c27ad46bafb9c5c', //search-only api key in flutter code
@@ -25,7 +23,8 @@ class AlgoliaApplication {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  String _searchTerm = "";
+  final TextEditingController _searchController = TextEditingController();
+  String _searchTerm = ""; //TODO: Needed for realtime (?)
   final Algolia _algoliaApp = AlgoliaApplication.algolia;
 
   Future<List<AlgoliaObjectSnapshot>> _operation(String input) async {
@@ -34,6 +33,23 @@ class _SearchPageState extends State<SearchPage> {
     List<AlgoliaObjectSnapshot> results = querySnap.hits;
     return results;
   }
+
+  //TODO: Uncomment for realtime search
+  /*@override
+  void initState() {
+    _searchController.addListener(() {
+      setState(() {
+        _searchTerm = _searchController.text;
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -44,56 +60,69 @@ class _SearchPageState extends State<SearchPage> {
             child: Column(
           children: [
             Container(
-                padding: EdgeInsets.all(4),
-                margin: EdgeInsets.all(4),
+                padding: const EdgeInsets.all(4),
+                margin: const EdgeInsets.all(4),
                 child: TextFormField(
+                  controller: _searchController,
+                  //TODO: Remove below for realtime search
                   onFieldSubmitted: (val) {
-                    //TODO: Change to onChanged for Realtime search
                     setState(() {
-                      _searchTerm = val;
+                      _searchTerm = _searchController.text;
                     });
                   },
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      labelText: "Enter course name or code."),
+                      suffixIcon: _searchController.text.isNotEmpty ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _searchController.clear();
+                          });
+                        },
+                        icon: const Icon(Icons.clear),
+                      ) : null,
+                      prefixIcon: const Icon(Icons.search),
+                      labelText: "ISBN, course name or course code."),
                 )),
             Container(
-              margin: EdgeInsets.all(4),
-              height: MediaQuery.of(context).size.height * 0.65,
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                ),
-                BoxShadow(
-                  color: Colors.white,
-                  spreadRadius: -2.0,
-                  blurRadius: 12.0,
-                ),
-              ], borderRadius: BorderRadius.all(Radius.circular(8))),
+              margin: const EdgeInsets.all(4),
+              height: MediaQuery.of(context).size.height - 250,
+              decoration: BoxDecoration(image: DecorationImage(opacity: 0.1, scale: 4, image: AssetImage("lib/assets/s_logo_o.png",)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0.5, 0.5),
+                      blurRadius: 1,
+                    ),
+                  ], borderRadius: BorderRadius.all(Radius.circular(8)),
+                gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Color(0xffeae6e6),
+                  Color(0xfffafafa),
+                  Color(0xfffaf4f4),
+                  Color(0xffe5e3e3)
+                ],
+              ),),
               child: StreamBuilder<List<AlgoliaObjectSnapshot>>(
-                stream: Stream.fromFuture(_operation(_searchTerm)),
+                stream: Stream.fromFuture(_operation(_searchController.text)),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData || _searchTerm.isEmpty)
-                    return Center(
-                        child: Text(
-                      "Enter your query.",
-                      style: TextStyle(color: Colors.black),
-                    ));
-                  else {
+                  if (!snapshot.hasData || _searchController.text.isEmpty) {
+                    return Center();
+                  } else {
                     List<AlgoliaObjectSnapshot> searchHit = snapshot.data!;
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                         return Container();
                       default:
-                        if (snapshot.hasError)
-                          return new Text('Error: ${snapshot.error}');
-                        else if (searchHit.isNotEmpty) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (searchHit.isNotEmpty) {
                           return ListView.builder(
                               itemCount: searchHit.length,
                               itemBuilder: (context, index) => _getBooks(
                                   searchHit[index].data["shortCode"], context));
                         } else {
-                          return Center(child: Text("No hits. :("));
+                          return const Center(child: Text("No hits. :("));
                         }
                     }
                   }
@@ -110,7 +139,7 @@ _getBooks(String shortCode, BuildContext context) {
       future: _getCurrentBooks(shortCode),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container(
+          return SizedBox(
             width: double.infinity,
             height: 150,
             child: Center(
@@ -128,7 +157,7 @@ _getBooks(String shortCode, BuildContext context) {
               itemBuilder: (context, index) =>
                   BookCard(shortCode, books[index], context));
         }
-        return Container(
+        return SizedBox(
           width: double.infinity,
           height: 150,
           child: Center(
@@ -141,7 +170,7 @@ _getBooks(String shortCode, BuildContext context) {
 }
 
 Widget BookCard(String shortCode, Book book, context) {
-  Color background = Colors.grey.shade300;
+  Color background = Colors.white;
   Color fill = Colors.white;
   final List<Color> gradient = [
     background,
@@ -159,13 +188,15 @@ Widget BookCard(String shortCode, Book book, context) {
               builder: (context) => BookDescription(book, shortCode))),
       child: Container(
           decoration: BoxDecoration(
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
-                offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                offset: Offset(1.0, 1.0), // shadow direction: bottom right
+                blurRadius: 2,
+                spreadRadius: 0.5,
               ),
             ],
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(5),
             gradient: LinearGradient(
               colors: gradient,
               stops: stops,
@@ -180,24 +211,19 @@ Widget BookCard(String shortCode, Book book, context) {
             children: [
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(
-                              2.0, 2.0), // shadow direction: bottom right
-                        ),
-                      ],
-                    ),
                     height: 130,
-                    child: Image.network(
-                        book.info.imageLinks["smallThumbnail"].toString()),
+                    child: book.info.imageLinks["smallThumbnail"] != null ? Image.network(
+                        book.info.imageLinks["smallThumbnail"].toString()) : Image.asset(
+                        "lib/assets/placeholderthumbnail.png",
+                      width: 70,
+                      height: 3,
+                    ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   // Texts
@@ -209,7 +235,7 @@ Widget BookCard(String shortCode, Book book, context) {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -219,10 +245,12 @@ Widget BookCard(String shortCode, Book book, context) {
                                   child: RichText(
                                     text: TextSpan(children: <TextSpan>[
                                       TextSpan(
-                                          text: (book.info.title +
-                                                  ": " +
-                                                  book.info.subtitle)
-                                              .toUpperCase(),
+                                          text: book.info.subtitle.isNotEmpty
+                                              ? (book.info.title +
+                                                      ": " +
+                                                      book.info.subtitle)
+                                                  .toUpperCase()
+                                              : book.info.title.toUpperCase(),
                                           style: const TextStyle(
                                             fontSize: 12,
                                             color: Colors.black,
@@ -232,7 +260,7 @@ Widget BookCard(String shortCode, Book book, context) {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -258,7 +286,7 @@ Widget BookCard(String shortCode, Book book, context) {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                           ],
@@ -278,7 +306,7 @@ Future<List<Book>> _getCurrentBooks(String shortCode) async {
   List<Book> books = [];
   for (String isbn in course.getCurrentIsbns()) {
     List<Book> result = await BookHandler.getBooks(isbn);
-    if(result.isNotEmpty){
+    if (result.isNotEmpty) {
       books.add(result[0]);
     }
   }
