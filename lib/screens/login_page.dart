@@ -18,12 +18,18 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatelessWidget {
-  LoginForm({Key? key}) : super(key: key);
+class LoginForm extends StatefulWidget {
+  const LoginForm({Key? key}) : super(key: key);
 
+  @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
   final emailCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool termsAgreed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +55,27 @@ class LoginForm extends StatelessWidget {
           return SingleChildScrollView(
             child: Form(
               key: _formKey,
-              child: Column(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.5, 0.5),
+                    blurRadius: 1,
+                  ),
+                ], borderRadius: BorderRadius.all(Radius.circular(8)),
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color(0xffeae6e6),
+                    Color(0xfffafafa),
+                    Color(0xfffaf4f4),
+                    Color(0xffe5e3e3)
+                  ],
+                ),),child: Column(
                 children: [
                   SizedBox(
                     width: 300.0,
@@ -71,7 +97,7 @@ class LoginForm extends StatelessWidget {
                         'Sign in with Daisy',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).highlightColor,
                             fontFamily: 'Roboto',
                             fontSize: 20.0),
                       ),
@@ -96,7 +122,7 @@ class LoginForm extends StatelessWidget {
                               labelText: 'Username',
                             ),
                             style: TextStyle(
-                                color: Theme.of(context).primaryColor),
+                                color: Theme.of(context).highlightColor),
                             controller: emailCtrl),
                       ),
                       const Padding(
@@ -114,26 +140,43 @@ class LoginForm extends StatelessWidget {
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(25))),
+                                  BorderRadius.all(Radius.circular(25))),
                               labelText: 'Password',
                             ),
                             style: TextStyle(
-                                color: Theme.of(context).primaryColor),
+                                color: Theme.of(context).highlightColor),
                             controller: passwordCtrl),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(width: 350,
+                          child: ListTile(
+                            leading: Checkbox(
+                              activeColor: Theme.of(context).highlightColor,
+                              value: termsAgreed,
+                              onChanged: (nValue) {
+                                setState(() {
+                                  termsAgreed = nValue!;
+                                });
+                              },
+
+                            ),
+                            title: Text("I agree to the terms and conditions", style: TextStyle(color: Theme.of(context).highlightColor)),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  const Padding(padding: EdgeInsets.symmetric(vertical: 16.0)),
                   ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
+                      if (_formKey.currentState!.validate() && termsAgreed) {
                         controller.setEmailAndPassword(
                           emailCtrl.text + '@test.com',
                           passwordCtrl.text,
                         );
                       }
                     },
-                    child: const Text('Sign in'),
+                    child: const Text('Sign in', style: TextStyle(color: Colors.white),),
                     style: ElevatedButton.styleFrom(
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(25))),
@@ -142,7 +185,7 @@ class LoginForm extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
+              ),)
             ),
           );
         } else if (state is SigningIn) {
