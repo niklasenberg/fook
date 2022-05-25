@@ -144,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
             contentPadding: EdgeInsets.only(top: 10.0),
             content: Container(
               width: MediaQuery.of(context).size.width * 0.5,
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.4,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
