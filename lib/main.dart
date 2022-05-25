@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           highlightColor: fookRed,
           splashColor: CustomColors.createMaterialColor(const Color(0xFFE5E5E5)),
           backgroundColor: CustomColors.createMaterialColor(const Color(0xFFFFFFFF)),
-          cardColor: CustomColors.createMaterialColor(const Color(0xFFE5E5E5)),
+          cardColor: Colors.white,
           fontFamily: 'Roboto',
           inputDecorationTheme: const InputDecorationTheme(
             labelStyle:

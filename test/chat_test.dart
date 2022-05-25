@@ -23,7 +23,7 @@ void main() {
     });
 
     test('Get chat', () async {
-      dynamic chat = await ChatHandler.getChat('1', '2', '3', firestore);
+      dynamic chat = await ChatHandler.getChat('1', firestore);
 
       StreamBuilder(
           stream: chat,
@@ -36,7 +36,7 @@ void main() {
     });
 
     test('Get chats', () async {
-      dynamic chat = await ChatHandler.getChat('1', '2', '3', firestore);
+      dynamic chat = await ChatHandler.getChat('1', firestore);
 
       StreamBuilder(
           stream: chat,
@@ -54,13 +54,13 @@ void main() {
 
     test('Check for existing chat', () async {
       await ChatHandler.sendMessage(
-          '1', '2', '3', true, 'hej', "anders", firestore);
+          '1', '2', '3', true, 'hej', "anders", 'enSale', 'ettISBN', firestore);
       expect(await ChatHandler.checkChatExists('1', '2', '3', firestore), true);
     });
 
     test('Send message', () async {
       await ChatHandler.sendMessage(
-          '3', '4', '5', true, 'hej', "anders", firestore);
+          '3', '4', '5', true, 'hej', "anders", 'enSale', 'ettISBN', firestore);
 
       QuerySnapshot query = await firestore
           .collection('chats')

@@ -39,8 +39,11 @@ class SaleHandler {
         .collection('sales')
         .where('saleID', isEqualTo: saleID)
         .get();
-
-    return Sale.fromMap(query.docs[0].data() as Map<String, dynamic>);
+    if(query.docs.isNotEmpty) {
+      return Sale.fromMap(query.docs[0].data() as Map<String, dynamic>);
+    } else {
+      return Sale(isbn: '0', userID: 'userID', courses: [], condition: '1/5', price: 0, saleID: 'saleID', description: 'removed');
+    }
   }
 
   //get sales for isbn
@@ -202,5 +205,12 @@ class SaleHandler {
   //removeSale for all usersxxx
   static void removeSale(FirebaseFirestore firestore, String saleID) async {
     await firestore.collection('sales').doc(saleID).delete();
+  }
+  static bool isSaleRemoved(Sale sale){
+
+    if(sale.isbn == 0){
+      return true;
+    }
+    return false;
   }
 }
