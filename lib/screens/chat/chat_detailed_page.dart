@@ -73,12 +73,40 @@ class _ChatDetailedState extends State<ChatDetailed> {
       key: _scaffKey,
       body: Column(
         children: [
-
           bookBox,
-
           Flexible(
             flex: 75,
-            child: _chatBody(userId),
+            child: Container(
+              margin: const EdgeInsets.all(4),
+              height: MediaQuery.of(context).size.height - 250,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                    opacity: 0.025,
+                    scale: 1,
+                    image: AssetImage(
+                      "lib/assets/chat_vector.png",
+                    )),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.5, 0.5),
+                    blurRadius: 1,
+                  ),
+                ],
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color(0xffeae6e6),
+                    Color(0xfffafafa),
+                    Color(0xfffaf4f4),
+                    Color(0xffe5e3e3)
+                  ],
+                ),
+              ),
+              child: _chatBody(userId),
+            ),
           ),
           const Divider(
             height: 1.0,
@@ -221,15 +249,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                   Container(
                     margin: EdgeInsets.all(4),
                     height: 50,
-                    decoration: const BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(
-                              2.0, 2.0), // shadow direction: bottom right
-                        ),
-                      ],
-                    ),
+                    decoration: const BoxDecoration(),
                     child: Image.network(
                         book.info.imageLinks["smallThumbnail"].toString()),
                   ),
@@ -357,15 +377,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                   Container(
                     margin: EdgeInsets.all(4),
                     height: 50,
-                    decoration: const BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(
-                              2.0, 2.0), // shadow direction: bottom right
-                        ),
-                      ],
-                    ),
+                    decoration: const BoxDecoration(),
                     child: Image.network(
                         book.info.imageLinks["smallThumbnail"].toString()),
                   ),
@@ -483,66 +495,50 @@ class _ChatDetailedState extends State<ChatDetailed> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!.docs.isNotEmpty
-              ? Container(
-                  padding: const EdgeInsets.all(4),
-                  margin: const EdgeInsets.all(8),
-                  height: MediaQuery.of(context).size.height * 0.75,
-                  decoration: const BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                    ),
-                    BoxShadow(
-                      color: Colors.white,
-                      spreadRadius: -2.0,
-                      blurRadius: 12.0,
-                    ),
-                  ], borderRadius: BorderRadius.all(Radius.circular(8))),
-                  child: ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    reverse: true,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot message = snapshot.data!.docs[index];
-                      if (snapshot.data!.docs.length == 1) {
-                        return Column(
-                          children: [
-                            _timeDivider((message.data()
-                                as Map<String, dynamic>)['time']),
-                            _messageItem(message, context),
-                          ],
-                        );
-                      }
-                      if (index == 0) {
-                        past = (message.data() as Map<String, dynamic>)['time'];
-                        return _messageItem(message, context);
-                      }
-                      Timestamp toPass = past;
-                      if (index == snapshot.data!.docs.length - 1) {
-                        return Column(
-                          children: [
-                            _timeDivider((message.data()
-                                as Map<String, dynamic>)['time']),
-                            _messageItem(message, context),
-                            if (!sameDay(
-                                toPass,
-                                (message.data()
-                                    as Map<String, dynamic>)['time']))
-                              _timeDivider(toPass),
-                          ],
-                        );
-                      }
+              ? ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  reverse: true,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot message = snapshot.data!.docs[index];
+                    if (snapshot.data!.docs.length == 1) {
+                      return Column(
+                        children: [
+                          _timeDivider(
+                              (message.data() as Map<String, dynamic>)['time']),
+                          _messageItem(message, context),
+                        ],
+                      );
+                    }
+                    if (index == 0) {
                       past = (message.data() as Map<String, dynamic>)['time'];
-                      return sameDay(
-                              (message.data() as Map<String, dynamic>)['time'],
-                              toPass)
-                          ? _messageItem(message, context)
-                          : Column(
-                              children: [
-                                _messageItem(message, context),
-                                _timeDivider(toPass),
-                              ],
-                            );
-                    },
-                  ))
+                      return _messageItem(message, context);
+                    }
+                    Timestamp toPass = past;
+                    if (index == snapshot.data!.docs.length - 1) {
+                      return Column(
+                        children: [
+                          _timeDivider(
+                              (message.data() as Map<String, dynamic>)['time']),
+                          _messageItem(message, context),
+                          if (!sameDay(toPass,
+                              (message.data() as Map<String, dynamic>)['time']))
+                            _timeDivider(toPass),
+                        ],
+                      );
+                    }
+                    past = (message.data() as Map<String, dynamic>)['time'];
+                    return sameDay(
+                            (message.data() as Map<String, dynamic>)['time'],
+                            toPass)
+                        ? _messageItem(message, context)
+                        : Column(
+                            children: [
+                              _messageItem(message, context),
+                              _timeDivider(toPass),
+                            ],
+                          );
+                  },
+                )
               : const Center(child: Text("No messages yet!"));
         }
         return const Center(
@@ -609,7 +605,9 @@ class _ChatDetailedState extends State<ChatDetailed> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                ttime.hour.toString() + ":" + ttime.minute.toString(),
+                isDoubleDigit(ttime)
+                    ? ttime.hour.toString() + ":" + ttime.minute.toString()
+                    : ttime.hour.toString() + ":" '0' + ttime.minute.toString(),
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 12.0,
@@ -646,6 +644,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
         ),
       );
     }
+
     /*return FutureBuilder(
       future: ChatHandler.getURLforImage(message.data()['photo'].toString()),
       builder: (context, snapshot) {
@@ -726,6 +725,14 @@ class _ChatDetailedState extends State<ChatDetailed> {
         );
       },
     );*/
+  }
+
+  bool isDoubleDigit(DateTime ttime) {
+    if (ttime.minute < 10) {
+      return false;
+    }
+
+    return true;
   }
 
 /*Widget _buildPopUpImagePicker(context) {

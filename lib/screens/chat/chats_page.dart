@@ -43,60 +43,303 @@ class _ChatPageState extends State<ChatsPage> {
           centerTitle: true,
           backgroundColor: Colors.white),
       // key: _scaffKey,
-      body: StreamBuilder(
-        stream: ChatHandler.getChats(myId, FirebaseFirestore.instance),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            QuerySnapshot qSnap = snapshot.data as QuerySnapshot;
-            List<DocumentSnapshot> docs = qSnap.docs;
-            if (docs.isEmpty) {
-              return const Center(
-                child: Text('No Chats yet!'),
-              );
-            }
-            return ListView.builder(
-              itemCount: docs.length,
-              itemBuilder: (context, index) {
-                String chatId =
-                    (docs[index].data() as Map<String, dynamic>)['chatId'];
-                List<dynamic> members =
-                    (docs[index].data() as Map<String, dynamic>)['members'];
-                String userId;
-                String saleId =
-                    (docs[index].data() as Map<String, dynamic>)['saleId'];
-                userId = members.elementAt(0) == myId
-                    ? members.elementAt(1)
-                    : members.elementAt(0);
-                String isbn =
-                    (docs[index].data() as Map<String, dynamic>)['saleISBN'];
+      body: Container(
+        margin: const EdgeInsets.all(4),
+        height: MediaQuery.of(context).size.height - 250,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              opacity: 0.025,
+              scale: 1,
+              image: AssetImage(
+                "lib/assets/chat_vector.png",
+              )),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0.5, 0.5),
+              blurRadius: 1,
+            ),
+          ],
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color(0xffeae6e6),
+              Color(0xfffafafa),
+              Color(0xfffaf4f4),
+              Color(0xffe5e3e3)
+            ],
+          ),
+        ),
+        child: StreamBuilder(
+          stream: ChatHandler.getChats(myId, FirebaseFirestore.instance),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              QuerySnapshot qSnap = snapshot.data as QuerySnapshot;
+              List<DocumentSnapshot> docs = qSnap.docs;
+              if (docs.isEmpty) {
+                return const Center(
+                  child: Text('No Chats yet!'),
+                );
+              }
+              return ListView.builder(
+                itemCount: docs.length,
+                itemBuilder: (context, index) {
+                  String chatId =
+                      (docs[index].data() as Map<String, dynamic>)['chatId'];
+                  List<dynamic> members =
+                      (docs[index].data() as Map<String, dynamic>)['members'];
+                  String userId;
+                  String saleId =
+                      (docs[index].data() as Map<String, dynamic>)['saleId'];
+                  userId = members.elementAt(0) == myId
+                      ? members.elementAt(1)
+                      : members.elementAt(0);
+                  String isbn =
+                      (docs[index].data() as Map<String, dynamic>)['saleISBN'];
 
-                return FutureBuilder(
-                  future: _getInfo(userId, saleId, chatId, members),
-                  builder: (context, _snapshot) {
-                    if (_snapshot.hasData) {
-                      Map<String, dynamic> infoMap =
-                          (_snapshot.data as Map<String, dynamic>);
-                      DocumentSnapshot docSnapUser =
-                          infoMap['otherUser'] as DocumentSnapshot;
-                      fook.User otherUser = fook.User.fromMap(
-                          docSnapUser.data() as Map<String, dynamic>);
-                      Sale sale = infoMap['sale'];
-                      Book book = infoMap['book'];
-                      String sellerId = infoMap['sellerId'];
-                      String saleISBN = infoMap['saleISBN'];
+                  return FutureBuilder(
+                    future: _getInfo(userId, saleId, chatId, members),
+                    builder: (context, _snapshot) {
+                      if (_snapshot.hasData) {
+                        Map<String, dynamic> infoMap =
+                            (_snapshot.data as Map<String, dynamic>);
+                        DocumentSnapshot docSnapUser =
+                            infoMap['otherUser'] as DocumentSnapshot;
+                        fook.User otherUser = fook.User.fromMap(
+                            docSnapUser.data() as Map<String, dynamic>);
+                        Sale sale = infoMap['sale'];
+                        Book book = infoMap['book'];
+                        String sellerId = infoMap['sellerId'];
+                        String saleISBN = infoMap['saleISBN'];
 
-                      if (sale.isbn == '0') {
+                        if (sale.isbn == '0') {
+                          return SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              child: Card(
+                                margin: const EdgeInsets.all(8.0),
+                                elevation: 8.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                child: InkWell(
+                                  splashColor:
+                                      Theme.of(context).highlightColor,
+                                  onLongPress: () =>
+                                      _deleteDialog(context, chatId),
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChatDetailed(infoMap),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    margin: const EdgeInsets.all(10.0),
+                                    height: MediaQuery.of(context).size.height *
+                                        0.08,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  height: 100,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey,
+                                                        offset: Offset(2.0,
+                                                            2.0), // shadow direction: bottom right
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Image.network(book
+                                                      .info
+                                                      .imageLinks[
+                                                          "smallThumbnail"]
+                                                      .toString()),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Flexible(
+                                                  child: Text(
+                                                    subtitleExists(
+                                                            book.info.subtitle)
+                                                        ? (book.info.title +
+                                                            ':\n ' +
+                                                            book.info.subtitle)
+                                                        : (book.info.title),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 2,
+                                                    softWrap: false,
+                                                    textAlign: TextAlign.center,
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                )
+                                              ]),
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.02,
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.43,
+                                          child: Center(
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  RichText(
+                                                    text: TextSpan(children: <
+                                                        TextSpan>[
+                                                      TextSpan(
+                                                          text: sellerId == myId
+                                                              ? "Buyer: "
+                                                              : "Seller: ",
+                                                          style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                              fontSize: 16)),
+                                                      TextSpan(
+                                                          text: (otherUser
+                                                                  .name +
+                                                              ' ' +
+                                                              otherUser
+                                                                  .lastName),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.black,
+                                                          )),
+                                                    ]),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  RichText(
+                                                    text: TextSpan(children: <
+                                                        TextSpan>[
+                                                      TextSpan(
+                                                          text: "Condition: ",
+                                                          style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                              fontSize: 16)),
+                                                      TextSpan(
+                                                          text:
+                                                              ('Not available'),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.black,
+                                                          )),
+                                                    ]),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  RichText(
+                                                    text: TextSpan(children: <
+                                                        TextSpan>[
+                                                      TextSpan(
+                                                          text: "ISBN: ",
+                                                          style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                              fontSize: 16)),
+                                                      TextSpan(
+                                                          text: (saleISBN),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.black,
+                                                          )),
+                                                    ]),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  RichText(
+                                                    text: TextSpan(children: <
+                                                        TextSpan>[
+                                                      TextSpan(
+                                                          text: "Price: ",
+                                                          style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                              fontSize: 16)),
+                                                      TextSpan(
+                                                          text:
+                                                              ('Not available'),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.black,
+                                                          )),
+                                                    ]),
+                                                  ),
+                                                ]),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.20,
+                                          child: Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: Flexible ( child: _timeDivider(
+                                                (docs[index].data() as Map<
+                                                    String,
+                                                    dynamic>)['lastActive']),)
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ));
+                        }
+
                         return SizedBox(
                             height: MediaQuery.of(context).size.height * 0.25,
                             child: Card(
                               margin: const EdgeInsets.all(8.0),
                               elevation: 8.0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
+                                borderRadius: BorderRadius.circular(4.0),
                               ),
                               child: InkWell(
                                 splashColor:
-                                    Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).highlightColor,
                                 onLongPress: () =>
                                     _deleteDialog(context, chatId),
                                 onTap: () => Navigator.push(
@@ -132,11 +375,16 @@ class _ChatPageState extends State<ChatsPage> {
                                                     ),
                                                   ],
                                                 ),
-                                                child: Image.network(book
-                                                    .info
-                                                    .imageLinks[
-                                                        "smallThumbnail"]
-                                                    .toString()),
+                                                child: book.info.imageLinks[
+                                                            "smallThumbnail"] !=
+                                                        null
+                                                    ? Image.network(book
+                                                        .info
+                                                        .imageLinks[
+                                                            "smallThumbnail"]
+                                                        .toString())
+                                                    : Image.asset(
+                                                        "lib/assets/placeholderthumbnail.png"),
                                               ),
                                               const SizedBox(height: 5),
                                               Flexible(
@@ -183,9 +431,10 @@ class _ChatPageState extends State<ChatsPage> {
                                                   text: TextSpan(children: <
                                                       TextSpan>[
                                                     TextSpan(
-                                                        text: sellerId == myId
-                                                            ? "Buyer: "
-                                                            : "Seller: ",
+                                                        text:
+                                                            sale.userID == myId
+                                                                ? "Buyer: "
+                                                                : "Seller: ",
                                                         style: TextStyle(
                                                             color: Theme.of(
                                                                     context)
@@ -215,7 +464,8 @@ class _ChatPageState extends State<ChatsPage> {
                                                                 .primaryColor,
                                                             fontSize: 16)),
                                                     TextSpan(
-                                                        text: ('Not available'),
+                                                        text: (sale.condition)
+                                                            .toUpperCase(),
                                                         style: const TextStyle(
                                                           fontSize: 16,
                                                           color: Colors.black,
@@ -226,43 +476,49 @@ class _ChatPageState extends State<ChatsPage> {
                                                   height: 5,
                                                 ),
                                                 RichText(
-                                                  text: TextSpan(children: <
-                                                      TextSpan>[
-                                                    TextSpan(
-                                                        text: "ISBN: ",
-                                                        style: TextStyle(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor,
-                                                            fontSize: 16)),
-                                                    TextSpan(
-                                                        text: (saleISBN),
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.black,
-                                                        )),
-                                                  ]),
+                                                  text: TextSpan(
+                                                      children: <TextSpan>[
+                                                        TextSpan(
+                                                            text: "ISBN: ",
+                                                            style: TextStyle(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .primaryColor,
+                                                                fontSize: 16)),
+                                                        TextSpan(
+                                                            text: (sale.isbn)
+                                                                .toUpperCase(),
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black,
+                                                            )),
+                                                      ]),
                                                 ),
                                                 const SizedBox(
                                                   height: 5,
                                                 ),
                                                 RichText(
-                                                  text: TextSpan(children: <
-                                                      TextSpan>[
-                                                    TextSpan(
-                                                        text: "Price: ",
-                                                        style: TextStyle(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor,
-                                                            fontSize: 16)),
-                                                    TextSpan(
-                                                        text: ('Not available'),
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.black,
-                                                        )),
-                                                  ]),
+                                                  text: TextSpan(
+                                                      children: <TextSpan>[
+                                                        TextSpan(
+                                                            text: "Price: ",
+                                                            style: TextStyle(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .primaryColor,
+                                                                fontSize: 16)),
+                                                        TextSpan(
+                                                            text: (sale.price)
+                                                                .toString(),
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black,
+                                                            )),
+                                                      ]),
                                                 ),
                                               ]),
                                         ),
@@ -285,231 +541,38 @@ class _ChatPageState extends State<ChatsPage> {
                             ));
                       }
 
-                      return SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.25,
-                          child: Card(
-                            margin: const EdgeInsets.all(8.0),
-                            elevation: 8.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: InkWell(
-                              splashColor:
-                                  Theme.of(context).colorScheme.primary,
-                              onLongPress: () => _deleteDialog(context, chatId),
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatDetailed(infoMap),
-                                ),
+                      return Card(
+                        margin: const EdgeInsets.all(8.0),
+                        elevation: 8.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.all(10.0),
+                          height: MediaQuery.of(context).size.height * 0.08,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(
+                                Theme.of(context).colorScheme.primary,
                               ),
-                              child: Container(
-                                margin: const EdgeInsets.all(10.0),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 100,
-                                              decoration: const BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey,
-                                                    offset: Offset(2.0,
-                                                        2.0), // shadow direction: bottom right
-                                                  ),
-                                                ],
-                                              ),
-                                              child: book.info.imageLinks["smallThumbnail"] != null ? Image.network(
-                                                  book.info.imageLinks["smallThumbnail"].toString()) : Image.asset(
-                                                "lib/assets/placeholderthumbnail.png"),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            Flexible(
-                                              child: Text(
-                                                subtitleExists(
-                                                        book.info.subtitle)
-                                                    ? (book.info.title +
-                                                        ':\n ' +
-                                                        book.info.subtitle)
-                                                    : (book.info.title),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                                softWrap: false,
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            )
-                                          ]),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.02,
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.43,
-                                      child: Center(
-                                        child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              RichText(
-                                                text: TextSpan(children: <
-                                                    TextSpan>[
-                                                  TextSpan(
-                                                      text: sale.userID == myId
-                                                          ? "Buyer: "
-                                                          : "Seller: ",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          fontSize: 16)),
-                                                  TextSpan(
-                                                      text: (otherUser.name +
-                                                          ' ' +
-                                                          otherUser.lastName),
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      )),
-                                                ]),
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              RichText(
-                                                text: TextSpan(children: <
-                                                    TextSpan>[
-                                                  TextSpan(
-                                                      text: "Condition: ",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          fontSize: 16)),
-                                                  TextSpan(
-                                                      text: (sale.condition)
-                                                          .toUpperCase(),
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      )),
-                                                ]),
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              RichText(
-                                                text: TextSpan(children: <
-                                                    TextSpan>[
-                                                  TextSpan(
-                                                      text: "ISBN: ",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          fontSize: 16)),
-                                                  TextSpan(
-                                                      text: (sale.isbn)
-                                                          .toUpperCase(),
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      )),
-                                                ]),
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              RichText(
-                                                text: TextSpan(children: <
-                                                    TextSpan>[
-                                                  TextSpan(
-                                                      text: "Price: ",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          fontSize: 16)),
-                                                  TextSpan(
-                                                      text: (sale.price)
-                                                          .toString(),
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      )),
-                                                ]),
-                                              ),
-                                            ]),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.17,
-                                      child: Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: _timeDivider((docs[index].data()
-                                                as Map<String, dynamic>)[
-                                            'lastActive']),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ));
-                    }
-
-                    return Card(
-                      margin: const EdgeInsets.all(8.0),
-                      elevation: 8.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Container(
-                        margin: const EdgeInsets.all(10.0),
-                        height: MediaQuery.of(context).size.height * 0.08,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(
-                              Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          }
-          return Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(
-                Theme.of(context).colorScheme.primary,
+                      );
+                    },
+                  );
+                },
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(
+                  Theme.of(context).colorScheme.primary,
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -561,13 +624,16 @@ Widget _timeDivider(Timestamp time) {
   DateTime t = time.toDate();
   DateTime press = DateTime.now();
   if (press.year == t.year && press.month == t.month && press.day == t.day) {
-    return Text(t.hour.toString() + ":" + t.minute.toString());
+    if(t.minute < 10){
+      return Text(t.hour.toString() + ":" + '0' + t.minute.toString(),);
+    }
+    return Text(t.hour.toString() + ":" + t.minute.toString(),);
   }
   return Text(t.day.toString() +
       '/' +
       (t.month + 1).toString() +
       '/' +
-      t.year.toString());
+      t.year.toString(),);
 }
 
 Future<void> _deleteDialog(BuildContext context, chatId) async {
