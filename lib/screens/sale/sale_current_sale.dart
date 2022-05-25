@@ -245,7 +245,8 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           alignment: Alignment.bottomLeft,
                           child: TextField(
                             //pricecontroller ska kunna ändra
-                            keyboardType: TextInputType.number, textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.done,
                             // initialValue: widget.price.toString(),
                             controller: priceController,
                             //kan ej ha controller och initialvalue
@@ -294,8 +295,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                                   ),
                                 ),
                                 onPressed: (() {
-                                  removeSale(widget.thissale.saleID, context);
-                                  Navigator.pop(context);
+                                  showAlertDialog(context);
                                 }),
                               ),
                             ),
@@ -330,6 +330,42 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
           ]),
         ))),
       );
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget yesButton = TextButton(
+      child: const Text("Yes"),
+      onPressed: () {
+        removeSale(widget.thissale.saleID, context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+    );
+    Widget noButton = TextButton(
+      child: const Text("No"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Delte?"),
+      content: const Text("Would you like to delete this sale?"),
+      actions: [
+        yesButton,
+        noButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   toastMessage(
     String toastMessage,
