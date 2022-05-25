@@ -27,6 +27,7 @@ class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
               'lib/assets/logo_w.png',
               height: 50,
             )),
+        
         centerTitle: true,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
