@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatHandler {
   
-  static getChat(
-      String userId, String myId, saleId, FirebaseFirestore firestore) {
-    String chatId = generateChatId(userId, myId, saleId);
+  static getChat(String chatId, FirebaseFirestore firestore) {
+
     return firestore
         .collection('chats')
         .doc(chatId)
@@ -49,7 +48,7 @@ class ChatHandler {
   }
 
   static sendMessage(String to, String from, String saleId, bool isText,
-      String msg, String senderName, FirebaseFirestore firestore) async {
+      String msg, String senderName, String sellerId, String saleISBN, FirebaseFirestore firestore) async {
     bool existsOrNot = await checkChatExists(to, from, saleId, firestore);
     String chatId = generateChatId(from, to, saleId);
     Timestamp now = Timestamp.now();
@@ -89,7 +88,9 @@ class ChatHandler {
         'lastActive': now,
         'members': members,
         'saleId': saleId,
-        'chatId': chatId
+        'chatId': chatId,
+        'saleISBN': saleISBN,
+        'sellerId': sellerId,
       });
     } else {
       await firestore
@@ -146,4 +147,9 @@ class ChatHandler {
     StorageReference pathReference = sRef.child(imagePath);
     return await pathReference.getDownloadURL();
   }*/
+
+static String getOldSaleId(String chatId){
+  List<String> result = chatId.split('-');
+  return result[2];
+}
 }

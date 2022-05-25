@@ -85,7 +85,7 @@ class _SearchPageState extends State<SearchPage> {
             Container(
               margin: const EdgeInsets.all(4),
               height: MediaQuery.of(context).size.height - 250,
-              decoration: BoxDecoration(image: DecorationImage(opacity: 0.1, scale: 4, image: AssetImage("lib/assets/s_logo_o.png",)),
+              decoration: const BoxDecoration(image: DecorationImage(opacity: 0.1, scale: 4, image: AssetImage("lib/assets/s_logo_o.png",)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey,

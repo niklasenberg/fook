@@ -134,22 +134,35 @@ class _SaleDescriptionState extends State<SaleDescription> {
                             borderRadius: BorderRadius.circular(15.0)),
                         onPressed: () async {
                           String myId = FirebaseAuth.instance.currentUser!.uid;
-                          if(myId != widget.sale.userID){//Dorra    Om man själv inte är ägare till annonsen
-                            
-                            if(await ChatHandler.checkChatExists(myId, widget.sale.userID, widget.sale.saleID, FirebaseFirestore.instance) == true){
+                          if (myId != widget.sale.userID) {
+                            //Dorra    Om man själv inte är ägare till annonsen
+
+                            if (await ChatHandler.checkChatExists(
+                                    myId,
+                                    widget.sale.userID,
+                                    widget.sale.saleID,
+                                    FirebaseFirestore.instance) ==
+                                true) {
                               //Hämta chatID, Hoppa till chatten, khalas
-                              String chatID = ChatHandler.generateChatId(myId, widget.sale.userID, widget.sale.saleID);//Behöver man ens denna?
-                              Map<String, dynamic> infoMap = await _getChatInfo(widget.sale.userID, widget.sale.saleID);
-                               Navigator.push(
+                              String chatID = ChatHandler.generateChatId(
+                                  myId,
+                                  widget.sale.userID,
+                                  widget.sale.saleID); //Behöver man ens denna?
+                              Map<String, dynamic> infoMap = await _getChatInfo(
+                                  widget.sale.userID, widget.sale.saleID, chatID);
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ChatDetailed(infoMap),
                                 ),
-                              );}
-                              else{
+                              );
+                            } else {
                               //Generera nytt chatID och chatt, förifyll medd, khalas
-                              ChatHandler.generateChatId(myId, widget.sale.userID, widget.sale.saleID);
-                              Map<String, dynamic> infoMap = await _getChatInfo(widget.sale.userID, widget.sale.saleID);
+                             String chatId = ChatHandler.generateChatId(
+                                  myId, widget.sale.userID, widget.sale.saleID);
+                              Map<String, dynamic> infoMap = await _getChatInfo(
+                                  widget.sale.userID, widget.sale.saleID, chatId);
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -157,7 +170,7 @@ class _SaleDescriptionState extends State<SaleDescription> {
                                 ),
                               );
                             }
-                          }else{
+                          } else {
                             toastMessage("This is your book!", 2);
                           }
                         },
@@ -248,7 +261,8 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Flexible(
-                                  child: RichText(overflow: TextOverflow.ellipsis,
+                                  child: RichText(
+                                    overflow: TextOverflow.ellipsis,
                                     text: TextSpan(children: <TextSpan>[
                                       TextSpan(
                                           text: (book.info.title +
@@ -271,33 +285,39 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Flexible(
-                                  child: FutureBuilder(future: _isCurrent(sale.isbn, sale.courses),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      bool current = snapshot.data as bool;
-                                      return RichText(
-                                        text: TextSpan(children: <TextSpan>[
-                                          const TextSpan(
-                                              text: "ISBN: ",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12)),
-                                          TextSpan(
-                                              text: current
-                                                  ? sale.isbn
-                                                  : sale.isbn +
-                                                  " OBS! Äldre upplaga",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: current ? Colors.black : Colors.red,
-                                              )),
-                                        ]),
-                                      );
-                                    } return Container();
-                                  }
-                                  )
-                                ),
+                                    child: FutureBuilder(
+                                        future:
+                                            _isCurrent(sale.isbn, sale.courses),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            bool current =
+                                                snapshot.data as bool;
+                                            return RichText(
+                                              text:
+                                                  TextSpan(children: <TextSpan>[
+                                                const TextSpan(
+                                                    text: "ISBN: ",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12)),
+                                                TextSpan(
+                                                    text: current
+                                                        ? sale.isbn
+                                                        : sale.isbn +
+                                                            " OBS! Äldre upplaga",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: current
+                                                          ? Colors.black
+                                                          : Colors.red,
+                                                    )),
+                                              ]),
+                                            );
+                                          }
+                                          return Container();
+                                        })),
                               ],
                             ),
                             const SizedBox(
@@ -382,10 +402,10 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
   );
 }
 
-_getChatInfo(String userId, String saleId) async {
+_getChatInfo(String userId, String saleId, String chatId) async {
   Map<String, dynamic> result = {};
-  result['otherUser'] =
-      await UserHandler.getUserSnapshot(userId, FirebaseFirestore.instance);        //userID = andra anv
+  result['otherUser'] = await UserHandler.getUserSnapshot(
+      userId, FirebaseFirestore.instance); //userID = andra anv
   result['photoUrl'] =
       await UserHandler.getPhotoUrl(userId, FirebaseFirestore.instance);
   result['thisUser'] = await UserHandler.getUserSnapshot(
@@ -395,7 +415,10 @@ _getChatInfo(String userId, String saleId) async {
   result['book'] = await BookHandler.getBook((result['sale'] as Sale).isbn);
   result['subtitleExists'] =
       subtitleExists((result['book'] as Book).info.subtitle);
-      result['userId'] = userId;
+  result['userId'] = userId;
+  result ['chatId'] = chatId;
+  result['saleISBN'] = ((result['sale']) as Sale).isbn;
+  result['sellerId'] = ((result['sale']) as Sale).userID;
   return result;
 }
 
@@ -407,13 +430,10 @@ bool subtitleExists(String subtitle) {
   }
 }
 
-
-
-
 toastMessage(
-    String toastMessage,
-    int sec,
-    ) {
+  String toastMessage,
+  int sec,
+) {
   Fluttertoast.showToast(
       msg: toastMessage,
       toastLength: Toast.LENGTH_SHORT,
@@ -425,9 +445,10 @@ toastMessage(
 }
 
 Future<bool> _isCurrent(String isbn, List<String> courses) async {
-  for (String shortCode in courses){
-    Course course = await CourseHandler.getCourse(shortCode, FirebaseFirestore.instance);
-    if(course.getCurrentIsbns().contains(isbn)){
+  for (String shortCode in courses) {
+    Course course =
+        await CourseHandler.getCourse(shortCode, FirebaseFirestore.instance);
+    if (course.getCurrentIsbns().contains(isbn)) {
       return true;
     }
   }
