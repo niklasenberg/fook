@@ -18,7 +18,16 @@ class UserHandler {
   }
 
   static sendReport(String reportedUser, String from, String message, FirebaseFirestore firestore){
-    firestore.collection('reports').add({"reportedUser": reportedUser, "from": from, "message": message});
+    firestore.collection('reports').add({"to": ["nickeen95@gmail.com"], "message": {"subject": "Report regarding " + reportedUser,
+      "text":
+        "Reported user: " + reportedUser + "\n" +
+        "Reported by: " + from + "\n" +
+        "Reason: " + message,
+      "html":
+      "Reported user: " + reportedUser + "\n" +
+          "Reported by: " + from + "\n" +
+          "Reason: " + message
+    }});
   }
 
   static getUserSnapshot(String uId, FirebaseFirestore firestore) async {
