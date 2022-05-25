@@ -17,6 +17,10 @@ class UserHandler {
     return firestore.collection('users').doc(userId).snapshots();
   }
 
+  static sendReport(String reportedUser, String from, String message, FirebaseFirestore firestore){
+    firestore.collection('reports').add({"reportedUser": reportedUser, "from": from, "message": message});
+  }
+
   static getUserSnapshot(String uId, FirebaseFirestore firestore) async {
     return await firestore.collection('users').doc(uId).get();
   }

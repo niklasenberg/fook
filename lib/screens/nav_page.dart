@@ -88,7 +88,7 @@ class _NavPageState extends State<NavPage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Elusive.tag),
-              label: 'Sale',
+              label: 'Sell',
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(

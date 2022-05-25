@@ -8,10 +8,14 @@ import 'package:fook/model/sale.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:fook/screens/widgets/fook_logo_appbar.dart';
 import 'package:fook/model/book.dart';
+import 'package:fook/screens/widgets/sale_description_page.dart';
+
+import '../../handlers/user_handler.dart';
 
 class ChatDetailed extends StatefulWidget {
   final Map<String, dynamic> infoList;
   bool isChatEmpty = false;
+  bool messageSent = false;
 
   ChatDetailed(this.infoList, {Key? key}) : super(key: key);
 
@@ -118,7 +122,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     widget.isChatEmpty = snapshot.data as bool;
-                    if (widget.isChatEmpty) {
+                    if (widget.isChatEmpty && !widget.messageSent) {
                       messageController = TextEditingController(
                           text: "Is the book still available?");
                       return _messageComposer("Is the book still available?");
@@ -207,6 +211,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                 String message = messageController.text;
                 if (message.isNotEmpty) {
                   messageController.clear();
+                  widget.messageSent = true;
                   await ChatHandler.sendMessage(
                       userId,
                       myId,
@@ -250,8 +255,9 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     margin: EdgeInsets.all(4),
                     height: 50,
                     decoration: const BoxDecoration(),
-                    child: Image.network(
-                        book.info.imageLinks["smallThumbnail"].toString()),
+                    child: book.info.imageLinks["smallThumbnail"] != null ? Image.network(
+                        book.info.imageLinks["smallThumbnail"].toString()) : Image.asset(
+                        "lib/assets/placeholderthumbnail.png"),
                   ),
                   const SizedBox(height: 5),
                   Flexible(
@@ -285,7 +291,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                       height: 10,
                     ),
                     RichText(
-                      text: TextSpan(children: <TextSpan>[
+                      text: TextSpan(children: [
                         TextSpan(
                             text: sellerId == myId ? "Buyer: " : "Seller: ",
                             style: TextStyle(
@@ -297,6 +303,12 @@ class _ChatDetailedState extends State<ChatDetailed> {
                               fontSize: 12,
                               color: Colors.black,
                             )),
+                        WidgetSpan(child: SizedBox(width: 20)),
+                        WidgetSpan(child: GestureDetector(onTap: () {
+                          return _reportDialog(otherUser, userId);
+                        },
+                          child: Icon(Icons.flag, color: Theme.of(context).highlightColor, size: 20,),
+                        ),)
                       ]),
                     ),
                     const SizedBox(
@@ -360,7 +372,6 @@ class _ChatDetailedState extends State<ChatDetailed> {
       ),
     );
   }
-
   bookDisplay(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.9,
@@ -378,8 +389,9 @@ class _ChatDetailedState extends State<ChatDetailed> {
                     margin: EdgeInsets.all(4),
                     height: 50,
                     decoration: const BoxDecoration(),
-                    child: Image.network(
-                        book.info.imageLinks["smallThumbnail"].toString()),
+                    child: book.info.imageLinks["smallThumbnail"] != null ? Image.network(
+                        book.info.imageLinks["smallThumbnail"].toString()) : Image.asset(
+                        "lib/assets/placeholderthumbnail.png"),
                   ),
                   const SizedBox(height: 5),
                   Flexible(
@@ -413,7 +425,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                       height: 10,
                     ),
                     RichText(
-                      text: TextSpan(children: <TextSpan>[
+                      text: TextSpan(children: [
                         TextSpan(
                             text: sale.userID == myId ? "Buyer: " : "Seller: ",
                             style: TextStyle(
@@ -425,6 +437,12 @@ class _ChatDetailedState extends State<ChatDetailed> {
                               fontSize: 12,
                               color: Colors.black,
                             )),
+                        WidgetSpan(child: SizedBox(width: 20)),
+                        WidgetSpan(child: GestureDetector(onTap: () {
+                          return _reportDialog(otherUser, userId);
+                        },
+                          child: Icon(Icons.flag, color: Theme.of(context).highlightColor, size: 20,),
+                        ),)
                       ]),
                     ),
                     const SizedBox(
@@ -546,6 +564,147 @@ class _ChatDetailedState extends State<ChatDetailed> {
         );
       },
     );
+  }
+
+  _reportDialog(fook.User user, String userId) {
+    TextEditingController reportController =
+    TextEditingController();
+
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Theme.of(context).backgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              side: BorderSide(
+                  color: Theme.of(context).colorScheme.primary, width: 3),
+            ),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.015,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        "Report " + user.name + " " + user.lastName,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(25))),
+                            label: Text("Why do you want to report this person?"),
+                          ),
+                          controller: reportController,
+                          expands: true,
+                          maxLines: null,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                MaterialStateProperty.all<Color>(
+                                    Theme.of(context).highlightColor),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    side: BorderSide(
+                                      color: Colors.black,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.05,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                MaterialStateProperty.all<Color>(
+                                    Theme.of(context).primaryColor),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    side: BorderSide(
+                                      color: Colors.black,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              child: Text('Send', style: TextStyle(color: Colors.white)),
+                              onPressed: () async {
+                                if(reportController.text.isNotEmpty){
+                                  UserHandler.sendReport(userId, FirebaseAuth.instance.currentUser!.uid, reportController.text, FirebaseFirestore.instance);
+                                  Navigator.pop(context);
+                                  toastMessage("Report sent", 2);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Widget _timeDivider(Timestamp time) {
