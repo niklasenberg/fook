@@ -28,14 +28,6 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
   TextEditingController conditionController = TextEditingController();
   TextEditingController commentController = TextEditingController();
 
-  /*6. As new
-5.Fine
-4.Very good
-3. Good
-2. Fair
-1.poor
-
-*/
   final items = [
     "1. Poor",
     "2. Fair",
@@ -104,7 +96,11 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: Column(
                             /*ISBN och ruta*/
                             children: [
-                              const Text("ISBN:", textAlign: TextAlign.left),
+                              const Text(
+                                "ISBN:",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                               TextFormField(
                                 controller: isbnController,
                                 //Sätter max inmatning av karaktärer till 13
@@ -144,13 +140,13 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Color.fromARGB(255, 10, 10, 10),
-                                        width: 1),
+                                        width: 2),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color:
                                               Color.fromARGB(255, 10, 10, 10),
-                                          width: 2),
+                                          width: 1),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10))),
                                 ),
@@ -162,7 +158,8 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: Column(/*Skanna streckkod och ruta*/
                               children: [
                             const Text("Scan barcode:",
-                                textAlign: TextAlign.center),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.w600)),
                             MaterialButton(
                               height: 50,
                               textColor:
@@ -204,7 +201,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Title',
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
 
@@ -225,7 +224,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Author',
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
 
@@ -245,7 +246,8 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: Text(
                             'Condition',
                             style: TextStyle(
-                                color: Color.fromARGB(255, 12, 12, 12)),
+                                color: Color.fromARGB(255, 10, 10, 10),
+                                fontWeight: FontWeight.w400),
                           ),
                         ),
 
@@ -278,7 +280,8 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           child: Text(
                             'Your price',
                             style: TextStyle(
-                                color: Color.fromARGB(255, 10, 10, 10)),
+                                color: Color.fromARGB(255, 10, 10, 10),
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
 
@@ -303,8 +306,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           alignment: Alignment.bottomLeft,
                           child: Text(
                             'Comments',
-                            style:
-                                TextStyle(color: Color.fromARGB(255, 8, 8, 8)),
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 10, 10, 10),
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
 
@@ -322,7 +326,12 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                             alignment: Alignment.bottomLeft,
                             child: ElevatedButton.icon(
                               label: const Text('Publish'),
-                              icon: const Icon(Icons.publish),
+                              icon: const Icon(Icons.publish_rounded),
+                              style: ElevatedButton.styleFrom(
+                                  onPrimary: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  )),
                               onPressed: (() {
                                 if (_isButtonEnabled) {
                                   createSale(
@@ -333,7 +342,10 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                     context,
                                   );
                                 } else {
-                                  toastMessage("Enter valid ISBN number", 2);
+                                  toastMessage(
+                                    "Enter valid ISBN number",
+                                    2,
+                                  );
                                 }
                               }),
                             )),
@@ -354,9 +366,9 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: sec,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.orange,
         textColor: Colors.white,
-        fontSize: 16.0);
+        fontSize: 26.0);
   }
 
   _fetchBook(String newValue) async {
@@ -401,7 +413,10 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
             isbn, FirebaseFirestore.instance),
       ),
     );
-    toastMessage('Published', 1);
+    toastMessage(
+      'Published',
+      1,
+    );
     Navigator.pop(context);
     return true;
   }
