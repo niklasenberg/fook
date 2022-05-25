@@ -15,6 +15,7 @@ import '../../handlers/user_handler.dart';
 class ChatDetailed extends StatefulWidget {
   final Map<String, dynamic> infoList;
   bool isChatEmpty = false;
+  bool messageSent = false;
 
   ChatDetailed(this.infoList, {Key? key}) : super(key: key);
 
@@ -121,7 +122,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     widget.isChatEmpty = snapshot.data as bool;
-                    if (widget.isChatEmpty) {
+                    if (widget.isChatEmpty && !widget.messageSent) {
                       messageController = TextEditingController(
                           text: "Is the book still available?");
                       return _messageComposer("Is the book still available?");
@@ -210,6 +211,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                 String message = messageController.text;
                 if (message.isNotEmpty) {
                   messageController.clear();
+                  widget.messageSent = true;
                   await ChatHandler.sendMessage(
                       userId,
                       myId,
@@ -289,7 +291,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                       height: 10,
                     ),
                     RichText(
-                      text: TextSpan(children: <TextSpan>[
+                      text: TextSpan(children: [
                         TextSpan(
                             text: sellerId == myId ? "Buyer: " : "Seller: ",
                             style: TextStyle(
@@ -301,6 +303,12 @@ class _ChatDetailedState extends State<ChatDetailed> {
                               fontSize: 12,
                               color: Colors.black,
                             )),
+                        WidgetSpan(child: SizedBox(width: 20)),
+                        WidgetSpan(child: GestureDetector(onTap: () {
+                          return _reportDialog(otherUser, userId);
+                        },
+                          child: Icon(Icons.flag, color: Theme.of(context).highlightColor, size: 20,),
+                        ),)
                       ]),
                     ),
                     const SizedBox(
@@ -364,7 +372,6 @@ class _ChatDetailedState extends State<ChatDetailed> {
       ),
     );
   }
-
   bookDisplay(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.9,
@@ -418,7 +425,7 @@ class _ChatDetailedState extends State<ChatDetailed> {
                       height: 10,
                     ),
                     RichText(
-                      text: TextSpan(children: <TextSpan>[
+                      text: TextSpan(children: [
                         TextSpan(
                             text: sale.userID == myId ? "Buyer: " : "Seller: ",
                             style: TextStyle(
@@ -430,6 +437,12 @@ class _ChatDetailedState extends State<ChatDetailed> {
                               fontSize: 12,
                               color: Colors.black,
                             )),
+                        WidgetSpan(child: SizedBox(width: 20)),
+                        WidgetSpan(child: GestureDetector(onTap: () {
+                          return _reportDialog(otherUser, userId);
+                        },
+                          child: Icon(Icons.flag, color: Theme.of(context).highlightColor, size: 20,),
+                        ),)
                       ]),
                     ),
                     const SizedBox(

@@ -96,8 +96,6 @@ class _ChatPageState extends State<ChatsPage> {
                   userId = members.elementAt(0) == myId
                       ? members.elementAt(1)
                       : members.elementAt(0);
-                  String isbn =
-                      (docs[index].data() as Map<String, dynamic>)['saleISBN'];
 
                   return FutureBuilder(
                     future: _getInfo(userId, saleId, chatId, members),
