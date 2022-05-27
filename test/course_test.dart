@@ -24,7 +24,7 @@ void main() {
       courses.add(await CourseHandler.getCourse('EMDSV', firestore));
 
       //Update mock course
-      // await CourseHandler.updateUserCourses(courses, firestore);
+      await CourseHandler.updateCourses(courses, firestore);
 
 
       //Assert results

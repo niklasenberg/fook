@@ -4,7 +4,7 @@ import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/screens/login_page.dart';
-import 'package:fook/screens/widgets/sale_description_page.dart';
+import 'package:fook/screens/sale_description_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);

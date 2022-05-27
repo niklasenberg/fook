@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fook/screens/chat/chats_page.dart';
-import 'package:fook/screens/home/home_page.dart';
+import 'package:fook/screens/home_page.dart';
 import 'package:fook/screens/profile_page.dart';
-import 'package:fook/screens/search/search_page.dart';
+import 'package:fook/screens/search_page.dart';
 import 'package:fook/screens/widgets/fook_logo_appbar.dart';
 import 'package:fook/screens/sale/sale_home_page.dart';
 import 'package:fluttericon/elusive_icons.dart';

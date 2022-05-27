@@ -137,6 +137,16 @@ class _ChatPageState extends State<ChatsPage> {
                                     margin: const EdgeInsets.all(10.0),
                                     height: MediaQuery.of(context).size.height *
                                         0.08,
+                                    decoration: BoxDecoration(
+                                      color: myId == sellerId ? Theme.of(context).primaryColor : Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey,
+                                          offset: Offset(2.0,
+                                              2.0), // shadow direction: bottom right
+                                        ),
+                                      ],
+                                    ),
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
@@ -152,16 +162,6 @@ class _ChatPageState extends State<ChatsPage> {
                                               children: [
                                                 Container(
                                                   height: 100,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.grey,
-                                                        offset: Offset(2.0,
-                                                            2.0), // shadow direction: bottom right
-                                                      ),
-                                                    ],
-                                                  ),
                                                   child: Image.network(book
                                                       .info
                                                       .imageLinks[
@@ -327,12 +327,13 @@ class _ChatPageState extends State<ChatsPage> {
                               ));
                         }
 
-                        return SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.25,
+                        return Container(
+                            height: MediaQuery.of(context).size.height * 0.28,
                             child: Card(
                               margin: const EdgeInsets.all(8.0),
                               elevation: 8.0,
                               shape: RoundedRectangleBorder(
+                                side: myId == sellerId ? BorderSide(width: 4, color: Theme.of(context).primaryColor) : BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(4.0),
                               ),
                               child: InkWell(
@@ -364,15 +365,6 @@ class _ChatPageState extends State<ChatsPage> {
                                             children: [
                                               Container(
                                                 height: 100,
-                                                decoration: const BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey,
-                                                      offset: Offset(2.0,
-                                                          2.0), // shadow direction: bottom right
-                                                    ),
-                                                  ],
-                                                ),
                                                 child: book.info.imageLinks[
                                                             "smallThumbnail"] !=
                                                         null
@@ -430,7 +422,7 @@ class _ChatPageState extends State<ChatsPage> {
                                                       TextSpan>[
                                                     TextSpan(
                                                         text:
-                                                            sale.userID == myId
+                                                            sellerId == myId
                                                                 ? "Buyer: "
                                                                 : "Seller: ",
                                                         style: TextStyle(
@@ -524,7 +516,7 @@ class _ChatPageState extends State<ChatsPage> {
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.17,
+                                                0.2,
                                         child: Align(
                                           alignment: Alignment.bottomRight,
                                           child: _timeDivider(

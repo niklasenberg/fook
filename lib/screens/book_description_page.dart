@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fook/screens/widgets/sale_description_page.dart';
+import 'package:fook/screens/widgets/sale_card.dart';
+import 'package:fook/screens/sale_description_page.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import '../../handlers/book_handler.dart';
-import '../../handlers/sale_handler.dart';
-import '../../handlers/user_handler.dart';
-import '../../model/book.dart';
-import '../../model/sale.dart';
-import 'fook_logo_appbar.dart';
+import '../handlers/book_handler.dart';
+import '../handlers/sale_handler.dart';
+import '../handlers/user_handler.dart';
+import '../model/book.dart';
+import '../model/sale.dart';
+import 'widgets/fook_logo_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookDescription extends StatefulWidget {
@@ -197,17 +198,12 @@ class _BookDescriptionState extends State<BookDescription> {
                     if (snapshot.hasData) {
                       widget.sales = snapshot.data as List<Sale>;
                       if (widget.sales.isEmpty) {
-
-                        String isbnIdentifier = widget.book.info.industryIdentifiers.first.toString();
-                        //Removes everything before and including ':'
-                        String isbn =  isbnIdentifier.substring(8);
-                        String titleAndSubtitle = (widget.book.info.title +"-" +widget.book.info.subtitle).replaceAll(' ', '-').toLowerCase().replaceAll("'", "").replaceAll(",", "").replaceAll("&", "");
-
+                        String isbn = widget.book.info.industryIdentifiers.first.identifier;
                         return Center(
                           child: ElevatedButton(
                             child:   const Text('Check Campusbokhandeln'),
                             onPressed: () {
-                              var url = 'https://campusbokhandeln.se/b/' + isbn + "/" + titleAndSubtitle  ;
+                              var url = 'https://campusbokhandeln.se/s/' + isbn;
                               launchUrl(url);
                             },
                           ),
@@ -248,10 +244,9 @@ class _BookDescriptionState extends State<BookDescription> {
                                                 2.0), // shadow direction: bottom right
                                           ),
                                         ],
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(5),
                                       ),
-                                      padding: EdgeInsets.all(4),
-                                      margin: EdgeInsets.all(8),
+                                      margin: EdgeInsets.all(10),
                                       width: double.infinity,
                                       height: 150,
                                       child: Center(

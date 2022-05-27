@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/handlers/chat_handler.dart';
-import 'package:fook/handlers/book_handler.dart';
-import 'package:fook/model/constants.dart';
 import 'package:fook/model/sale.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:fook/screens/widgets/fook_logo_appbar.dart';
 import 'package:fook/model/book.dart';
-import 'package:fook/screens/widgets/sale_description_page.dart';
+import 'package:fook/screens/sale_description_page.dart';
 
 import '../../handlers/user_handler.dart';
 
@@ -1062,4 +1060,21 @@ class _ChatDetailedState extends State<ChatDetailed> {
     );
   }*/
 
+}
+
+class Constants {
+  static List<String> months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 }

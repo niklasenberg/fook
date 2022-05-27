@@ -81,6 +81,7 @@ flutter:
   - lib/assets/placeholderthumbnail.png
   - lib/assets/logo_sv.png
   - lib/assets/chat_vector.png
+  - lib/assets/fook_r_24fps_appBack.gif
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

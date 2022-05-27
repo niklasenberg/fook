@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fook/handlers/notification_handler.dart';
 import 'package:fook/screens/nav_page.dart';
-import 'model/firebase_options.dart';
+import 'handlers/firebase_options.dart';
 import 'screens/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fook/theme/colors.dart';
@@ -45,21 +45,21 @@ class MyApp extends StatelessWidget {
                 TextStyle(color: Colors.deepOrangeAccent, fontFamily: 'Roboto'),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.deepOrange),
-              borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
             hintStyle: TextStyle(color: Colors.deepOrangeAccent),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.deepOrangeAccent),
-                borderRadius: BorderRadius.all(Radius.circular(15))),
+                borderRadius: BorderRadius.all(Radius.circular(5))),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.deepOrangeAccent),
-                borderRadius: BorderRadius.all(Radius.circular(15))),
+                borderRadius: BorderRadius.all(Radius.circular(5))),
             errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red),
-                borderRadius: BorderRadius.all(Radius.circular(15))),
+                borderRadius: BorderRadius.all(Radius.circular(5))),
             focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red),
-                borderRadius: BorderRadius.all(Radius.circular(15))),
+                borderRadius: BorderRadius.all(Radius.circular(5))),
           )),
       home: FutureBuilder(
         future: _initialization,

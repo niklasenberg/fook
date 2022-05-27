@@ -26,11 +26,11 @@ void main() {
     });
 
     test('Get correct books', () async {
-      // String bookOne = await BookHandler.getBookName('9781408855652');
-      // expect(bookOne, "harry potter and the philosopher's stone");
+      String bookOne = await BookHandler.getBookName('9781408855652');
+      expect(bookOne.toLowerCase(), "harry potter and the philosopher's stone");
 
-      // String bookTwo = await BookHandler.getBookName('9789100126537');
-      // expect(bookTwo.toLowerCase(), "jag är zlatan ibrahimovic");
+      String bookTwo = await BookHandler.getBookName('9789100126537');
+      expect(bookTwo.toLowerCase(), "jag är zlatan ibrahimovic min historia");
     });
   });
 }

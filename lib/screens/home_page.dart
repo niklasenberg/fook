@@ -9,9 +9,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/handlers/user_handler.dart';
 import 'package:fook/model/user.dart' as fook;
 import 'package:fook/model/book.dart';
-import 'package:fook/screens/widgets/book_description_page.dart';
-import '../../handlers/user_handler.dart';
-import '../../model/book.dart';
+import 'package:fook/screens/book_description_page.dart';
+import '../handlers/user_handler.dart';
+import '../model/book.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.fromLTRB(18, 0, 0, 5),
                     alignment: Alignment.centerLeft,
                     child: const Text(
-                      "Your current courses",
+                      "Here are books for your current courses",
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -94,20 +94,22 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       } else {
-                        return const CircularProgressIndicator();
+                        return Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Color.fromARGB(255, 228, 227, 227),
+                        child: Image.asset('lib/assets/fook_r_24fps_appBack.gif', scale: 4,));
                       }
                     }),
               ),
               backgroundColor: Theme.of(context).backgroundColor,
             );
           } else {
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(
-                  Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            );
+            return Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Color.fromARGB(255, 228, 227, 227),
+                child: Image.asset('lib/assets/fook_r_24fps_appBack.gif', scale: 4,));
           }
         });
   }
@@ -311,6 +313,7 @@ Future<List<Book>> _getBooks(Course course) async {
 }
 
 Future<List<Course>> _update() async {
-  return await CourseHandler.updateUserCourses(
-      FirebaseAuth.instance.currentUser!.uid, FirebaseFirestore.instance);
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  return await CourseHandler.updateCourses(
+      (await CourseHandler.getUserCourses(FirebaseAuth.instance.currentUser!.uid, firestore)), firestore);
 }

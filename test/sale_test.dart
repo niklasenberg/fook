@@ -91,7 +91,7 @@ void main() {
   });
 
   group('Sale tests', () {
-    test('get sales for user', () async {
+    test('Get sales for user', () async {
       Sale sale1 = Sale.fromMap({
         'isbn': '1236',
         'userID': 'piot2333',
@@ -119,7 +119,7 @@ void main() {
       }
     });
 
-    test('get sales for isbn', () async {
+    test('Get sales for isbn', () async {
       Sale sale = Sale.fromMap({
         'isbn': '1236',
         'userID': 'doav7858',
@@ -160,7 +160,6 @@ void main() {
           .where('isbn', isEqualTo: '1111')
           .get(); //.where('isbn', isEqualTo: '1111');
 
-      bool result = false;
       for (DocumentSnapshot a in query.docs) {
         Sale random = Sale.fromMap(a.data() as Map<String, dynamic>);
         expect(random, sale);

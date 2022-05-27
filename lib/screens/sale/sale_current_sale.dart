@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,7 +80,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(5),
                   color: Colors.white,
                   border: Border.all(
                       width: 1, color: Color.fromARGB(255, 223, 219, 219)),
@@ -100,18 +99,20 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                       children: [
                         Expanded(
                           child: Column(
-                            /*ISBN och ruta*/
                             children: [
-                              const Text("ISBN:",
-                                  textAlign: TextAlign.left,
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w600)),
+                              SizedBox(height: 10),
                               TextFormField(
                                 initialValue: widget.thissale.getIsbn(),
                                 //controller: isbnController,
                                 enableInteractiveSelection: false,
-                                focusNode: new AlwaysDisabledFocusNode(),
+                                focusNode: AlwaysDisabledFocusNode(),
                                 decoration: const InputDecoration(
+                                  label: Text(
+                                    "ISBN",
+                                    style: (TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600)),
+                                  ),
                                   filled: true,
                                   fillColor: Color.fromARGB(255, 228, 227, 227),
                                 ),
@@ -144,21 +145,10 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                       ],
                     ),
                     Column(
-                      /*Här ska Titel, Författar, väljsskick osv vara*/
-
-                      children: [
-                        //Titel:
-
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Title',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w600),
-                          ),
+                      children:[
+                        SizedBox(
+                          height: 10,
                         ),
-
                         Container(
                             height: 55,
                             margin: const EdgeInsets.only(bottom: 10),
@@ -166,29 +156,29 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                               initialValue: widget.thisbook.info.title,
                               //controller: titleController,
                               decoration: const InputDecoration(
+                                label: Text(
+                                "Title",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600),
+                              ),
                                   filled: true,
                                   fillColor:
                                       Color.fromARGB(255, 228, 227, 227)),
                               enabled: false,
                             )),
-
-                        //Författare:
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Author',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-
                         Container(
                           child: TextFormField(
                             initialValue:
                                 widget.thisbook.info.authors.toString(),
                             //controller: authorController,
                             decoration: const InputDecoration(
+                                label: Text(
+                                  "Authors",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ),
                                 filled: true,
                                 fillColor: Color.fromARGB(255, 228, 227, 227)),
                             enabled: false,
@@ -196,26 +186,17 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                           height: 55,
                           margin: const EdgeInsets.only(bottom: 10),
                         ),
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Condition',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 10, 10, 10),
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ),
 
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: Container(
-                              width: 200,
+                            height: 55,
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
+                                  borderRadius: BorderRadius.circular(5),
                                   border: Border.all(
-                                      color: Colors.black, width: 1)),
+                                      color: Theme.of(context).highlightColor,)),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
                                     value: conditionController.text,
@@ -229,18 +210,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                                             value.toString())),
                               )),
                         ),
-
-                        //Begärt pris:
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Your price',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 10, 10, 10),
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-
+                        SizedBox(height: 10),
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: TextField(
@@ -251,6 +221,12 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             controller: priceController,
                             //kan ej ha controller och initialvalue
                             decoration: const InputDecoration(
+                                label: Text(
+                                  "Your price",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600),
+                                ),
                                 filled: false, fillColor: Colors.white),
                             enabled: true,
 
@@ -259,27 +235,24 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                             ],
                           ),
                         ),
-
-                        //Övriga kommentarer:
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Comments',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 10, 10, 10),
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
+                        SizedBox(height: 10),
 
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: TextField(
                             controller: commentController,
                             decoration: const InputDecoration(
+                                label: Text(
+                                  "Comments",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600),
+                                ),
                                 filled: false, fillColor: Colors.white),
                             enabled: true,
                           ),
                         ),
+                        SizedBox(height: 10),
 
                         Stack(
                           children: [
@@ -311,14 +284,18 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
                                     ),
                                   ),
                                   onPressed: () {
-                                    updateSale(
-                                      commentController.text,
-                                      conditionController.text,
-                                      int.parse(priceController.text),
-                                      context,
-                                      widget.thissale.saleID,
-                                    );
-                                    Navigator.pop(context);
+                                    if(priceController.text.isNotEmpty){
+                                      updateSale(
+                                        commentController.text,
+                                        conditionController.text,
+                                        int.parse(priceController.text),
+                                        context,
+                                        widget.thissale.saleID,
+                                      );
+                                      Navigator.pop(context);
+                                    }else{
+                                      toastMessage("Price can't be empty", 2);
+                                    }
                                   }),
                             ),
                           ],
@@ -350,7 +327,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: const Text("Delte?"),
+      title: const Text("Delete?"),
       content: const Text("Would you like to delete this sale?"),
       actions: [
         yesButton,
@@ -376,7 +353,7 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: sec,
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 26.0);
   }
@@ -385,7 +362,6 @@ class _SaleCurrentSale extends State<SaleCurrentSale> {
       value: item,
       child: Text(
         item,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ));
 
   Future<bool> updateSale(

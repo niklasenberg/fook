@@ -9,7 +9,8 @@ import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/screens/sale/sale_create_new.dart';
 import 'package:fook/screens/sale/sale_current_sale.dart';
 import 'package:fook/model/user.dart' as fook;
-import 'package:fook/screens/widgets/sale_description_page.dart';
+
+import '../widgets/sale_card.dart';
 
 class SaleHomePage extends StatefulWidget {
   const SaleHomePage({Key? key}) : super(key: key);
@@ -41,19 +42,24 @@ class _SaleHomePageState extends State<SaleHomePage> {
             Container(
               height: MediaQuery.of(context).size.height * 0.52,
               width: MediaQuery.of(context).size.width * 0.93,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                  width: 3,
-                  style: BorderStyle.solid,
-                ),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
+              decoration: const BoxDecoration(image: DecorationImage(opacity: 0.1, scale: 4, image: AssetImage("lib/assets/s_logo_o.png",)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.5, 0.5),
+                    blurRadius: 1,
+                  ),
+                ], borderRadius: BorderRadius.all(Radius.circular(8)),
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color(0xffeae6e6),
+                    Color(0xfffafafa),
+                    Color(0xfffaf4f4),
+                    Color(0xffe5e3e3)
+                  ],
+                ),),
               child: buildA(context),
             ),
             Container(

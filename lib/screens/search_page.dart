@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:algolia/algolia.dart';
 import 'package:fook/handlers/book_handler.dart';
 import 'package:fook/handlers/course_handler.dart';
-import '../../model/book.dart';
-import '../../model/course.dart';
+import '../model/book.dart';
+import '../model/course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../widgets/book_description_page.dart';
+import 'book_description_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);

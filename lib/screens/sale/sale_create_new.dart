@@ -37,6 +37,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
     "6. As new"
   ];
   bool _isButtonEnabled = false;
+  bool _fieldsEnabled = false;
   String? value;
 
   @override
@@ -49,8 +50,6 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
             child: ConstrainedBox(
           constraints: const BoxConstraints(),
           child: Column(children: [
-            //Övergripande strukturen
-
             AppBar(
                 automaticallyImplyLeading: false,
                 shape: const RoundedRectangleBorder(
@@ -62,7 +61,6 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   style: TextStyle(color: Colors.orange),
                 ),
                 backgroundColor: Color.fromARGB(255, 255, 255, 255)),
-
             Container(
                 //Nedersta rektangeln (För att kunna färgfylla, skugga osv)
                 padding: const EdgeInsets.all(15),
@@ -71,7 +69,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(5),
                   color: Colors.white,
                   border: Border.all(
                       width: 1, color: Color.fromARGB(255, 223, 219, 219)),
@@ -84,23 +82,14 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                   ],
                 ),
                 child: Column(
-                  //Nedersta rektangeln, fyller ut containern den är i men strukturerar så att allt är vertikalt
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
                   children: [
                     Row(
-                      //Här ska isbn och skanna streckkod vara. BEhövs förmodligen två columns
-
                       children: [
                         Expanded(
                           child: Column(
-                            /*ISBN och ruta*/
                             children: [
-                              const Text(
-                                "ISBN:",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              ),
+                              SizedBox(height: 10),
                               TextFormField(
                                 controller: isbnController,
                                 //Sätter max inmatning av karaktärer till 13
@@ -116,6 +105,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                     toastMessage(
                                         "ISBN should contain 10 or 13 characters",
                                         1);
+                                    _disableFields();
                                   } else if ((newValue.length != 10 &&
                                           newValue.length != 13) &&
                                       !isNumeric(newValue)) {
@@ -123,32 +113,33 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                                     toastMessage(
                                         "ISBN should contain 10 or 13 characters",
                                         1);
-                                    toastMessage(
-                                        "ISBN should only contain numbers", 1);
+                                    _disableFields();
                                   } else if ((newValue.length == 10 ||
                                           newValue.length == 13) &&
                                       !isNumeric(newValue)) {
                                     toastMessage(
                                         "ISBN should only contain numbers", 1);
+                                    _disableFields();
                                   } else {
                                     _fetchBook(newValue);
+                                    setState(() {
+                                      _fieldsEnabled = true;
+                                    });
                                   }
                                 },
-                                decoration: const InputDecoration(
-                                  labelText: 'xxxxxxxxxx',
+                                decoration: InputDecoration(
+                                  label: Text(
+                                    "ISBN",
+                                    style: (TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600)),
+                                  ),
                                   fillColor: Color.fromARGB(255, 255, 255, 255),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: Color.fromARGB(255, 10, 10, 10),
+                                        color: Theme.of(context).highlightColor,
                                         width: 2),
                                   ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color:
-                                              Color.fromARGB(255, 10, 10, 10),
-                                          width: 1),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
                                 ),
                               )
                             ],
@@ -192,48 +183,41 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                       ],
                     ),
                     Column(
-                      /*Här ska Titel, Författar, väljsskick osv vara*/
-
                       children: [
-                        //Titel:
-
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Title',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w600),
-                          ),
+                        SizedBox(
+                          height: 10,
                         ),
-
                         Container(
                             height: 55,
                             margin: const EdgeInsets.only(bottom: 10),
                             child: TextField(
                               controller: titleController,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                  label: Text(
+                                    "Title",
+                                    style: TextStyle(
+                                        color: _fieldsEnabled
+                                            ? Colors.black
+                                            : Colors.grey,
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                   filled: true,
                                   fillColor:
                                       Color.fromARGB(255, 228, 227, 227)),
                               enabled: false,
                             )),
-
-                        //Författare:
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Author',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-
                         Container(
                           child: TextField(
                             controller: authorController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
+                                label: Text(
+                                  "Authors",
+                                  style: TextStyle(
+                                      color: _fieldsEnabled
+                                          ? Colors.black
+                                          : Colors.grey,
+                                      fontWeight: FontWeight.w600),
+                                ),
                                 filled: true,
                                 fillColor: Color.fromARGB(255, 228, 227, 227)),
                             enabled: false,
@@ -241,89 +225,87 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
                           height: 55,
                           margin: const EdgeInsets.only(bottom: 10),
                         ),
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Condition',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 10, 10, 10),
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ),
-
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: Container(
-                              width: 200,
+                              height: 55,
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
+                                  color: _fieldsEnabled
+                                      ? null
+                                      : Color.fromARGB(255, 228, 227, 227),
+                                  borderRadius: BorderRadius.circular(5),
                                   border: Border.all(
-                                      color: Colors.black, width: 1)),
+                                      color: _fieldsEnabled
+                                          ? Theme.of(context).highlightColor
+                                          : Color.fromARGB(
+                                              255, 228, 227, 227))),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
+                                    hint: Text(
+                                      "Condition",
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w600),
+                                    ),
                                     value: value,
                                     iconSize: 36,
-                                    icon: const Icon(Icons.arrow_drop_down,
-                                        color: Colors.black),
+                                    icon: _fieldsEnabled
+                                        ? const Icon(Icons.arrow_drop_down,
+                                            color: Colors.black)
+                                        : null,
                                     isExpanded: true,
-                                    items: items.map(buildMenuItem).toList(),
+                                    items: _fieldsEnabled
+                                        ? items.map(buildMenuItem).toList()
+                                        : [],
                                     onChanged: (value) =>
                                         setState(() => this.value = value)),
                               )),
                         ),
-
-                        //Begärt pris:
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Your price',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 10, 10, 10),
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-
+                        SizedBox(height: 10),
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: TextField(
                             //pricecontroller ska kunna ändra
                             keyboardType: TextInputType.number,
                             controller: priceController,
-                            decoration: const InputDecoration(
-                                filled: false, fillColor: Colors.white),
-                            enabled: true,
+                            decoration: InputDecoration(
+                                label: Text(
+                                  "Your price",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                filled: !_fieldsEnabled,
+                                fillColor: Color.fromARGB(255, 228, 227, 227)),
+                            enabled: _fieldsEnabled,
 
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(4),
                             ],
                           ),
                         ),
-
-                        //Övriga kommentarer:
-                        const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Comments',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 10, 10, 10),
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-
+                        SizedBox(height: 10),
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: TextFormField(
                             controller: commentController,
-                            decoration: const InputDecoration(
-                                filled: false, fillColor: Colors.white),
-                            enabled: true,
+                            decoration: InputDecoration(
+                                label: Text(
+                                  "Comments",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                filled: !_fieldsEnabled,
+                                fillColor: Color.fromARGB(255, 228, 227, 227)),
+                            enabled: _fieldsEnabled,
                           ),
                         ),
-
+                        SizedBox(height: 10),
                         Align(
-                            alignment: Alignment.bottomLeft,
+                            alignment: Alignment.bottomCenter,
                             child: ElevatedButton.icon(
                               label: const Text('Publish'),
                               icon: const Icon(Icons.publish_rounded),
@@ -366,7 +348,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: sec,
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 26.0);
   }
@@ -383,18 +365,26 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
         authorController.text = book.info.authors.toString();
       });
     } else {
-      _isButtonEnabled = false;
+      _disableFields();
       toastMessage(
           "ISBN don't match with any book in DSV's courses, therefore it can't be put up for sale in Fook.",
           2);
     }
   }
 
+  _disableFields() {
+    _isButtonEnabled = false;
+    titleController.clear();
+    authorController.clear();
+    setState(() {
+      _fieldsEnabled = false;
+    });
+  }
+
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
       value: item,
       child: Text(
         item,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ));
 
   Future<bool> createSale(String isbn, String description, String condition,

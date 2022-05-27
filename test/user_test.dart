@@ -65,12 +65,8 @@ void main() {
     });
 
     test('Update user courses', () async {
-      //Fetch a specific users courses
-      List<Course> userCourses = await CourseHandler.getUserCourses('boomerFc', firestore);
 
-      expect(userCourses.first.literature.keys.first, 'boken till prog1');
-
-      userCourses = await CourseHandler.updateUserCourses('boomerFc', firestore);
+      List<Course> userCourses = await CourseHandler.updateCourses((await CourseHandler.getUserCourses('boomerFc', firestore)), firestore);
 
       //PROG1 doesnt have literature and should be empty
       expect(userCourses.first.literature, {'boken till prog1': ['isbn1', 'isbn2']});

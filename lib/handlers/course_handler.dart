@@ -53,9 +53,8 @@ class CourseHandler {
     }
   }
 
-  static Future<List<Course>> updateUserCourses(
-      String uid, FirebaseFirestore firestore) async {
-    List<Course> courses = await getUserCourses(uid, firestore);
+  static Future<List<Course>> updateCourses(
+      List<Course> courses, FirebaseFirestore firestore) async {
 
     for (Course course in courses) {
       //Get current ISBN for course from Daisy
