@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
@@ -161,7 +162,17 @@ class _LoginFormState extends State<LoginForm> {
                               },
 
                             ),
-                            title: Text("I agree to the terms and conditions", style: TextStyle(color: Theme.of(context).highlightColor)),
+                            title: RichText(
+                                text: TextSpan(
+                                    children: <TextSpan>[
+                                TextSpan(text: 'I agree to the ', style: TextStyle(color: Theme.of(context).primaryColor)),
+                                TextSpan(
+                                    text: 'Terms of Service',
+                                    style: TextStyle(color: Colors.blue),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        _termsDialog(context);
+                                      }),])),
                           ),
                         ),
                       ),
@@ -196,4 +207,70 @@ class _LoginFormState extends State<LoginForm> {
       },
     );
   }
+}
+
+_termsDialog(BuildContext context) {
+  String terms =
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget tempor sem. Nulla vulputate scelerisque sem, eget volutpat magna porttitor et. Proin malesuada, urna sed sagittis dignissim, sem dolor auctor diam, sed vehicula purus libero ut neque. Fusce commodo dictum libero. Nulla pulvinar tincidunt erat, at consequat erat sodales vel. Ut eget aliquet ex, a pharetra neque. Sed mattis, sem a dapibus convallis, mi lacus feugiat odio, non bibendum ante sem sed turpis. Quisque semper, ex ut convallis aliquet, odio libero lacinia diam, et convallis ante purus nec ligula. Nunc pretium tortor id risus bibendum tincidunt. Aenean eget iaculis mi, a sodales felis. Duis feugiat molestie turpis ut rhoncus. Suspendisse faucibus porta purus, at porttitor erat venenatis at. Maecenas vitae quam eros.";
+
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            backgroundColor: Theme.of(context).backgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              side: BorderSide(
+                  color: Theme.of(context).colorScheme.primary, width: 3),
+            ),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      "Terms of Service",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10,),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: MediaQuery.of(context).size.height*0.75,
+                  child: Container(
+                      child: Scrollbar(child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Text(
+                          terms,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ))),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    shape:
+                    MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width * 0.3,
+                        ),
+                      ),
+                    ),
+                  ),
+                  child: Text('Ok', style: TextStyle(color: Colors.white),),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
+      });
 }
