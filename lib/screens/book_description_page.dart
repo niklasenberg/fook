@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fook/screens/widgets/sale_card.dart';
 import 'package:fook/screens/sale_description_page.dart';
@@ -179,7 +180,6 @@ class _BookDescriptionState extends State<BookDescription> {
                           child: Text(
                             'Include Older Editions',
                             style: TextStyle(
-                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -287,6 +287,8 @@ class _BookDescriptionState extends State<BookDescription> {
                                                     SaleDescription(
                                                         widget.sales[index]))),
                                         child: SaleCard(
+                                            FirebaseAuth.instance.currentUser!.uid,
+                                            widget.sales[index].userID,
                                             widget.sales[index],
                                             infoList["seller"],
                                             infoList["book"],

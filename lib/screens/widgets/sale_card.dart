@@ -7,7 +7,7 @@ import '../../model/user.dart' as fook;
 import '../../handlers/course_handler.dart';
 
 
-Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
+Widget SaleCard(String myId, String sellerId, Sale sale, fook.User seller, Book book, context) {
   Color background = Theme.of(context).backgroundColor;
   Color fill = Colors.white;
   final List<Color> gradient = [
@@ -28,6 +28,7 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
                 spreadRadius: 0.5,
               ),
             ],
+            border: Border.all(color: myId == sellerId ? Theme.of(context).primaryColor : Colors.white, width: 4),
             borderRadius: BorderRadius.circular(5),
             gradient: LinearGradient(
                 begin: Alignment.topRight,
@@ -37,7 +38,7 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
           ),
           margin: const EdgeInsets.all(10),
           width: double.infinity,
-          height: 150,
+          height: 160,
           child: Stack(
             children: [
               Row(
@@ -144,7 +145,7 @@ Widget SaleCard(Sale sale, fook.User seller, Book book, context) {
                                               color: Colors.black,
                                               fontSize: 12)),
                                       TextSpan(
-                                          text: seller.name +
+                                          text: myId == sellerId ? "Me" : seller.name +
                                               " " +
                                               seller.lastName,
                                           style: TextStyle(

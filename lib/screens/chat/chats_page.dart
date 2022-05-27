@@ -119,6 +119,7 @@ class _ChatPageState extends State<ChatsPage> {
                                 margin: const EdgeInsets.all(8.0),
                                 elevation: 8.0,
                                 shape: RoundedRectangleBorder(
+                                  side: myId == sellerId ? BorderSide(width: 4, color: Theme.of(context).primaryColor) : BorderSide(color: Colors.white),
                                   borderRadius: BorderRadius.circular(4.0),
                                 ),
                                 child: InkWell(
@@ -138,7 +139,6 @@ class _ChatPageState extends State<ChatsPage> {
                                     height: MediaQuery.of(context).size.height *
                                         0.08,
                                     decoration: BoxDecoration(
-                                      color: myId == sellerId ? Theme.of(context).primaryColor : Colors.white,
                                       boxShadow: [
                                         BoxShadow(
                                           color: Colors.grey,
@@ -215,16 +215,15 @@ class _ChatPageState extends State<ChatsPage> {
                                                     text: TextSpan(children: <
                                                         TextSpan>[
                                                       TextSpan(
-                                                          text: sellerId == myId
-                                                              ? "Buyer: "
-                                                              : "Seller: ",
+                                                          text: "Seller: ",
                                                           style: TextStyle(
                                                               color: Theme.of(
                                                                       context)
                                                                   .primaryColor,
                                                               fontSize: 16)),
                                                       TextSpan(
-                                                          text: (otherUser
+                                                          text: sellerId == myId
+                                                              ? "Me" : (otherUser
                                                                   .name +
                                                               ' ' +
                                                               otherUser
@@ -421,19 +420,19 @@ class _ChatPageState extends State<ChatsPage> {
                                                   text: TextSpan(children: <
                                                       TextSpan>[
                                                     TextSpan(
-                                                        text:
-                                                            sellerId == myId
-                                                                ? "Buyer: "
-                                                                : "Seller: ",
+                                                        text: "Seller: ",
                                                         style: TextStyle(
                                                             color: Theme.of(
                                                                     context)
                                                                 .primaryColor,
                                                             fontSize: 16)),
                                                     TextSpan(
-                                                        text: (otherUser.name +
+                                                        text: sellerId == myId
+                                                            ? "Me" : (otherUser
+                                                            .name +
                                                             ' ' +
-                                                            otherUser.lastName),
+                                                            otherUser
+                                                                .lastName),
                                                         style: const TextStyle(
                                                           fontSize: 16,
                                                           color: Colors.black,
@@ -658,16 +657,6 @@ Future<void> _deleteDialog(BuildContext context, chatId) async {
                     ),
                   ],
                 ),
-                /* Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      "By doing so the chat is removed for" + otherUser.name,
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ],
-                ),*/
                 SizedBox(
                   height: 5.0,
                 ),

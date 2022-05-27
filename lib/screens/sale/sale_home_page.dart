@@ -119,6 +119,8 @@ class _SaleHomePageState extends State<SaleHomePage> {
                                   );
                                 },
                                 child: SaleCard(
+                                  FirebaseAuth.instance.currentUser!.uid,
+                                    FirebaseAuth.instance.currentUser!.uid,
                                     sales[index],
                                     saleInfo['user'] as fook.User,
                                     saleInfo['book'] as Book,

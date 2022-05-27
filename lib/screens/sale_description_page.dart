@@ -77,7 +77,7 @@ class _SaleDescriptionState extends State<SaleDescription> {
                                   ),
                                 ],
                               ),
-                              SaleCard(widget.sale, seller, book, context),
+                              SaleCard(FirebaseAuth.instance.currentUser!.uid, widget.sale.userID, widget.sale, seller, book, context),
                               Column(children: [
                                 Row(children: [
                                   const SizedBox(
