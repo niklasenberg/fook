@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fook/screens/nav_page.dart';
 
+///Appbar that persists over all pages
 class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final double height;
-  bool implyLeading = false;
+  final bool implyLeading; //Toggle back button, default is off
 
-  FookAppBar({
-    this.height = 85.0,
+  const FookAppBar({
+    Key? key,
     required this.implyLeading,
-  });
+  }) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(height);
+  Size get preferredSize => const Size.fromHeight(85); //Fixed size
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +20,14 @@ class FookAppBar extends StatelessWidget implements PreferredSizeWidget {
         iconTheme: const IconThemeData(
           color: Colors.white, //change your color here
         ),
+        //Clickable logo to return to homepage
         title: GestureDetector(
             onTap: () => Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => NavPage())),
+                context, MaterialPageRoute(builder: (context) => const NavPage())),
             child: Image.asset(
               'lib/assets/logo_w.png',
               height: 50,
             )),
-        
         centerTitle: true,
         flexibleSpace: Container(
           decoration: const BoxDecoration(

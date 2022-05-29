@@ -8,7 +8,7 @@ void main() {
   final firestore = FakeFirebaseFirestore();
 
   group('Chat tests', () {
-    setUp(() async {
+    setUpAll(() async {
       await firestore.collection('users').doc('1').set({
         'name': 'Zlatan',
         'lastName': 'Ibrahamovic',
@@ -20,10 +20,13 @@ void main() {
         'lastName': 'Larsson',
         'courses': ['EMDSV', 'ISBI'],
       });
+
+      await ChatHandler.sendMessage(
+          '1', '2', '3', 'hej', "anders", 'enSale', 'ettISBN', firestore);
     });
 
-    test('Get chat', () async {
-      dynamic chat = await ChatHandler.getChat('1', firestore);
+    test('Get messages', () async {
+      dynamic chat = ChatHandler.getMessages('1-2-3', firestore);
 
       StreamBuilder(
           stream: chat,
@@ -35,8 +38,13 @@ void main() {
           });
     });
 
+    test('Get chat', () async {
+      var chat = await ChatHandler.getChatById('1-2-3', firestore);
+      expect((chat.data() as Map<String, dynamic>)["sellerId"], "enSale");
+    });
+
     test('Get chats', () async {
-      dynamic chat = await ChatHandler.getChat('1', firestore);
+      var chat = ChatHandler.getMessages('1', firestore);
 
       StreamBuilder(
           stream: chat,
@@ -54,21 +62,31 @@ void main() {
 
     test('Check for existing chat', () async {
       await ChatHandler.sendMessage(
-          '1', '2', '3', true, 'hej', "anders", 'enSale', 'ettISBN', firestore);
-      expect(await ChatHandler.checkChatExists('1', '2', '3', firestore), true);
+          '1', '2', '3', 'hej', "anders", 'enSale', 'ettISBN', firestore);
+      assert(await ChatHandler.checkChatExists('1', '2', '3', firestore));
+    });
+
+    test('Check whether chat is empty', () async {
+      assert(!await ChatHandler.isChatEmpty('1-2-3', firestore));
     });
 
     test('Send message', () async {
-      await ChatHandler.sendMessage(
-          '3', '4', '5', true, 'hej', "anders", 'enSale', 'ettISBN', firestore);
-
       QuerySnapshot query = await firestore
           .collection('chats')
-          .doc('3-4-5')
+          .doc('1-2-3')
           .collection('messages')
           .get();
 
-      expect(query.docs.length, 1);
+      expect(query.docs.length, 2);
+    });
+
+    test('Delete chat', () async {
+      await ChatHandler.deleteChat('1-2-3', firestore);
+
+      DocumentSnapshot chat =
+          await firestore.collection('chats').doc('1-2-3').get();
+
+      expect(chat.exists, false);
     });
   });
 }

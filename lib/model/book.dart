@@ -1,50 +1,33 @@
-//  Copyright 2020 Bruno D'Luka
-
+///Book class, containing information about thumbnail images, titles etc
+///Initially used via package [https://pub.dev/packages/books_finder], later
+///adopted and modified.
 class Book {
-  /// The id of the book
-  final String id;
-  final String? etag;
-
-  /// A self link containing more especific information
-  final Uri? selfLink;
-
   /// The information about the book
   final BookInfo info;
 
-  /// The information about the book's sale info
-  final SaleInfo saleInfo;
-
   const Book({
-    required this.id,
-    this.etag,
     required this.info,
-    this.selfLink,
-    required this.saleInfo,
   });
 
   @override
-  String toString() => '$id:${info.title}';
+  String toString() => info.title;
 
   static Book fromJson(
-      Map<String, dynamic> json, {
-        bool reschemeImageLinks = false,
-      }) {
+    Map<String, dynamic> json, {
+    bool reschemeImageLinks = false,
+  }) {
     return Book(
-      id: json['id'],
-      etag: json['etag'],
       info: BookInfo.fromJson(
         json['volumeInfo'],
         reschemeImageLinks: reschemeImageLinks,
       ),
-      selfLink: Uri.parse(json['selfLink']),
-      saleInfo: SaleInfo.fromJson(json['saleInfo']),
     );
   }
 }
 
 class IndustryIdentifier {
-  final String type;
-  final String identifier;
+  final String type; //ISBN_10 or 13 etc
+  final String identifier; //Numeric string
 
   const IndustryIdentifier({
     required this.type,
@@ -79,52 +62,6 @@ class IndustryIdentifier {
 
   @override
   String toString() => '$type:$identifier';
-}
-
-class SaleInfo {
-  final String country;
-  final String saleability;
-  final bool isEbook;
-
-  const SaleInfo({
-    required this.country,
-    required this.saleability,
-    required this.isEbook,
-  });
-
-  @override
-  String toString() =>
-      'SaleInfo(country: $country, saleability: $saleability, isEbook: $isEbook)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is SaleInfo &&
-        other.country == country &&
-        other.saleability == saleability &&
-        other.isEbook == isEbook;
-  }
-
-  @override
-  int get hashCode =>
-      country.hashCode ^ saleability.hashCode ^ isEbook.hashCode;
-
-  Map<String, dynamic> toJson() {
-    return {
-      'country': country,
-      'saleability': saleability,
-      'isEbook': isEbook,
-    };
-  }
-
-  factory SaleInfo.fromJson(Map<String, dynamic> map) {
-    return SaleInfo(
-      country: map['country'] ?? '',
-      saleability: map['saleability'] ?? '',
-      isEbook: map['isEbook'] ?? false,
-    );
-  }
 }
 
 class BookInfo {
@@ -208,11 +145,11 @@ class BookInfo {
   });
 
   static BookInfo fromJson(
-      Map<String, dynamic> json, {
-        bool reschemeImageLinks = false,
-      }) {
+    Map<String, dynamic> json, {
+    bool reschemeImageLinks = false,
+  }) {
     final publishedDateArray =
-    ((json['publishedDate'] as String?) ?? '0000-00-00').split('-');
+        ((json['publishedDate'] as String?) ?? '0000-00-00').split('-');
 
     // initialize datetime variable
     DateTime? publishedDate;
@@ -295,7 +232,7 @@ class BookInfo {
       'ratingsCount': ratingsCount,
       'imageLinks': imageLinks,
       'industryIdentifiers':
-      industryIdentifiers.map((identifier) => identifier.toJson()).toList(),
+          industryIdentifiers.map((identifier) => identifier.toJson()).toList(),
       'previewLink': previewLink,
       'infoLink': infoLink,
       'canonicalVolumeLink': canonicalVolumeLink,
@@ -305,55 +242,6 @@ class BookInfo {
   @override
   String toString() {
     return 'BookInfo(title: $title, subtitle: $subtitle authors: $authors, publisher: $publisher, publishedDate: $publishedDate, rawPublishedDate: $rawPublishedDate, description: $description, industryIdentifiers: $industryIdentifiers, pageCount: $pageCount, categories: $categories, averageRating: $averageRating, ratingsCount: $ratingsCount, maturityRating: $maturityRating, contentVersion: $contentVersion, imageLinks: $imageLinks, language: $language, previewLink: $previewLink, infoLink: $infoLink, canonicalVolumeLink: $canonicalVolumeLink)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is BookInfo &&
-        other.title == title &&
-        other.subtitle == subtitle &&
-        other.authors == authors &&
-        other.publisher == publisher &&
-        other.publishedDate == publishedDate &&
-        other.rawPublishedDate == rawPublishedDate &&
-        other.description == description &&
-        other.industryIdentifiers == industryIdentifiers &&
-        other.pageCount == pageCount &&
-        other.categories == categories &&
-        other.averageRating == averageRating &&
-        other.ratingsCount == ratingsCount &&
-        other.maturityRating == maturityRating &&
-        other.contentVersion == contentVersion &&
-        other.imageLinks == imageLinks &&
-        other.language == language &&
-        other.previewLink == previewLink &&
-        other.infoLink == infoLink &&
-        other.canonicalVolumeLink == canonicalVolumeLink;
-  }
-
-  @override
-  int get hashCode {
-    return title.hashCode ^
-    subtitle.hashCode ^
-    authors.hashCode ^
-    publisher.hashCode ^
-    publishedDate.hashCode ^
-    rawPublishedDate.hashCode ^
-    description.hashCode ^
-    industryIdentifiers.hashCode ^
-    pageCount.hashCode ^
-    categories.hashCode ^
-    averageRating.hashCode ^
-    ratingsCount.hashCode ^
-    maturityRating.hashCode ^
-    contentVersion.hashCode ^
-    imageLinks.hashCode ^
-    language.hashCode ^
-    previewLink.hashCode ^
-    infoLink.hashCode ^
-    canonicalVolumeLink.hashCode;
   }
 }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+///Helper class for customizing colors
 class CustomColors {
+  ///Helper method for converting [Color] to [MaterialColor]
   static MaterialColor createMaterialColor(Color color) {
     List strengths = <double>[.05];
     Map<int, Color> swatch = {};
@@ -20,4 +22,17 @@ class CustomColors {
     }
     return MaterialColor(color.value, swatch);
   }
+
+  static MaterialColor fookOrange =
+  CustomColors.createMaterialColor(const Color(0xFFFE8A13));
+
+  static MaterialColor fookRed =
+  CustomColors.createMaterialColor(const Color(0xFFFE5608));
+
+  static List<Color> fookGradient = [
+    const Color(0xffeae6e6),
+    const Color(0xfffafafa),
+    const Color(0xfffaf4f4),
+    const Color(0xffe5e3e3)
+  ];
 }

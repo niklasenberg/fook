@@ -1,21 +1,22 @@
-import 'package:fook/handlers/book_handler.dart';
-import 'package:fook/handlers/course_handler.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fook/handlers/user_handler.dart';
-import 'package:fook/model/course.dart';
 import 'package:fook/model/user.dart';
 import 'package:test/test.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
 void main() {
   final firestore = FakeFirebaseFirestore();
 
-  //Populate mock firestore
-  setUp(() async {
+  //Populate mock firestore AND firebase storage
+  setUpAll(() async {
     await firestore.collection('courses').doc('0').set({
       'name': 'Programmering 1',
       'shortCode': 'PROG1',
       'code': 'IB133N',
-      'literature': {'boken till prog1': ['isbn1', 'isbn2']},
+      'literature': {
+        'boken till prog1': ['isbn1', 'isbn2']
+      },
       'isbnNumbers': ['123']
     });
 
@@ -23,7 +24,9 @@ void main() {
       'name': 'PrototypkursN',
       'shortCode': 'PROTO',
       'code': 'IB711C',
-      'literature': {'Prototyping:':  ['123', '124']},
+      'literature': {
+        'Prototyping:': ['123', '124']
+      },
       'isbnNumbers': ['123']
     });
 
@@ -31,7 +34,9 @@ void main() {
       'name': 'Spelbaserat lärande',
       'shortCode': 'SL',
       'code': 'IB530C',
-      'literature': {'placeholder':  ['456', '789']},
+      'literature': {
+        'placeholder': ['456', '789']
+      },
       'isbnNumbers': ['123']
     });
 
@@ -40,48 +45,52 @@ void main() {
       'lastName': 'Ibrahamovic',
       'courses': ['PROG1', 'PROTO', 'SL'],
     });
+
+    await firestore.collection('users').doc('ronaldo').set({
+      'name': 'Christiano',
+      'lastName': 'Ronaldo',
+      'courses': ['PROG1', 'PROTO', 'SL'],
+    });
   });
 
   group('User tests', () {
-    test('Get UserName', () async {
+    test('Get User', () async {
       //Assert correct user fetch
       User user = await UserHandler.getUser('boomerFc', firestore);
-      expect('Zlatan', user.getName());
+      expect('Zlatan', user.name);
     });
 
-    test('Get user courses', () async {
-      List<String> validCourses = ['PROG1', 'PROTO', 'SL'];
-
-      //Fetch a specific users courses
-      List<Course> userCourses = await CourseHandler.getUserCourses('boomerFc', firestore);
-
-      for(Course course in userCourses){
-        assert(validCourses.contains(course.shortCode));
-      }
-      //Assert correct result
-      expect(userCourses.first.literature.keys.first, 'boken till prog1');
-      expect(userCourses.first.literature['boken till prog1'], ['isbn1', 'isbn2']);
-
+    test('Get user stream', () async {
+      StreamBuilder(
+          stream: UserHandler.getUserStream('boomerFc', firestore),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              User user = User.fromMap((snapshot.data as DocumentSnapshot)
+                  .data() as Map<String, dynamic>);
+              expect(user.name, 'Zlatan');
+            }
+            return Container();
+          });
     });
 
-    test('Update user courses', () async {
+    test('Update username', () async {
+      await UserHandler.updateUsername(
+          'boomerFc', 'Henrik', 'Larsson', firestore);
+      User user = await UserHandler.getUser('boomerFc', firestore);
+      expect(user.name, 'Henrik');
+    });
 
-      List<Course> userCourses = await CourseHandler.updateCourses((await CourseHandler.getUserCourses('boomerFc', firestore)), firestore);
+    test('Send report', () async {
+      QuerySnapshot query = await firestore.collection('reports').get();
 
-      //PROG1 doesnt have literature and should be empty
-      expect(userCourses.first.literature, {'boken till prog1': ['isbn1', 'isbn2']});
+      assert(query.docs.isEmpty);
 
-      for(Course c in userCourses){
-        if(c.shortCode == 'SL'){
-          var name = await BookHandler.getBookName('9781118096345');
-          expect(c.literature[name], {'9781118096345',
-            '1118096347'});
-        }else if (c.shortCode == 'PROTO'){
-          var name = await BookHandler.getBookName('9144042035');
-          expect(c.literature[name], {'9144042035',
-            '9789144042039'});
-        }
-      }
+      await UserHandler.sendReport(
+          'boomerFc', 'ronaldo', 'he is too good at soccer', firestore);
+
+      query = await firestore.collection('reports').get();
+
+      assert(query.docs.isNotEmpty);
     });
   });
 }

@@ -1,15 +1,12 @@
-import 'package:fook/handlers/sale_handler.dart';
-import 'package:fook/model/course.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
+///Sale object, contains information such as condition, price, etc
 class Sale {
   final String isbn;
-  final String userID;
-  final List<String> courses;
-  final String description;
+  final String userID; //Sellers user ID
+  final List<String> courses; //List of courses that sale object is relevant for
+  final String description; //Sellers comments
   String condition;
   int price;
-  final String saleID;
+  final String saleID; //Document ID
 
   Sale({
     required this.isbn,
@@ -45,43 +42,8 @@ class Sale {
     };
   }
 
-  int changePrice(int newPrice) {
-    return price = newPrice;
-  }
-
-  changeCondition(String c) {
-    return condition = c;
-  }
-
-  String getIsbn() {
-    return isbn;
-  }
-
-  List<String> getCourses() {
-    return courses;
-  }
-
-  String getuserID() {
-    return userID;
-  }
-
-  int getPrice() {
-    return price;
-  }
-
-/*
-  set newprice(int inputprice) {
-    newprice = inputprice;
-  }
-*/
-  String getSaleID() {
-    return saleID;
-  }
-
   @override
   bool operator ==(Object other) {
-    // Long calculation involving a, b, c, d etc.
-
     return other is Sale && other.saleID == saleID;
   }
 
@@ -100,7 +62,6 @@ class Sale {
         saleID;
   }
 
-
-
-
+  @override
+  int get hashCode => saleID.hashCode;
 }

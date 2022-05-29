@@ -2,15 +2,20 @@ import 'dart:convert';
 import 'package:fook/model/book.dart';
 import 'package:http/http.dart' as http;
 
+/// Handler class that fetches data from Google Books API
 class BookHandler {
+  /// Given a name, returns a set of known ISBNs for that book
   static Future<Set<String>> getBookEditions(String name) async {
-    List<Book> bookList = await getBookObjects(name);
-    Set<String> result = {};
+    //Fetch list of books with same name
+    List<Book> bookList = await getBooks(name);
 
+    //For each fetched book, add their corresponding ISBNs
+    Set<String> result = {};
     for (Book book in bookList) {
       List<IndustryIdentifier> isbnList =
           List.from(book.info.industryIdentifiers);
 
+      //Each book can contains several ISBNs
       for (IndustryIdentifier number in isbnList) {
         result.add(number.identifier);
       }
@@ -19,22 +24,8 @@ class BookHandler {
     return result;
   }
 
-  static Future<String> getBookName(String isbn) async {
-    final List<Book> books = await queryBooks(
-      isbn,
-      queryType: QueryType.isbn,
-      maxResults: 1,
-      printType: PrintType.books,
-      orderBy: OrderBy.relevance,
-    );
-
-    if(books.isNotEmpty){
-      return (books[0].info.title + " " + books[0].info.subtitle).trim();
-    }else{
-      return "Unknown name";
-    }
-  }
-
+  ///Given an ISBN number, returns a Book object
+  ///Does not accept bad isbn numbers
   static Future<Book> getBook(String isbn) async {
     final List<Book> books = await queryBooks(
       isbn,
@@ -47,7 +38,9 @@ class BookHandler {
     return books[0];
   }
 
-  static Future<List<Book>> getBooks(String isbn) async {
+  ///Given an ISBN number, returns a Book object
+  ///Accepts bad isbn numbers
+  static Future<List<Book>> getNullableBook(String isbn) async {
     final List<Book> books = await queryBooks(
       isbn,
       queryType: QueryType.isbn,
@@ -57,23 +50,20 @@ class BookHandler {
     );
 
     List<Book> result = [];
-    if(books.isNotEmpty){
+    if (books.isNotEmpty) {
       result.add(books[0]);
     }
 
     return result;
   }
 
-  static String getIsbn(Book book){
-    return book.info.industryIdentifiers.first.toString();
-
-  }
-
-  static Future<List<Book>> getBookObjects(String name) async {
-    if(name == "Unknown"){
+  ///Given a name, returns a list of book objects with matching title and subtitle
+  static Future<List<Book>> getBooks(String name) async {
+    if (name == "Unknown") {
       return [];
     }
 
+    //Fetch 10 books
     List<Book> books = await queryBooks(
       name,
       maxResults: 10,
@@ -81,9 +71,11 @@ class BookHandler {
       orderBy: OrderBy.relevance,
     );
 
+    //Sort list of books by year published
     books
         .sort((a, b) => b.info.publishedDate!.compareTo(a.info.publishedDate!));
 
+    //Filter to ensure correct title + subtitle in fetched books
     books = List.from(books.where((book) =>
         (book.info.title + " " + book.info.subtitle)
             .toLowerCase()
@@ -92,10 +84,11 @@ class BookHandler {
 
     return books;
   }
-
-
 }
 
+/// Method for querying against Google Books API
+/// ///Initially used via package [https://pub.dev/packages/books_finder], later
+///adopted and modified.
 Future<List<Book>> queryBooks(
   String query, {
   QueryType? queryType,
@@ -106,12 +99,16 @@ Future<List<Book>> queryBooks(
   int startIndex = 0,
   bool reschemeImageLinks = false,
 }) async {
+  //Makes sure query isnt empty
   assert(query.isNotEmpty);
 
+  //Base URL
   var url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
+  //If the queryType is undefined, default to "name"
   if (queryType != null) url += queryType.name + ':';
 
+  //Append different string to query url depending on parameters
   var q = '$url'
       '${query.trim().replaceAll(' ', '+')}'
       '&maxResults=$maxResults'
@@ -130,6 +127,7 @@ Future<List<Book>> queryBooks(
     final list = (jsonDecode(result.body))['items'] as List<dynamic>?;
     if (list == null) return [];
     for (final e in list) {
+      //Create Book objects from JSON Response
       books.add(Book.fromJson(e, reschemeImageLinks: reschemeImageLinks));
     }
     return books;

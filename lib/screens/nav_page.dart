@@ -7,6 +7,9 @@ import 'package:fook/screens/widgets/fook_logo_appbar.dart';
 import 'package:fook/screens/sale/sale_home_page.dart';
 import 'package:fluttericon/elusive_icons.dart';
 
+import '../theme/colors.dart';
+
+///Page for top of widget tree, reached after loggin in
 class NavPage extends StatefulWidget {
   const NavPage({Key? key}) : super(key: key);
 
@@ -15,13 +18,10 @@ class NavPage extends StatefulWidget {
 }
 
 class _NavPageState extends State<NavPage> {
+  //Default page index (home_page)
   int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  //List of child widgets, main pages of app
   static const List<Widget> _pages = <Widget>[
     Center(child: HomePage()),
     Center(child: SearchPage()),
@@ -30,16 +30,10 @@ class _NavPageState extends State<NavPage> {
     Center(child: ProfilePage()),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: FookAppBar(
+      appBar: const FookAppBar(
         implyLeading: false,
       ),
       body: IndexedStack(
@@ -47,8 +41,8 @@ class _NavPageState extends State<NavPage> {
         children: _pages,
       ),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-            boxShadow: [
+        decoration: BoxDecoration(
+            boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
                 spreadRadius: 0.5,
@@ -56,56 +50,58 @@ class _NavPageState extends State<NavPage> {
               ),
             ],
             gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            Color(0xffeae6e6),
-            Color(0xfffafafa),
-            Color(0xfffaf4f4),
-            Color(0xffe5e3e3)
-          ],
-        )
-            // image: DecorationImage(
-            //     image: AssetImage('lib/assets/Fook_back_sm.png'),
-            //fit: BoxFit.fill),
-            ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Theme.of(context).primaryColor,
-          unselectedItemColor: Colors.black,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-              backgroundColor: Colors.white,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'Search',
-              backgroundColor: Colors.white,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Elusive.tag),
-              label: 'Sell',
-              backgroundColor: Colors.white,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble),
-              label: 'Chat',
-              backgroundColor: Colors.white,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-              backgroundColor: Colors.white,
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-        ),
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: CustomColors.fookGradient)),
+        child: _fookNavBar(),
       ),
     );
+  }
+
+  ///Main navigation bar for entire app
+  Widget _fookNavBar() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: Theme.of(context).primaryColor,
+      unselectedItemColor: Colors.black,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+          backgroundColor: Colors.white,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Search',
+          backgroundColor: Colors.white,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Elusive.tag),
+          label: 'Sell',
+          backgroundColor: Colors.white,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat_bubble),
+          label: 'Chat',
+          backgroundColor: Colors.white,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profile',
+          backgroundColor: Colors.white,
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+    );
+  }
+
+  ///Helper method for selecting page in navbar
+  _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }

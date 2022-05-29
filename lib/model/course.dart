@@ -1,9 +1,11 @@
-class Course extends Object {
-  final String name;
-  final String shortCode;
-  final String code;
-  Map<String, Set<String>> literature;
-  Set<String> isbnNumbers;
+///Course class, contains information about course,
+///such as the course literature
+class Course {
+  final String name; //Full course name, such as "Vetenskapligt skrivande"
+  final String shortCode; //Short version of course name, such as "VESK"
+  final String code; //Course code used by Daisy, such as "IB141N"
+  Map<String, Set<String>> literature; //Map of book names -> Sets of ISBNs
+  Set<String> isbnNumbers; //All ISBNs related with the course
 
   Course({
     required this.name,
@@ -33,38 +35,19 @@ class Course extends Object {
     };
   }
 
-  String getName() {
-    return name;
-  }
-
-  String getShortCode() {
-    return shortCode;
-  }
-
-  String getCode() {
-    return code;
-  }
-
-  List<String> getCurrentIsbns(){
+  List<String> getCurrentIsbns() {
     List<String> result = [];
-    for(String name in literature.keys){
-      result.add(literature[name]!.first);
+    for (String name in literature.keys) {
+      result.add(literature[name]!
+          .first); //Current ISBNs are always placed at this index
     }
     return result;
   }
 
-  List<String> getBookName() {
-    return List.from(literature.keys);
-  }
-
-  Set<String> getIsbnNumbers() {
-    return isbnNumbers;
-  }
-
   Set<String> getISBN(String name) {
-    if(literature[name] != null){
+    if (literature[name] != null) {
       return literature[name]!;
-    }else{
+    } else {
       return <String>{};
     }
   }
@@ -73,12 +56,28 @@ class Course extends Object {
     this.literature = literature;
   }
 
-  void setIsbnNumbers(Set<String> numbers){
+  void setIsbnNumbers(Set<String> numbers) {
     isbnNumbers = numbers;
   }
 
   @override
-  String toString() {
-    return name + " " + shortCode + " " + code + " " + literature.toString() + " " + isbnNumbers.toString();
+  bool operator ==(Object other) {
+    return other is Course && other.shortCode == shortCode;
   }
+
+  @override
+  String toString() {
+    return name +
+        " " +
+        shortCode +
+        " " +
+        code +
+        " " +
+        literature.toString() +
+        " " +
+        isbnNumbers.toString();
+  }
+
+  @override
+  int get hashCode => shortCode.hashCode;
 }

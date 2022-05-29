@@ -50,6 +50,7 @@ dependencies:
   algolia: ^1.1.1
   flutter_barcode_scanner: ^2.0.0
   url_launcher: ^6.1.2
+  firebase_storage_mocks: ^0.5.0
 
 dev_dependencies:
   flutter_test:
@@ -74,13 +75,12 @@ flutter:
   uses-material-design: true
   assets:
   - lib/assets/logo_o.png
-  - lib/assets/Fook_back.png
   - lib/assets/logo_w.png
   - lib/assets/Fook_back_sm.png
   - lib/assets/s_logo_o.png
   - lib/assets/placeholderthumbnail.png
-  - lib/assets/logo_sv.png
   - lib/assets/chat_vector.png
+  - lib/assets/books_vector.png
   - lib/assets/fook_r_24fps_appBack.gif
   # To add assets to your application, add an assets section, like this:
   # assets:

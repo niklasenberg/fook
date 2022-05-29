@@ -6,35 +6,28 @@ import '../../model/sale.dart';
 import '../../model/user.dart' as fook;
 import '../../handlers/course_handler.dart';
 
-
-Widget SaleCard(String myId, String sellerId, Sale sale, fook.User seller, Book book, context) {
-  Color background = Theme.of(context).backgroundColor;
-  Color fill = Colors.white;
-  final List<Color> gradient = [
-    background,
-    background,
-    fill,
-    fill,
-  ];
+///Card displaying a Sale object, is used almost everywhere
+Widget saleCard(String myId, String sellerId, Sale sale, fook.User seller,
+    Book book, context) {
   return Column(
     children: [
       Container(
           decoration: BoxDecoration(
+            color: Colors.white,
             boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
-                offset: Offset(1.0, 1.0), // shadow direction: bottom right
+                offset: Offset(1.0, 1.0),
                 blurRadius: 2,
                 spreadRadius: 0.5,
               ),
             ],
-            border: Border.all(color: myId == sellerId ? Theme.of(context).primaryColor : Colors.white, width: 4),
+            border: Border.all(
+                color: myId == sellerId
+                    ? Theme.of(context).primaryColor
+                    : Colors.white,
+                width: 4),
             borderRadius: BorderRadius.circular(5),
-            gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: gradient
-            ),
           ),
           margin: const EdgeInsets.all(10),
           width: double.infinity,
@@ -46,11 +39,12 @@ Widget SaleCard(String myId, String sellerId, Sale sale, fook.User seller, Book 
                   const SizedBox(
                     width: 20,
                   ),
-                  Container(
+                  SizedBox(
                     height: 130,
-                    child: book.info.imageLinks["smallThumbnail"] != null ? Image.network(
-                        book.info.imageLinks["smallThumbnail"].toString()) : Image.asset(
-                        "lib/assets/placeholderthumbnail.png"),
+                    child: book.info.imageLinks["smallThumbnail"] != null
+                        ? Image.network(
+                            book.info.imageLinks["smallThumbnail"].toString())
+                        : Image.asset("lib/assets/placeholderthumbnail.png"),
                   ),
                   const SizedBox(
                     width: 10,
@@ -76,8 +70,8 @@ Widget SaleCard(String myId, String sellerId, Sale sale, fook.User seller, Book 
                                     text: TextSpan(children: <TextSpan>[
                                       TextSpan(
                                           text: (book.info.title +
-                                              ": " +
-                                              book.info.subtitle)
+                                                  ": " +
+                                                  book.info.subtitle)
                                               .toUpperCase(),
                                           style: const TextStyle(
                                             fontSize: 12,
@@ -97,14 +91,14 @@ Widget SaleCard(String myId, String sellerId, Sale sale, fook.User seller, Book 
                                 Flexible(
                                     child: FutureBuilder(
                                         future:
-                                        _isCurrent(sale.isbn, sale.courses),
+                                            _isCurrent(sale.isbn, sale.courses),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData) {
                                             bool current =
-                                            snapshot.data as bool;
+                                                snapshot.data as bool;
                                             return RichText(
                                               text:
-                                              TextSpan(children: <TextSpan>[
+                                                  TextSpan(children: <TextSpan>[
                                                 const TextSpan(
                                                     text: "ISBN: ",
                                                     style: TextStyle(
@@ -114,11 +108,11 @@ Widget SaleCard(String myId, String sellerId, Sale sale, fook.User seller, Book 
                                                     text: current
                                                         ? sale.isbn
                                                         : sale.isbn +
-                                                        " NOTE: Older edition!",
+                                                            " NOTE: Older edition!",
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
-                                                      FontWeight.bold,
+                                                          FontWeight.bold,
                                                       color: current
                                                           ? Colors.black
                                                           : Colors.red,
@@ -145,9 +139,11 @@ Widget SaleCard(String myId, String sellerId, Sale sale, fook.User seller, Book 
                                               color: Colors.black,
                                               fontSize: 12)),
                                       TextSpan(
-                                          text: myId == sellerId ? "Me" : seller.name +
-                                              " " +
-                                              seller.lastName,
+                                          text: myId == sellerId
+                                              ? "Me"
+                                              : seller.name +
+                                                  " " +
+                                                  seller.lastName,
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .primaryColor,
@@ -212,10 +208,11 @@ Widget SaleCard(String myId, String sellerId, Sale sale, fook.User seller, Book 
   );
 }
 
+///Helper method that determines whether Sale object is current in any course
 Future<bool> _isCurrent(String isbn, List<String> courses) async {
   for (String shortCode in courses) {
     Course course =
-    await CourseHandler.getCourse(shortCode, FirebaseFirestore.instance);
+        await CourseHandler.getCourse(shortCode, FirebaseFirestore.instance);
     if (course.getCurrentIsbns().contains(isbn)) {
       return true;
     }

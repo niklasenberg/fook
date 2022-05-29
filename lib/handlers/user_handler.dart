@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fook/model/user.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fook/handlers/course_handler.dart';
-import 'package:fook/model/course.dart';
 
+///Handler class that fetches/writes users data
 class UserHandler {
+  ///Given a user Id, returns a User object of corresponding user
   static Future<User> getUser(
       String userId, FirebaseFirestore firestore) async {
     DocumentSnapshot document =
@@ -13,43 +13,55 @@ class UserHandler {
     return User.fromMap(document.data() as Map<String, dynamic>);
   }
 
-  static Stream<DocumentSnapshot> getUserStream(String userId, FirebaseFirestore firestore){
+  ///Given a user Id, returns a stream of user data
+  ///Is needed due to realtime updates of username etc
+  static Stream<DocumentSnapshot> getUserStream(
+      String userId, FirebaseFirestore firestore) {
     return firestore.collection('users').doc(userId).snapshots();
   }
 
-  static sendReport(String reportedUser, String from, String message, FirebaseFirestore firestore){
-    firestore.collection('reports').add({"to": ["nickeen95@gmail.com"], "message": {"subject": "Report regarding " + reportedUser,
-      "text":
-        "Reported user: " + reportedUser + "\n" +
-        "Reported by: " + from + "\n" +
-        "Reason: " + message,
-      "html":
-      "Reported user: " + reportedUser + "\n" +
-          "Reported by: " + from + "\n" +
-          "Reason: " + message
-    }});
-  }
-
-  static getUserSnapshot(String uId, FirebaseFirestore firestore) async {
-    return await firestore.collection('users').doc(uId).get();
-  }
-
-  static addUser(User user) async {
-    FirebaseFirestore.instance
-        .collection('users')
-        .add(user.toMap());
-  }
-
+  ///Given a user Id, returns a String URL for that users profile picture
   static Future<String> getPhotoUrl(
-      String userId, FirebaseFirestore firestore) async {
-    return FirebaseStorage.instance
-        .ref()
-        .child(userId + ".png")
-        .getDownloadURL();
+      String userId, FirebaseStorage storage) async {
+    return storage.ref().child(userId + ".png").getDownloadURL();
   }
 
-  static Future<bool> updateUsername(String uid, String name, String lastName, FirebaseFirestore firestore) async {
-    firestore.collection("users").doc(uid).update({"name": name, "lastName": lastName});
+  ///Given a user id, name and lastName, updates that users information.
+  static Future<bool> updateUsername(String uid, String name, String lastName,
+      FirebaseFirestore firestore) async {
+    firestore
+        .collection("users")
+        .doc(uid)
+        .update({"name": name, "lastName": lastName});
     return true;
+  }
+
+  ///Given a reported user id, the reporters id, the report message,
+  ///creates a report document in the database. Triggers server function which
+  ///sends email corresponding to database document.
+  static sendReport(String reportedUser, String from, String message,
+      FirebaseFirestore firestore) {
+    firestore.collection('reports').add({
+      "to": ["nickeen95@gmail.com"],
+      "message": {
+        "subject": "Report regarding " + reportedUser,
+        "text": "Reported user: " +
+            reportedUser +
+            "\n" +
+            "Reported by: " +
+            from +
+            "\n" +
+            "Reason: " +
+            message,
+        "html": "Reported user: " +
+            reportedUser +
+            "\n" +
+            "Reported by: " +
+            from +
+            "\n" +
+            "Reason: " +
+            message
+      }
+    });
   }
 }
