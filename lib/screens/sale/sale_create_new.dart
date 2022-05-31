@@ -343,6 +343,7 @@ class _SaleCreateNewState extends State<SaleCreateNew> {
       _isButtonEnabled = true;
       Book book = await BookHandler.getBook(newValue);
       setState(() {
+        _fieldsEnabled = true;
         titleController.text = book.info.title;
         authorController.text = book.info.authors.toString();
       });

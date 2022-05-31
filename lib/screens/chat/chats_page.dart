@@ -330,9 +330,9 @@ _timeDivider(Timestamp time) {
       t.hour.toString() + ":" + t.minute.toString(),
     );
   }
-  return Text(
-    t.day.toString() + '/' + (t.month + 1).toString() + '/' + t.year.toString(),
-  );
+  return Text(t.day.toString() +
+      ' ' +
+      Constants.months.elementAt(t.month - 1));
 }
 
 ///Popup dialog for deletion of chat objects

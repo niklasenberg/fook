@@ -36,7 +36,7 @@ class _SaleHomePageState extends State<SaleHomePage> {
             Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Container(
             margin: const EdgeInsets.all(4),
-            height: MediaQuery.of(context).size.height - 285,
+            height: MediaQuery.of(context).size.height * 0.58,
             decoration: BoxDecoration(
               image: const DecorationImage(
                   opacity: 0.1,
